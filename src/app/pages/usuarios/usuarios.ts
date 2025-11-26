@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MenuComponent } from '../../components/menu/menu';
-import { NgForOf } from '@angular/common';
+
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [MenuComponent, NgForOf],
+  imports: [MenuComponent],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.scss',
 })

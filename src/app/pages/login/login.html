@@ -1,14 +1,9 @@
 <div class="login-container">
-    <h2>Iniciar Sesión</h2>
+  <h2>Pantalla de Login</h2>
 
-    <form (ngSubmit)="iniciarSesion()">
-        <label for="usuario">Usuario</label>
-        <input id="usuario" type="text" placeholder="Ingresa tu usuario" [(ngModel)]="usuario" name="usuario" />
+  <button (click)="loginConGoogle()" [disabled]="cargando">
+    {{ cargando ? 'Conectando...' : 'Ingresar con Google' }}
+  </button>
 
-        <label for="contrasena">Contraseña</label>
-        <input id="contrasena" type="password" placeholder="Ingresa tu contraseña" [(ngModel)]="contrasena"
-            name="contrasena" />
-
-        <button type="submit">Entrar</button>
-    </form>
+  <p *ngIf="error" class="error">{{ error }}</p>
 </div>

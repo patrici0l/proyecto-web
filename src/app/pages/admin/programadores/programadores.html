@@ -1,0 +1,27 @@
+<h2>Listado de Programadores</h2>
+<button routerLink="/admin/programadores/nuevo">Nuevo Programador</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Especialidad</th>
+            <th>GitHub</th>
+            <th>LinkedIn</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let p of programadores">
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.especialidad }}</td>
+            <td>{{ p.github }}</td>
+            <td>{{ p.linkedin }}</td>
+            <td>
+                <!-- EDITAR más adelante -->
+                <button (click)="eliminar(p.id)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

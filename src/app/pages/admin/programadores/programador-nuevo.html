@@ -1,0 +1,49 @@
+<h2>Nuevo Programador</h2>
+
+<form (ngSubmit)="guardar()">
+    <div>
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="modelo.nombre" name="nombre" required />
+    </div>
+
+    <div>
+        <label>Especialidad</label>
+        <input type="text" [(ngModel)]="modelo.especialidad" name="especialidad" required />
+    </div>
+
+    <div>
+        <label>Descripción</label>
+        <textarea [(ngModel)]="modelo.descripcion" name="descripcion" rows="3"></textarea>
+    </div>
+
+    <div>
+        <label>GitHub</label>
+        <input type="text" [(ngModel)]="modelo.github" name="github" />
+    </div>
+
+    <div>
+        <label>LinkedIn</label>
+        <input type="text" [(ngModel)]="modelo.linkedin" name="linkedin" />
+    </div>
+
+    <div>
+        <label>Portafolio</label>
+        <input type="text" [(ngModel)]="modelo.portafolio" name="portafolio" />
+    </div>
+
+    <div>
+        <label>Foto de perfil</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+
+    <div *ngIf="vistaPreviaFoto">
+        <p>Vista previa:</p>
+        <img [src]="vistaPreviaFoto" alt="Foto de perfil" style="max-width: 150px; border-radius: 8px;">
+    </div>
+
+    <p *ngIf="error" style="color: red;">{{ error }}</p>
+
+    <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'Guardando...' : 'Guardar Programador' }}
+    </button>
+</form>
