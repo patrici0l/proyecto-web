@@ -1,78 +1,64 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ProgramadoresService, Programador } from '../../../services/programadores';
-import { Router } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProgramadoresService } from '../../../services/programadores';
 
 @Component({
     selector: 'app-programador-nuevo',
     standalone: true,
-    imports: [FormsModule, NgIf],
+    imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './programador-nuevo.html',
-    styleUrl: './programador-nuevo.scss',
+    styleUrls: ['./programador-nuevo.scss']
 })
 export class ProgramadorNuevoComponent {
-    cargando = false;
-    error: string | null = null;
-    vistaPreviaFoto: string | null = null;
-    fotoFile: File | null = null;
 
-    modelo: Omit<Programador, 'id' | 'foto'> = {
-        nombre: '',
-        especialidad: '',
-        descripcion: '',
-        github: '',
-        linkedin: '',
-        portafolio: '',
-        rol: 'programador',
-    };
+    form: FormGroup;
+    archivoFoto: File | null = null;
+    cargando = false;
+    mensaje = '';
+    error = '';
 
     constructor(
-        private progService: ProgramadoresService,
-        private router: Router
-    ) { }
+        private fb: FormBuilder,
+        private programadoresService: ProgramadoresService
+    ) {
+        this.form = this.fb.group({
+            nombre: ['', Validators.required],
+            descripcion: [''],
+            especialidad: ['', Validators.required],
+            github: [''],
+            linkedin: [''],
+            portafolio: [''],
+        });
+    }
 
-    onFileSelected(event: Event) {
+    onFotoSeleccionada(event: Event) {
         const input = event.target as HTMLInputElement;
-        if (!input.files || input.files.length === 0) return;
-
-        const file = input.files[0];
-        this.fotoFile = file;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.vistaPreviaFoto = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+        const file = input.files && input.files[0];
+        this.archivoFoto = file ?? null;
     }
 
     async guardar() {
-        if (!this.fotoFile) {
-            this.error = 'Debes seleccionar una foto de perfil.';
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
             return;
         }
 
         this.cargando = true;
-        this.error = null;
+        this.mensaje = '';
+        this.error = '';
 
         try {
-            // 1. Subir foto y obtener URL
-            const urlFoto = await this.progService.uploadFotoProgramador(this.fotoFile);
-
-            // 2. Armar objeto completo
-            const nuevo: Programador = {
-                ...this.modelo,
-                foto: urlFoto,
-            };
-
-            // 3. Guardar en Firestore
-            await this.progService.createProgramador(nuevo);
-
-            // 4. Volver al listado
-            this.router.navigate(['/admin/programadores']);
-        } catch (err) {
-            console.error(err);
-            this.error = 'Ocurrió un error al guardar el programador.';
+            await this.programadoresService.crearProgramador(
+                this.form.value,
+                this.archivoFoto
+            );
+            this.mensaje = 'Programador agregado correctamente';
+            this.form.reset();
+            this.archivoFoto = null;
+        } catch (e) {
+            console.error(e);
+            this.error = 'Ocurrió un error al guardar el programador';
         } finally {
             this.cargando = false;
         }

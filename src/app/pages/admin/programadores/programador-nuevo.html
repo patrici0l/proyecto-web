@@ -1,49 +1,46 @@
-<h2>Nuevo Programador</h2>
+<h2>Nuevo programador</h2>
 
-<form (ngSubmit)="guardar()">
+<form [formGroup]="form" (ngSubmit)="guardar()">
+
     <div>
         <label>Nombre</label>
-        <input type="text" [(ngModel)]="modelo.nombre" name="nombre" required />
-    </div>
-
-    <div>
-        <label>Especialidad</label>
-        <input type="text" [(ngModel)]="modelo.especialidad" name="especialidad" required />
+        <input type="text" formControlName="nombre">
     </div>
 
     <div>
         <label>Descripción</label>
-        <textarea [(ngModel)]="modelo.descripcion" name="descripcion" rows="3"></textarea>
+        <textarea formControlName="descripcion"></textarea>
+    </div>
+
+    <div>
+        <label>Especialidad</label>
+        <input type="text" formControlName="especialidad">
     </div>
 
     <div>
         <label>GitHub</label>
-        <input type="text" [(ngModel)]="modelo.github" name="github" />
+        <input type="text" formControlName="github">
     </div>
 
     <div>
         <label>LinkedIn</label>
-        <input type="text" [(ngModel)]="modelo.linkedin" name="linkedin" />
+        <input type="text" formControlName="linkedin">
     </div>
 
     <div>
         <label>Portafolio</label>
-        <input type="text" [(ngModel)]="modelo.portafolio" name="portafolio" />
+        <input type="text" formControlName="portafolio">
     </div>
 
     <div>
-        <label>Foto de perfil</label>
-        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        <label>Foto</label>
+        <input type="file" (change)="onFotoSeleccionada($event)" accept="image/*">
     </div>
-
-    <div *ngIf="vistaPreviaFoto">
-        <p>Vista previa:</p>
-        <img [src]="vistaPreviaFoto" alt="Foto de perfil" style="max-width: 150px; border-radius: 8px;">
-    </div>
-
-    <p *ngIf="error" style="color: red;">{{ error }}</p>
 
     <button type="submit" [disabled]="cargando">
-        {{ cargando ? 'Guardando...' : 'Guardar Programador' }}
+        {{ cargando ? 'Guardando...' : 'Agregar programador' }}
     </button>
 </form>
+
+<p *ngIf="mensaje" style="color: green">{{ mensaje }}</p>
+<p *ngIf="error" style="color: red">{{ error }}</p>

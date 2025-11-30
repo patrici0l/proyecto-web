@@ -1,19 +1,26 @@
-import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { addDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  collectionData,
+  deleteDoc,
+  doc
+} from '@angular/fire/firestore';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
 
+// 👇 interface que pedía tu componente Programadores
 export interface Programador {
   id?: string;
   nombre: string;
-  especialidad: string;
   descripcion: string;
-  foto: string;
-  github: string;
-  linkedin: string;
-  portafolio: string;
-  rol: string; // siempre programador
+  especialidad: string;
+  github?: string;
+  linkedin?: string;
+  portafolio?: string;
+  foto?: string;
+  rol?: string;
 }
 
 @Injectable({
@@ -21,34 +28,43 @@ export interface Programador {
 })
 export class ProgramadoresService {
 
-  private firestore = inject(Firestore);
-  private colRef = collection(this.firestore, 'programadores');
-  private storage = inject(Storage);
+  private programadoresRef;
 
+  constructor(
+    private firestore: Firestore,
+    private storage: Storage
+  ) {
+    this.programadoresRef = collection(this.firestore, 'programadores');
+  }
+
+  // 👇 para la lista de programadores
   getProgramadores(): Observable<Programador[]> {
-    return collectionData(this.colRef, { idField: 'id' }) as Observable<Programador[]>;
+    return collectionData(this.programadoresRef, { idField: 'id' }) as Observable<Programador[]>;
   }
 
-  createProgramador(prog: Programador) {
-    return addDoc(this.colRef, prog);
+  // 👇 para crear programador (con foto)
+  async crearProgramador(data: Programador, archivoFoto: File | null) {
+    let urlFoto = '';
+
+    if (archivoFoto) {
+      const nombreArchivo = `${Date.now()}_${archivoFoto.name}`;
+      const ruta = `programadores/${nombreArchivo}`;
+
+      const storageRef = ref(this.storage, ruta);
+      await uploadBytes(storageRef, archivoFoto);
+      urlFoto = await getDownloadURL(storageRef);
+    }
+
+    return addDoc(this.programadoresRef, {
+      ...data,
+      foto: urlFoto,
+      rol: 'programador',
+    });
   }
 
-  updateProgramador(id: string, prog: Partial<Programador>) {
-    const ref = doc(this.firestore, 'programadores', id);
-    return updateDoc(ref, prog);
+  // 👇 para borrar desde la tabla
+  async deleteProgramador(id: string) {
+    const refDoc = doc(this.firestore, `programadores/${id}`);
+    await deleteDoc(refDoc);
   }
-
-  deleteProgramador(id: string) {
-    const ref = doc(this.firestore, 'programadores', id);
-    return deleteDoc(ref);
-  }
-  async uploadFotoProgramador(file: File): Promise<string> {
-    const filePath = `programadores/${Date.now()}_${file.name}`;
-    const storageRef = ref(this.storage, filePath);
-
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    return url; // URL pública de la imagen
-  }
-
 }

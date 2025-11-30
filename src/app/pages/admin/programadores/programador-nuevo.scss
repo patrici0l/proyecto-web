@@ -1,18 +1,170 @@
+// Variables de colores y tamaños para facilitar cambios
+$primary-color: #3b82f6; // Azul moderno
+$primary-hover: #2563eb;
+$text-color: #1f2937;
+$text-secondary: #6b7280;
+$bg-card: #ffffff;
+$bg-body: #f3f4f6;
+$border-color: #d1d5db;
+$radius: 0.5rem;
+$spacing: 1.25rem;
+
+:host {
+    display: block;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    padding: 2rem;
+    background-color: $bg-body; // Fondo gris suave alrededor
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+// Contenedor principal (simulando una tarjeta)
 form {
+    background-color: $bg-card;
+    padding: 2.5rem;
+    border-radius: $radius;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 500px; // Ancho máximo para que no se estire demasiado
+
+    // Título (que está fuera del form en tu HTML, pero si lo metes dentro o usas un div wrapper)
+    // Nota: Como tu h2 está fuera del form en el HTML, lo estilizamos relativo al host o adyacente
+}
+
+// Estilo para el título h2 (asumiendo que está antes del form)
+h2 {
+    text-align: center;
+    color: $text-color;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    width: 100%;
     max-width: 500px;
-    margin: 20px auto;
+
+    // Pequeño ajuste si el H2 está fuera de la tarjeta visualmente
+    @media (min-width: 500px) {
+        margin: 0 auto 2rem auto;
+    }
+}
+
+// Grupos de inputs (los divs que rodean cada campo)
+form>div {
+    margin-bottom: $spacing;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+
+    label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    textarea {
+        padding: 0.75rem 1rem;
+        border: 1px solid $border-color;
+        border-radius: $radius;
+        font-size: 1rem;
+        color: $text-color;
+        transition: all 0.2s ease-in-out;
+        background-color: #f9fafb;
+
+        &::placeholder {
+            color: #9ca3af;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+        }
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    // Estilo específico para el input de archivo
+    input[type="file"] {
+        padding: 0.5rem;
+        background: white;
+        font-size: 0.9rem;
+        cursor: pointer;
+
+        // Estilo del botón "Seleccionar archivo" (pseudo-elemento)
+        &::file-selector-button {
+            margin-right: 1rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: #e5e7eb;
+            color: $text-color;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+
+            &:hover {
+                background-color: #d1d5db;
+            }
+        }
+    }
 }
 
-label {
-    font-weight: bold;
-}
-
-input[type="text"],
-textarea {
+// Botón de envío
+button[type="submit"] {
     width: 100%;
-    padding: 6px;
-    box-sizing: border-box;
+    padding: 0.875rem;
+    margin-top: 1rem;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $radius;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 6px rgba($primary-color, 0.3);
+
+    &:hover:not(:disabled) {
+        background-color: $primary-hover;
+        transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+        box-shadow: none;
+        opacity: 0.7;
+    }
+}
+
+// Mensajes de éxito y error
+p {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: $radius;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+
+    &[style*="color: green"] {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important; // Sobrescribimos el style inline con !important si es necesario, o mejor quitamos el style inline del HTML
+        border: 1px solid #a7f3d0;
+    }
+
+    &[style*="color: red"] {
+        background-color: #fee2e2 !important;
+        color: #991b1b !important;
+        border: 1px solid #fecaca;
+    }
 }

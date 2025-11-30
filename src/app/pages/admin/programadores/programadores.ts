@@ -1,28 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ProgramadoresService, Programador } from '../../../services/programadores';
-import { NgFor } from '@angular/common';
-import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-programadores',
   standalone: true,
-  imports: [NgFor],
+  imports: [CommonModule, RouterModule],
   templateUrl: './programadores.html',
-  styleUrl: './programadores.scss',
+  styleUrls: ['./programadores.scss']
 })
-export class ProgramadoresComponent {
+export class ProgramadoresComponent implements OnInit {
 
   programadores: Programador[] = [];
 
-  constructor(private progService: ProgramadoresService) {
-    this.progService.getProgramadores().subscribe(data => {
+  constructor(private progService: ProgramadoresService) { }
+
+  ngOnInit(): void {
+    this.progService.getProgramadores().subscribe((data: Programador[]) => {
       this.programadores = data;
     });
   }
 
-  eliminar(id?: string) {
-    if (!id) return;
-    const seguro = confirm('¿Seguro que deseas eliminar este programador?');
-    if (!seguro) return;
+  borrar(id: string | undefined) {
+    if (!id) { return; }
     this.progService.deleteProgramador(id);
   }
 }
