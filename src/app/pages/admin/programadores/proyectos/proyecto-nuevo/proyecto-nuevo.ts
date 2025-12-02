@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms'; // Agregamos FormGroup
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ProyectosService } from '../../../../../services/proyectos';
+
+import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
 
 @Component({
   selector: 'app-proyecto-nuevo',
@@ -13,71 +14,66 @@ import { ProyectosService } from '../../../../../services/proyectos';
 })
 export class ProyectoNuevoComponent implements OnInit {
 
-  // 1. Declaramos la variable (sin asignarle valor todavía)
   form!: FormGroup;
-
-  cargando = false;
   idProgramador!: string;
+
+  tiposProyecto: { valor: TipoProyecto; label: string }[] = [
+    { valor: 'academico', label: 'Académico' },
+    { valor: 'laboral', label: 'Laboral' }
+  ];
+
+  tiposParticipacion: { valor: TipoParticipacion; label: string }[] = [
+    { valor: 'frontend', label: 'Frontend' },
+    { valor: 'backend', label: 'Backend' },
+    { valor: 'bd', label: 'Base de datos' },
+    { valor: 'fullstack', label: 'Fullstack' }
+  ];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private proyectosService: ProyectosService
-  ) {
-    // 2. Inicializamos la variable con la estructura del formulario
+  ) { }
+
+  ngOnInit(): void {
+    this.idProgramador = this.route.snapshot.paramMap.get('id')!;
+
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      tipoProyecto: ['', Validators.required],
-      participacion: ['', Validators.required],
-      tecnologiasTexto: [''],
+      tipoProyecto: ['academico', Validators.required],
+      tipoParticipacion: ['frontend', Validators.required],
+      tecnologias: ['', Validators.required],
       repoUrl: [''],
       demoUrl: ['']
     });
   }
 
-  ngOnInit(): void {
-    this.idProgramador = this.route.snapshot.paramMap.get('id')!;
-  }
-
   async guardar() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+    if (this.form.invalid) return;
 
-    this.cargando = true;
+    const v = this.form.value;
 
-    // Usamos el operador ? para evitar errores si el campo es null
-    const formValue = this.form.value;
-
-    // Lógica para convertir el texto de tecnologías a array
-    const tecnologias = formValue.tecnologiasTexto
-      ?.split(',')
-      ?.map((t: string) => t.trim())
-      ?.filter((t: string) => t !== '') || [];
-
-    const nuevoProyecto = {
+    const data: Proyecto = {
       idProgramador: this.idProgramador,
-      nombre: formValue.nombre!,
-      descripcion: formValue.descripcion!,
-      tipoProyecto: formValue.tipoProyecto as any,
-      participacion: formValue.participacion as any,
-      tecnologias,
-      repoUrl: formValue.repoUrl || '',
-      demoUrl: formValue.demoUrl || ''
+      nombre: v.nombre,
+      descripcion: v.descripcion,
+      tipoProyecto: v.tipoProyecto,
+      tipoParticipacion: v.tipoParticipacion,
+      tecnologias: v.tecnologias,
+      repoUrl: v.repoUrl || undefined,
+      demoUrl: v.demoUrl || undefined,
+      creadoEn: new Date().toISOString()
     };
 
     try {
-      await this.proyectosService.crearProyecto(this.idProgramador, nuevoProyecto);
+      await this.proyectosService.crearProyecto(data);
       alert('Proyecto creado correctamente');
       this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
-    } catch (error) {
-      console.error(error);
-      alert('Error al crear el proyecto');
-    } finally {
-      this.cargando = false;
+    } catch (err) {
+      console.error(err);
+      alert('Ocurrió un error al crear el proyecto');
     }
   }
 }

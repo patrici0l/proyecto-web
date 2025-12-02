@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+
 import { ProyectosService, Proyecto } from '../../../../../services/proyectos';
 
 @Component({
@@ -13,7 +14,10 @@ import { ProyectosService, Proyecto } from '../../../../../services/proyectos';
 export class ProyectosAdminComponent implements OnInit {
 
   idProgramador!: string;
+
+  
   proyectos: Proyecto[] = [];
+  cargando = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,20 +25,29 @@ export class ProyectosAdminComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // /admin/programadores/:id/proyectos
     this.idProgramador = this.route.snapshot.paramMap.get('id')!;
     this.cargarProyectos();
   }
 
   cargarProyectos() {
+    this.cargando = true;
     this.proyectosService.getProyectos(this.idProgramador)
-      .subscribe(proys => this.proyectos = proys);
+      .subscribe((proys: Proyecto[]) => {
+        this.proyectos = proys;
+        this.cargando = false;
+      });
   }
 
-  async eliminarProyecto(idProyecto: string | undefined) {
-    if (!idProyecto) return;
-    if (!confirm('¿Seguro que deseas eliminar este proyecto?')) return;
+  eliminar(idProyecto?: string) {
+    if (!idProyecto) { return; }
+    if (!confirm('¿Seguro que deseas eliminar este proyecto?')) { return; }
 
-    await this.proyectosService.deleteProyecto(this.idProgramador, idProyecto);
-    this.cargarProyectos();
+    this.proyectosService.deleteProyecto(this.idProgramador, idProyecto)
+      .then(() => this.cargarProyectos())
+      .catch(err => {
+        console.error(err);
+        alert('Error al eliminar el proyecto');
+      });
   }
 }

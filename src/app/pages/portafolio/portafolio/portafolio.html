@@ -1,32 +1,27 @@
-<h2>{{ programador?.nombre }}</h2>
+<h1>{{ programador?.nombre }}</h1>
 <p>{{ programador?.descripcion }}</p>
 
-<hr>
-
-<h3>Proyectos Académicos</h3>
-<div *ngIf="proyectosAcademicos.length === 0">No hay proyectos académicos</div>
-
-<div *ngFor="let p of proyectosAcademicos" class="proyecto">
-    <h4>{{ p.nombre }}</h4>
+<h2>Proyectos académicos</h2>
+<div *ngIf="proyectosAcademicos.length === 0">
+    <p>Este programador aún no ha registrado proyectos académicos.</p>
+</div>
+<div *ngFor="let p of proyectosAcademicos" class="proyecto-card">
+    <h3>{{ p.nombre }}</h3>
     <p>{{ p.descripcion }}</p>
-    <p><strong>Participación:</strong> {{ p.participacion }}</p>
-    <p><strong>Tecnologías:</strong> {{ p.tecnologias.join(', ') }}</p>
-
-    <a *ngIf="p.repoUrl" href="{{ p.repoUrl }}" target="_blank">Repositorio</a>
-    <a *ngIf="p.demoUrl" href="{{ p.demoUrl }}" target="_blank">Demo</a>
+    <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
+    <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
+    <p *ngIf="p.repoUrl">
+        <a [href]="p.repoUrl" target="_blank">Ver repositorio</a>
+    </p>
+    <p *ngIf="p.demoUrl">
+        <a [href]="p.demoUrl" target="_blank">Ver demo</a>
+    </p>
 </div>
 
-<hr>
+<h2>Proyectos laborales</h2>
+<div *ngIf="proyectosLaborales.length === 0">
+    <p>Este programador aún no ha registrado proyectos laborales.</p>
+</div>
+<div *ngFor="let p of proyectosLaborales" class="proyecto-card">
 
-<h3>Proyectos Laborales</h3>
-<div *ngIf="proyectosLaborales.length === 0">No hay proyectos laborales</div>
-
-<div *ngFor="let p of proyectosLaborales" class="proyecto">
-    <h4>{{ p.nombre }}</h4>
-    <p>{{ p.descripcion }}</p>
-    <p><strong>Participación:</strong> {{ p.participacion }}</p>
-    <p><strong>Tecnologías:</strong> {{ p.tecnologias.join(', ') }}</p>
-
-    <a *ngIf="p.repoUrl" href="{{ p.repoUrl }}" target="_blank">Repositorio</a>
-    <a *ngIf="p.demoUrl" href="{{ p.demoUrl }}" target="_blank">Demo</a>
 </div>

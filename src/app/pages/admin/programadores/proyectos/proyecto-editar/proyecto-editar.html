@@ -1,51 +1,54 @@
 <h2>Editar Proyecto</h2>
 
+
+
 <form [formGroup]="form" (ngSubmit)="guardar()">
 
-    <div>
-        <label>Nombre</label>
+    <label>
+        Nombre:
         <input type="text" formControlName="nombre">
-    </div>
+    </label>
 
-    <div>
-        <label>Descripción</label>
-        <textarea formControlName="descripcion" rows="3"></textarea>
-    </div>
+    <label>
+        Descripción:
+        <textarea formControlName="descripcion"></textarea>
+    </label>
 
-    <div>
-        <label>Tipo de Proyecto</label>
+    <label>
+        Tipo de proyecto:
         <select formControlName="tipoProyecto">
-            <option value="academico">Académico</option>
-            <option value="laboral">Laboral</option>
+            <option *ngFor="let t of tiposProyecto" [value]="t.valor">
+                {{ t.label }}
+            </option>
         </select>
-    </div>
+    </label>
 
-    <div>
-        <label>Participación</label>
-        <select formControlName="participacion">
-            <option value="frontend">Frontend</option>
-            <option value="backend">Backend</option>
-            <option value="bd">Base de Datos</option>
+    <label>
+        Tipo de participación:
+        <select formControlName="tipoParticipacion">
+            <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
+                {{ t.label }}
+            </option>
         </select>
-    </div>
+    </label>
 
-    <div>
-        <label>Tecnologías (coma)</label>
-        <input type="text" formControlName="tecnologiasTexto">
-    </div>
+    <label>
+        Tecnologías usadas:
+        <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, ...">
+    </label>
 
-    <div>
-        <label>Repositorio</label>
-        <input type="text" formControlName="repoUrl">
-    </div>
+    <label>
+        Enlace al repositorio (GitHub, etc.):
+        <input type="url" formControlName="repoUrl">
+    </label>
 
-    <div>
-        <label>Demo</label>
-        <input type="text" formControlName="demoUrl">
-    </div>
+    <label>
+        Enlace a demo (Firebase, Vercel, etc.):
+        <input type="url" formControlName="demoUrl">
+    </label>
 
-    <button type="submit">
-        Guardar Cambios
+    <button type="submit" [disabled]="form.invalid">Guardar</button>
+    <button type="button" [routerLink]="['/admin/programadores', idProgramador, 'proyectos']">
+        Cancelar
     </button>
-
 </form>

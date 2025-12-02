@@ -1,16 +1,27 @@
 <h2>Proyectos del programador</h2>
 
-<a [routerLink]="['/admin/programadores', idProgramador, 'proyectos/nuevo']">
-    + Nuevo proyecto
-</a>
+<!-- Botón para crear nuevo proyecto -->
+<button type="button" [routerLink]="['/admin/programadores', idProgramador, 'proyectos', 'nuevo']">
+    Nuevo proyecto
+</button>
 
-<table>
+<!-- Estado cargando -->
+<div *ngIf="cargando">
+    Cargando proyectos...
+</div>
+
+<!-- Sin proyectos -->
+<div *ngIf="!cargando && proyectos.length === 0">
+    <p>Este programador todavía no tiene proyectos registrados.</p>
+</div>
+
+<!-- Tabla de proyectos -->
+<table *ngIf="!cargando && proyectos.length > 0">
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Participación</th>
-            <th>Tecnologías</th>
+            <th>Tipo</th>
+            <th>Rol</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -18,14 +29,19 @@
     <tbody>
         <tr *ngFor="let p of proyectos">
             <td>{{ p.nombre }}</td>
-    
-            <td>{{ p.participacion }}</td>
-            <td>{{ p.tecnologias }}</td>
+            <td>{{ p.tipoProyecto }}</td>
+            <td>{{ p.tipoParticipacion | titlecase }}</td>
+
             <td>
-                <button [routerLink]="['/admin/programadores', idProgramador, 'proyectos/editar', p.id]">
+                <a [routerLink]="['/admin/programadores', idProgramador, 'proyectos', p.id, 'editar']">
                     Editar
+                </a>
+
+                &nbsp;|&nbsp;
+
+                <button type="button" (click)="eliminar(p.id)">
+                    Eliminar
                 </button>
-                <button (click)="eliminarProyecto(p.id)">Eliminar</button>
             </td>
         </tr>
     </tbody>

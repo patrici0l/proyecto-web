@@ -1,61 +1,52 @@
-<h2>Nuevo Proyecto</h2>
+<h2>Nuevo proyecto</h2>
 
 <form [formGroup]="form" (ngSubmit)="guardar()">
 
-    <div>
-        <label>Nombre del proyecto</label>
+    <label>
+        Nombre:
         <input type="text" formControlName="nombre">
-    </div>
+    </label>
 
-    <div>
-        <label>Descripción</label>
-        <textarea formControlName="descripcion" rows="3"></textarea>
-    </div>
+    <label>
+        Descripción:
+        <textarea formControlName="descripcion"></textarea>
+    </label>
 
-    <hr>
-
-    <h3>Clasificación</h3>
-
-    <div>
-        <label>Tipo de proyecto</label>
+    <label>
+        Tipo de proyecto:
         <select formControlName="tipoProyecto">
-            <option value="">Seleccione</option>
-            <option value="academico">Académico</option>
-            <option value="laboral">Laboral</option>
+            <option *ngFor="let t of tiposProyecto" [value]="t.valor">
+                {{ t.label }}
+            </option>
         </select>
-    </div>
+    </label>
 
-    <div>
-        <label>Participación</label>
-        <select formControlName="participacion">
-            <option value="">Seleccione</option>
-            <option value="frontend">Frontend</option>
-            <option value="backend">Backend</option>
-            <option value="bd">Base de Datos</option>
+    <label>
+        Tipo de participación:
+        <select formControlName="tipoParticipacion">
+            <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
+                {{ t.label }}
+            </option>
         </select>
-    </div>
+    </label>
 
-    <hr>
+    <label>
+        Tecnologías usadas:
+        <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, ...">
+    </label>
 
-    <h3>Tecnologías</h3>
-    <p class="ayuda">Ingrese tecnologías separadas por coma (Angular, Firebase, MySQL…)</p>
-    <input type="text" formControlName="tecnologiasTexto">
+    <label>
+        Enlace al repositorio (GitHub, etc.):
+        <input type="url" formControlName="repoUrl">
+    </label>
 
-    <hr>
+    <label>
+        Enlace a demo (Firebase, Vercel, etc.):
+        <input type="url" formControlName="demoUrl">
+    </label>
 
-    <h3>Enlaces</h3>
-
-    <div>
-        <label>Repositorio (GitHub)</label>
-        <input type="text" formControlName="repoUrl">
-    </div>
-
-    <div>
-        <label>Demo (Firebase, Vercel, etc.)</label>
-        <input type="text" formControlName="demoUrl">
-    </div>
-
-    <button type="submit" [disabled]="form.invalid || cargando">
-        {{ cargando ? 'Guardando...' : 'Guardar Proyecto' }}
+    <button type="submit" [disabled]="form.invalid">Guardar</button>
+    <button type="button" [routerLink]="['/admin/programadores', idProgramador, 'proyectos']">
+        Cancelar
     </button>
 </form>
