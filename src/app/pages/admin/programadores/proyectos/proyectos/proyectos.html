@@ -1,49 +1,36 @@
-<h2>Proyectos del programador</h2>
+<div class="proyectos-admin">
 
-<!-- Botón para crear nuevo proyecto -->
-<button 
-    class="btn-primary" 
-    type="button" 
-    [routerLink]="['/admin/programadores', idProgramador, 'proyectos', 'nuevo']">
-    Nuevo proyecto
-</button>
+    <h2>Proyectos del programador</h2>
 
-<!-- Estado cargando -->
-<div *ngIf="cargando" class="cargando">
-    Cargando proyectos...
+    <button (click)="nuevoProyecto()">Nuevo proyecto</button>
+
+    <table *ngIf="proyectos.length > 0; else sinProyectos">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Rol</th>
+                <th>Tecnologías</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let p of proyectos">
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.tipoProyecto }}</td>
+                <td>{{ p.tipoParticipacion }}</td>
+                <td>{{ p.tecnologias }}</td>
+                <td>
+                    <button (click)="editarProyecto(p.id!)">Editar</button>
+                    <button (click)="eliminarProyecto(p.id!)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #sinProyectos>
+        <p>No hay proyectos registrados para este programador.</p>
+    </ng-template>
+
 </div>
-
-<!-- Sin proyectos -->
-<div *ngIf="!cargando && proyectos.length === 0" class="sin-proyectos">
-    Este programador todavía no tiene proyectos registrados.
-</div>
-
-<!-- Tabla de proyectos -->
-<table *ngIf="!cargando && proyectos.length > 0">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr *ngFor="let p of proyectos">
-            <td>{{ p.nombre }}</td>
-            <td>{{ p.tipoProyecto }}</td>
-            <td>{{ p.tipoParticipacion | titlecase }}</td>
-
-            <td>
-                <a [routerLink]="['/admin/programadores', idProgramador, 'proyectos', p.id, 'editar']">
-                    Editar
-                </a>
-
-                <button type="button" (click)="eliminar(p.id)">
-                    Eliminar
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>

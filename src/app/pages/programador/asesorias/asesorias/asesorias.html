@@ -1,18 +1,17 @@
 <h2>Asesorías recibidas</h2>
-<hr>
 
 <div *ngIf="cargando">
-    Cargando solicitudes...
+    Cargando asesorías...
 </div>
 
 <div *ngIf="!cargando && asesorias.length === 0">
-    <p>No tienes solicitudes de asesoría por el momento.</p>
+    <p>No tienes asesorías solicitadas por el momento.</p>
 </div>
 
 <table *ngIf="!cargando && asesorias.length > 0">
     <thead>
         <tr>
-            <th>Estudiante</th>
+            <th>Solicitante</th>
             <th>Correo</th>
             <th>Fecha</th>
             <th>Hora</th>
@@ -30,44 +29,20 @@
             <td>{{ a.fecha }}</td>
             <td>{{ a.hora }}</td>
             <td>{{ a.comentario || '-' }}</td>
-
+            <td>{{ a.estado | titlecase }}</td>
+            <td>{{ a.respuestaProgramador || '-' }}</td>
             <td>
-                <span [ngClass]="{
-'estado-pendiente': a.estado === 'pendiente',
-    'estado-aprobada': a.estado === 'aprobada',
-        'estado-rechazada': a.estado === 'rechazada'
-        }">
-                    {{ a.estado | titlecase }}
+                <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'aprobada')">
+                    Aprobar
+                </button>
+
+                <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'rechazada')">
+                    Rechazar
+                </button>
+
+                <span *ngIf="a.estado !== 'pendiente'">
+                    (Ya gestionada)
                 </span>
-            </td>
-
-            <td>
-                <ng-container *ngIf="a.respuestaProgramador; else sinRespuesta">
-                    {{ a.respuestaProgramador }}
-                </ng-container>
-                <ng-template #sinRespuesta>
-                    <span class="texto-gris" *ngIf="a.estado === 'pendiente'">
-                        Aún no has respondido.
-                    </span>
-                    <span class="texto-gris" *ngIf="a.estado !== 'pendiente'">
-                        (Sin mensaje)
-                    </span>
-                </ng-template>
-            </td>
-
-            <td>
-                <div *ngIf="a.estado === 'pendiente'; else yaProcesada">
-                    <button class="btn-aprobar" (click)="aprobar(a)">
-                        Aprobar
-                    </button>
-                    <button class="btn-rechazar" (click)="rechazar(a)">
-                        Rechazar
-                    </button>
-                </div>
-
-                <ng-template #yaProcesada>
-                    <span>(Solicitud {{ a.estado }})</span>
-                </ng-template>
             </td>
         </tr>
     </tbody>
