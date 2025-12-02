@@ -1,5 +1,13 @@
 <!doctype html>
 <html lang="en">
+  <script>
+// Eliminar SVGs fantasma al cargar
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('[data-gpts-theme], svg[width="0"]').forEach(el => el.remove());
+  }, 100);
+});
+</script>
 <head>
   <meta charset="utf-8">
   <title>ProyectoWeb</title>
