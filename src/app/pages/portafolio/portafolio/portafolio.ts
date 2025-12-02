@@ -18,6 +18,9 @@ export class PortafolioComponent implements OnInit {
   proyectosAcademicos: Proyecto[] = [];
   proyectosLaborales: Proyecto[] = [];
 
+  // Agregamos la variable de estado
+  cargando = true;
+
   constructor(
     private route: ActivatedRoute,
     private programadoresService: ProgramadoresService,
@@ -30,10 +33,15 @@ export class PortafolioComponent implements OnInit {
     this.programadoresService.getProgramador(idProgramador)
       .subscribe(p => this.programador = p);
 
+    // Mantenemos tu método original 'getProyectosDeProgramador'
+    // pero agregamos la lógica para apagar el 'cargando'
     this.proyectosService.getProyectosDeProgramador(idProgramador)
       .subscribe(lista => {
         this.proyectosAcademicos = lista.filter(p => p.tipoProyecto === 'academico');
         this.proyectosLaborales = lista.filter(p => p.tipoProyecto === 'laboral');
+
+        // Aquí indicamos que ya terminó de cargar
+        this.cargando = false;
       });
   }
 }

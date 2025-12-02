@@ -1,27 +1,60 @@
-<h1>{{ programador?.nombre }}</h1>
-<p>{{ programador?.descripcion }}</p>
-
-<h2>Proyectos académicos</h2>
-<div *ngIf="proyectosAcademicos.length === 0">
-    <p>Este programador aún no ha registrado proyectos académicos.</p>
-</div>
-<div *ngFor="let p of proyectosAcademicos" class="proyecto-card">
-    <h3>{{ p.nombre }}</h3>
-    <p>{{ p.descripcion }}</p>
-    <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
-    <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
-    <p *ngIf="p.repoUrl">
-        <a [href]="p.repoUrl" target="_blank">Ver repositorio</a>
-    </p>
-    <p *ngIf="p.demoUrl">
-        <a [href]="p.demoUrl" target="_blank">Ver demo</a>
-    </p>
+<div *ngIf="cargando">
+    <p>Cargando portafolio...</p>
 </div>
 
-<h2>Proyectos laborales</h2>
-<div *ngIf="proyectosLaborales.length === 0">
-    <p>Este programador aún no ha registrado proyectos laborales.</p>
-</div>
-<div *ngFor="let p of proyectosLaborales" class="proyecto-card">
+<div *ngIf="!cargando">
+
+    <h1>{{ programador?.nombre }}</h1>
+    <p>{{ programador?.descripcion }}</p>
+
+    <hr>
+
+    <h2>Proyectos académicos</h2>
+
+    <div *ngIf="proyectosAcademicos.length === 0">
+        <p>Este programador aún no tiene proyectos académicos registrados.</p>
+    </div>
+
+    <div *ngFor="let p of proyectosAcademicos" class="proyecto-card">
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.descripcion }}</p>
+        <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
+        <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
+
+        <p *ngIf="p.repoUrl">
+            <strong>Repositorio:</strong>
+            <a [href]="p.repoUrl" target="_blank">Ver código</a>
+        </p>
+
+        <p *ngIf="p.demoUrl">
+            <strong>Demo:</strong>
+            <a [href]="p.demoUrl" target="_blank">Ver proyecto</a>
+        </p>
+    </div>
+
+    <hr>
+
+    <h2>Proyectos laborales</h2>
+
+    <div *ngIf="proyectosLaborales.length === 0">
+        <p>Este programador aún no tiene proyectos laborales registrados.</p>
+    </div>
+
+    <div *ngFor="let p of proyectosLaborales" class="proyecto-card">
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.descripcion }}</p>
+        <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
+        <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
+
+        <p *ngIf="p.repoUrl">
+            <strong>Repositorio:</strong>
+            <a [href]="p.repoUrl" target="_blank">Ver código</a>
+        </p>
+
+        <p *ngIf="p.demoUrl">
+            <strong>Demo:</strong>
+            <a [href]="p.demoUrl" target="_blank">Ver proyecto</a>
+        </p>
+    </div>
 
 </div>

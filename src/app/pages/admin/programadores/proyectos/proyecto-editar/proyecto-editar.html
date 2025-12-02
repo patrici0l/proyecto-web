@@ -1,54 +1,56 @@
-<h2>Editar Proyecto</h2>
-
-
+<h2>Editar proyecto</h2>
 
 <form [formGroup]="form" (ngSubmit)="guardar()">
 
-    <label>
-        Nombre:
+    <div>
+        <label>Nombre del proyecto</label>
         <input type="text" formControlName="nombre">
-    </label>
+    </div>
 
-    <label>
-        Descripción:
-        <textarea formControlName="descripcion"></textarea>
-    </label>
+    <div>
+        <label>Descripción</label>
+        <textarea rows="4" formControlName="descripcion"></textarea>
+    </div>
 
-    <label>
-        Tipo de proyecto:
+    <div>
+        <label>Tipo de proyecto</label>
         <select formControlName="tipoProyecto">
             <option *ngFor="let t of tiposProyecto" [value]="t.valor">
                 {{ t.label }}
             </option>
         </select>
-    </label>
+    </div>
 
-    <label>
-        Tipo de participación:
+    <div>
+        <label>Tipo de participación</label>
         <select formControlName="tipoParticipacion">
             <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
                 {{ t.label }}
             </option>
         </select>
-    </label>
+    </div>
 
-    <label>
-        Tecnologías usadas:
+    <div>
+        <label>Tecnologías utilizadas</label>
         <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, ...">
-    </label>
+    </div>
 
-    <label>
-        Enlace al repositorio (GitHub, etc.):
+    <div>
+        <label>Repositorio</label>
         <input type="url" formControlName="repoUrl">
-    </label>
+    </div>
 
-    <label>
-        Enlace a demo (Firebase, Vercel, etc.):
+    <div>
+        <label>Demo / despliegue</label>
         <input type="url" formControlName="demoUrl">
-    </label>
+    </div>
 
-    <button type="submit" [disabled]="form.invalid">Guardar</button>
-    <button type="button" [routerLink]="['/admin/programadores', idProgramador, 'proyectos']">
+    <button type="submit" [disabled]="cargando || form.invalid">
+        {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+
+    <button type="button" (click)="cancelar()">
         Cancelar
     </button>
+
 </form>
