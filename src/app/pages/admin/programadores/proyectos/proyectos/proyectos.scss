@@ -1,0 +1,175 @@
+:host {
+    display: block;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #1f2937;
+}
+
+/* ------- TÍTULO ------- */
+h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &::before {
+        /* Icono de carpeta */
+        content: "📁";
+        font-size: 1.8rem;
+    }
+}
+
+/* ------- BOTÓN NUEVO PROYECTO ------- */
+button,
+.btn-primary {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.25s ease;
+
+    &:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+
+    &::before {
+        content: "➕"; 
+        font-size: 1.2rem;
+    }
+}
+
+/* ------- ESTADO CARGANDO ------- */
+.cargando {
+    font-size: 1.1rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+        content: "⏳";
+        animation: spin 1.2s linear infinite;
+        display: inline-block;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ------- ESTADO SIN PROYECTOS ------- */
+.sin-proyectos {
+    background: #f9fafb;
+    padding: 25px;
+    border: 1px dashed #9ca3af;
+    border-radius: 14px;
+    font-size: 1rem;
+    text-align: center;
+    color: #6b7280;
+
+    &::before {
+        content: "📄";
+        font-size: 1.8rem;
+        display: block;
+        margin-bottom: 8px;
+    }
+}
+
+/* ------- TABLA ------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease;
+
+    thead {
+        background: #2563eb;
+        color: white;
+
+        th {
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+    }
+
+    tbody {
+        tr {
+            transition: background 0.2s;
+
+            &:hover {
+                background: #f3f4f6;
+            }
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.92rem;
+
+            &:last-child {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+
+            a {
+                color: #2563eb;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                transition: 0.2s;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &::before {
+                    content: "✏️"; 
+                }
+            }
+
+            button {
+                background: transparent;
+                color: #dc2626;
+                padding: 5px 8px;
+                border-radius: 6px;
+
+                &::before {
+                    content: "🗑️";
+                }
+
+                &:hover {
+                    background: #fee2e2;
+                }
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

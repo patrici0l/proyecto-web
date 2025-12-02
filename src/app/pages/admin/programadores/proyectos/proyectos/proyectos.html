@@ -1,18 +1,21 @@
 <h2>Proyectos del programador</h2>
 
 <!-- Botón para crear nuevo proyecto -->
-<button type="button" [routerLink]="['/admin/programadores', idProgramador, 'proyectos', 'nuevo']">
+<button 
+    class="btn-primary" 
+    type="button" 
+    [routerLink]="['/admin/programadores', idProgramador, 'proyectos', 'nuevo']">
     Nuevo proyecto
 </button>
 
 <!-- Estado cargando -->
-<div *ngIf="cargando">
+<div *ngIf="cargando" class="cargando">
     Cargando proyectos...
 </div>
 
 <!-- Sin proyectos -->
-<div *ngIf="!cargando && proyectos.length === 0">
-    <p>Este programador todavía no tiene proyectos registrados.</p>
+<div *ngIf="!cargando && proyectos.length === 0" class="sin-proyectos">
+    Este programador todavía no tiene proyectos registrados.
 </div>
 
 <!-- Tabla de proyectos -->
@@ -36,8 +39,6 @@
                 <a [routerLink]="['/admin/programadores', idProgramador, 'proyectos', p.id, 'editar']">
                     Editar
                 </a>
-
-                &nbsp;|&nbsp;
 
                 <button type="button" (click)="eliminar(p.id)">
                     Eliminar
