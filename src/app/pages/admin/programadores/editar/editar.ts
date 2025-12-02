@@ -17,7 +17,7 @@ export class EditarComponent implements OnInit {
   form!: FormGroup;
   id!: string;
 
-  // Variables para manejo de foto (del primer código)
+  // Variables para manejo de foto (Mantenemos la lógica robusta del código 1)
   preview: string = '';
   archivoFotoNuevo: File | null = null; 
 
@@ -33,19 +33,24 @@ export class EditarComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
 
-    // Fusión de campos: Estándar + Nuevos del segundo código
     this.form = this.fb.group({
+      // --- Campos Estándar ---
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       especialidad: ['', Validators.required],
+      
+      // --- Redes Sociales ---
       github: [''],
       linkedin: [''],
-      portafolio: [''], // Mantenemos portafolio del código 1
+      portafolio: [''],
       
-      // Nuevos campos del código 2
+      // --- Campos de Contacto y Horas (Código 1) ---
       emailContacto: [''],
       whatsapp: [''],
-      horasDisponiblesTexto: [''] // Campo auxiliar para el array de horas
+      horasDisponiblesTexto: [''], // Auxiliar para convertir array <-> string
+
+      // --- 🔹 NUEVO CAMPO (Del código 2) ---
+      disponibilidad: [''] 
     });
 
     this.cargarDatos();
@@ -53,7 +58,7 @@ export class EditarComponent implements OnInit {
 
   cargarDatos() {
     this.programadoresService.getProgramador(this.id)
-      .subscribe((data: Programador | undefined) => { // Ajuste de tipo por si es undefined
+      .subscribe((data: Programador | undefined) => {
         if (!data) return;
 
         // Rellenar formulario (Fusión de lógica)
@@ -65,21 +70,27 @@ export class EditarComponent implements OnInit {
           linkedin: data.linkedin || '',
           portafolio: data.portafolio || '',
           
-          // Nuevos campos
           emailContacto: data.emailContacto || '',
           whatsapp: data.whatsapp || '',
-          // Convertir array a string para el input
-          horasDisponiblesTexto: data.horasDisponibles?.join(', ') || ''
+          
+          // Lógica de horas (array a string)
+          horasDisponiblesTexto: data.horasDisponibles?.join(', ') || '',
+
+          // --- 🔹 NUEVO: Parchear disponibilidad ---
+          disponibilidad: data.disponibilidad || ''
         });
 
-        // Mostrar foto actual (Lógica del código 1)
-        if (data.foto) { // o data.fotoUrl, según como se llame en tu BD
+        // Mostrar foto actual (Lógica visual del código 1, más robusta que solo poner la URL en el form)
+        // Nota: Asumimos que data.foto o data.fotoUrl traen la imagen
+        if (data.foto) { 
           this.preview = data.foto;
+        } else if (data['fotoUrl']) { // Por si en tu modelo se llama fotoUrl
+           this.preview = data['fotoUrl'];
         }
       });
   }
 
-  // Lógica de selección de archivo (del código 1)
+  // Lógica de selección de archivo (Se mantiene intacta porque funciona bien)
   onFileSelected(event: any) {
     const file: File | undefined = event.target.files?.[0];
     if (!file) return;
@@ -104,7 +115,7 @@ export class EditarComponent implements OnInit {
     // 1. Obtener valores del form
     const value = this.form.value;
 
-    // 2. Lógica del código 2: Convertir texto a array de horas
+    // 2. Lógica del código 1: Convertir texto a array de horas
     let horasDisponibles: string[] = [];
     if (value.horasDisponiblesTexto) {
       horasDisponibles = value.horasDisponiblesTexto
@@ -113,8 +124,7 @@ export class EditarComponent implements OnInit {
         .filter((h: string) => h !== '');
     }
 
-    // 3. Preparar objeto de datos
-    // Usamos Partial<Programador> y fusionamos todo
+    // 3. Preparar objeto de datos fusionado
     const datos: Partial<Programador> = {
       nombre: value.nombre,
       descripcion: value.descripcion,
@@ -122,17 +132,21 @@ export class EditarComponent implements OnInit {
       github: value.github,
       linkedin: value.linkedin,
       portafolio: value.portafolio,
+      
       emailContacto: value.emailContacto,
       whatsapp: value.whatsapp,
-      horasDisponibles: horasDisponibles 
+      horasDisponibles: horasDisponibles, // Array procesado
+      
+      // --- 🔹 NUEVO: Guardar disponibilidad ---
+      disponibilidad: value.disponibilidad
     };
 
     try {
-      // 4. Llamar al servicio manteniendo la firma del código 1 (ID, datos, Archivo)
+      // 4. Llamar al servicio (Se mantiene la firma original que soporta Archivos)
       await this.programadoresService.updateProgramador(
         this.id,
         datos,
-        this.archivoFotoNuevo 
+        this.archivoFotoNuevo // Se envía el archivo si el usuario seleccionó uno nuevo
       );
 
       alert('Programador actualizado correctamente');

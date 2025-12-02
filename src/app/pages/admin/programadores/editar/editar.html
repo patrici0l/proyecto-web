@@ -17,9 +17,14 @@
         <textarea formControlName="descripcion" rows="3"></textarea>
     </div>
 
-    <div>
-        <label>Foto (URL)</label>
-        <input type="text" formControlName="fotoUrl">
+    <div class="foto-section">
+        <label>Foto de perfil</label>
+
+        <input type="file" (change)="onFileSelected($event)" accept="image/*">
+
+        <div *ngIf="preview" style="margin-top: 10px;">
+            <img [src]="preview" alt="Previsualización" width="150" style="border-radius: 5px;">
+        </div>
     </div>
 
     <hr>
@@ -52,17 +57,26 @@
 
     <hr>
 
-    <h3>Horarios de disponibilidad</h3>
-    <p class="ayuda">
-        Horas separadas por coma (HH:mm). Ej: <strong>09:00, 10:30, 16:00</strong>
-    </p>
+    <h3>Disponibilidad y Horarios</h3>
 
-    <div>
-        <label>Horas disponibles</label>
+    <div class="form-group">
+        <label>Disponibilidad (Descripción general)</label>
+        <textarea formControlName="disponibilidad" rows="3" placeholder="Ej: Lunes a Viernes de 14:00 a 18:00">
+    </textarea>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <p class="ayuda">
+            Horas específicas (HH:mm) para el calendario. Ej: <strong>09:00, 10:30, 16:00</strong>
+        </p>
+        <label>Horas disponibles (Array)</label>
         <input type="text" formControlName="horasDisponiblesTexto">
     </div>
+
+    <hr>
 
     <button type="submit" [disabled]="form.invalid || cargando">
         {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
     </button>
+
 </form>

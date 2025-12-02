@@ -53,17 +53,24 @@
     <hr>
 
     <h3>Horarios de disponibilidad</h3>
+
+    <div class="form-group" style="margin-bottom: 1rem;">
+        <label>Disponibilidad (horarios)</label>
+        <textarea formControlName="disponibilidad" rows="3"
+            placeholder="Ej: Lunes a Viernes de 14:00 a 18:00, sábados 10:00-12:00">
+        </textarea>
+    </div>
     <p class="ayuda">
         Ingresa horas separadas por coma, formato HH:mm.
         Ejemplo: <strong>09:00, 10:30, 16:00</strong>
     </p>
 
     <div>
-        <label>Horas disponibles</label>
+        <label>Horas exactas (para sistema)</label>
         <input type="text" formControlName="horasDisponiblesTexto">
     </div>
 
-    <button type="submit" [disabled]="form.invalid || cargando">
+    <button type="submit" [disabled]="form.invalid || cargando" style="margin-top: 20px;">
         {{ cargando ? 'Guardando...' : 'Guardar programador' }}
     </button>
 </form>
