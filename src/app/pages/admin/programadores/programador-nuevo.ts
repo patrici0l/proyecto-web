@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ProgramadoresService } from '../../../services/programadores';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 @Component({
     selector: 'app-programador-nuevo',
@@ -15,6 +16,7 @@ export class ProgramadorNuevoComponent {
 
     form: FormGroup;
     archivoFoto: File | null = null;
+    previewUrl: string | null = null;
     cargando = false;
     mensaje = '';
     error = '';
@@ -22,6 +24,7 @@ export class ProgramadorNuevoComponent {
     constructor(
         private fb: FormBuilder,
         private programadoresService: ProgramadoresService,
+        private storage: Storage,
         private router: Router
     ) {
         this.form = this.fb.group({
@@ -31,28 +34,39 @@ export class ProgramadorNuevoComponent {
             github: [''],
             linkedin: [''],
             portafolio: [''],
-            
-            // --- Nuevos campos integrados ---
             emailContacto: [''],
             whatsapp: [''],
-            
-            // 🔹 NUEVO CAMPO SOLICITADO
-            disponibilidad: [''], 
-
-            // Campo auxiliar para lógica de horas
-            horasDisponiblesTexto: [''] 
+            disponibilidad: [''],
+            horasDisponiblesTexto: ['']
         });
     }
 
     onFotoSeleccionada(event: Event) {
         const input = event.target as HTMLInputElement;
-        const file = input.files && input.files[0];
-        this.archivoFoto = file ?? null;
+
+        if (!input.files || input.files.length === 0) {
+            this.archivoFoto = null;
+            this.previewUrl = null;
+            return;
+        }
+
+        this.archivoFoto = input.files[0];
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.previewUrl = reader.result as string;
+        };
+        reader.readAsDataURL(this.archivoFoto);
     }
 
     async guardar() {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
+            return;
+        }
+
+        if (!this.archivoFoto) {
+            this.error = 'Debes seleccionar una imagen';
             return;
         }
 
@@ -62,7 +76,6 @@ export class ProgramadorNuevoComponent {
 
         const value = this.form.value;
 
-        // 1. Lógica existente: Convertir texto a array de horas
         let horasDisponibles: string[] = [];
         if (value.horasDisponiblesTexto) {
             horasDisponibles = value.horasDisponiblesTexto
@@ -71,23 +84,27 @@ export class ProgramadorNuevoComponent {
                 .filter((h: string) => h !== '');
         }
 
-        // 2. Preparar objeto data
-        // Fusionamos todo el formulario (...value) e insertamos las lógicas específicas
-        const data = {
-            ...value,
-            // Aseguramos que disponibilidad sea un string (como en tu snippet)
-            disponibilidad: value.disponibilidad || '', 
-            horasDisponibles
-        };
-
-        // Eliminamos el campo auxiliar del objeto final porque el backend no lo espera
-        delete data.horasDisponiblesTexto;
-
         try {
-            await this.programadoresService.crearProgramador(
-                data,
-                this.archivoFoto
-            );
+            const ruta = `programadores/${Date.now()}_${this.archivoFoto.name}`;
+            const storageRef = ref(this.storage, ruta);
+            await uploadBytes(storageRef, this.archivoFoto);
+            const urlFotoFinal = await getDownloadURL(storageRef);
+
+            const data = {
+                nombre: value.nombre,
+                descripcion: value.descripcion,
+                especialidad: value.especialidad,
+                github: value.github,
+                linkedin: value.linkedin,
+                portafolio: value.portafolio,
+                emailContacto: value.emailContacto,
+                whatsapp: value.whatsapp,
+                disponibilidad: value.disponibilidad || '',
+                horasDisponibles,
+                foto: urlFotoFinal
+            };
+
+            await this.programadoresService.crearProgramador(data, null);
 
             this.mensaje = 'Programador agregado correctamente';
             this.router.navigate(['/admin/programadores']);

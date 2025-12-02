@@ -1,76 +1,87 @@
 <h2>Nuevo programador</h2>
 
-<form [formGroup]="form" (ngSubmit)="guardar()">
+<form [formGroup]="form" (ngSubmit)="guardar()" class="form-programador">
 
-    <div>
+    <div class="form-row">
         <label>Nombre</label>
-        <input type="text" formControlName="nombre">
+        <input formControlName="nombre" type="text" />
     </div>
 
-    <div>
+    <div class="form-row">
         <label>Especialidad</label>
-        <input type="text" formControlName="especialidad">
+        <input formControlName="especialidad" type="text" />
     </div>
 
-    <div>
+    <div class="form-row">
         <label>Descripción</label>
-        <textarea formControlName="descripcion" rows="3"></textarea>
+        <textarea formControlName="descripcion" rows="4"></textarea>
     </div>
 
-    <div>
-        <label>Foto (URL)</label>
-        <input type="text" formControlName="fotoUrl">
+    <!-- ================= FOTO SOLO ARCHIVO ================= -->
+
+    <div class="form-row">
+        <label>Foto (archivo)</label>
+        <input type="file" (change)="onFotoSeleccionada($event)" accept="image/*" />
+
+        <div class="preview" *ngIf="previewUrl">
+            <p>Vista previa:</p>
+            <img [src]="previewUrl" alt="Preview foto programador" width="150">
+        </div>
     </div>
 
-    <hr>
+    <!-- ================= CONTACTO ================= -->
 
-    <h3>Contacto</h3>
-
-    <div>
-        <label>Email de contacto</label>
-        <input type="email" formControlName="emailContacto">
+    <div class="form-row">
+        <label>Correo de contacto</label>
+        <input formControlName="emailContacto" type="email" />
     </div>
 
-    <div>
+    <div class="form-row">
         <label>WhatsApp</label>
-        <input type="text" formControlName="whatsapp" placeholder="+593 ...">
+        <input formControlName="whatsapp" type="text" />
     </div>
 
-    <hr>
+    <!-- ================= REDES ================= -->
 
-    <h3>Redes</h3>
-
-    <div>
+    <div class="form-row">
         <label>GitHub</label>
-        <input type="text" formControlName="github" placeholder="https://github.com/...">
+        <input formControlName="github" type="text" />
     </div>
 
-    <div>
+    <div class="form-row">
         <label>LinkedIn</label>
-        <input type="text" formControlName="linkedin" placeholder="https://www.linkedin.com/in/...">
+        <input formControlName="linkedin" type="text" />
     </div>
 
-    <hr>
+    <div class="form-row">
+        <label>Portafolio</label>
+        <input formControlName="portafolio" type="text" />
+    </div>
 
-    <h3>Horarios de disponibilidad</h3>
+    <!-- ================= DISPONIBILIDAD ================= -->
 
-    <div class="form-group" style="margin-bottom: 1rem;">
-        <label>Disponibilidad (horarios)</label>
+    <div class="form-row">
+        <label>Disponibilidad</label>
         <textarea formControlName="disponibilidad" rows="3"
-            placeholder="Ej: Lunes a Viernes de 14:00 a 18:00, sábados 10:00-12:00">
-        </textarea>
-    </div>
-    <p class="ayuda">
-        Ingresa horas separadas por coma, formato HH:mm.
-        Ejemplo: <strong>09:00, 10:30, 16:00</strong>
-    </p>
-
-    <div>
-        <label>Horas exactas (para sistema)</label>
-        <input type="text" formControlName="horasDisponiblesTexto">
+            placeholder="Ej: Lunes a Viernes de 14:00 a 18:00"></textarea>
     </div>
 
-    <button type="submit" [disabled]="form.invalid || cargando" style="margin-top: 20px;">
-        {{ cargando ? 'Guardando...' : 'Guardar programador' }}
-    </button>
+    <div class="form-row">
+        <label>Horas exactas (separadas por coma)</label>
+        <input formControlName="horasDisponiblesTexto" type="text" placeholder="09:00, 10:30, 16:00" />
+    </div>
+
+    <!-- ================= MENSAJES ================= -->
+
+    <p *ngIf="mensaje" style="color: green;">{{ mensaje }}</p>
+    <p *ngIf="error" style="color: red;">{{ error }}</p>
+
+    <!-- ================= BOTÓN ================= -->
+
+    <div class="form-actions">
+        <button type="submit" [disabled]="cargando">
+            {{ cargando ? 'Guardando...' : 'Guardar' }}
+        </button>
+    </div>
+
 </form>
