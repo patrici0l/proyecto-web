@@ -1,6 +1,12 @@
-<h2>Lista de programadores</h2>
+<!-- Título con efecto de escritura permanente -->
+<h2 class="typing-title">Lista de programadores</h2>
 
-<a [routerLink]="['/admin/programadores/nuevo']">+ Nuevo programador</a>
+<!-- Botón moderno -->
+<button 
+    class="btn-nuevo"
+    [routerLink]="['/admin/programadores/nuevo']">
+    <i class="icon">➕</i> Nuevo programador
+</button>
 
 <table>
     <thead>
@@ -22,7 +28,6 @@
             <td>
                 <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button>
                 <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button>
-                
                 <button [routerLink]="['/admin/programadores', p.id, 'proyectos']" class="btn btn-info"> Proyectos</button>
             </td>
         </tr>

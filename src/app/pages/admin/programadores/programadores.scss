@@ -1,173 +1,141 @@
-// Variables de diseño (Paleta de colores moderna)
-$primary-color: #2563eb; // Azul real
-$danger-color: #ef4444; // Rojo suave
-$info-color: #0d9488; // Verde azulado (Teal) para distinguir de 'Editar'
-$bg-color: #f8fafc; // Fondo muy claro
-$text-main: #1e293b; // Gris oscuro para texto
-$text-muted: #64748b; // Gris medio
-$border-color: #e2e8f0; // Bordes sutiles
-$radius: 8px;
-$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-
-:host {
-    display: block;
-    padding: 2rem;
-    background-color: $bg-color;
-    min-height: 100vh;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-
-// 1. Título y Botón "Nuevo" (Header de la sección)
-h2 {
-    color: $text-main;
+/* ============================
+   TITULO CON EFECTO ESCRITURA
+   ============================ */
+.typing-title {
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    display: inline-block;
-    margin-right: 1.5rem;
-    vertical-align: middle;
+    text-align: center;
+    color: #1e293b;
+    width: fit-content;
+    margin: 0 auto 1.5rem auto;
+
+    border-right: 3px solid #2563eb;
+    white-space: nowrap;
+    overflow: hidden;
+
+    animation: typing 2.5s steps(30), blink 0.7s infinite;
 }
 
-// Transformamos el enlace de "Nuevo" en un Botón Call-to-Action (CTA)
-a[routerLink*='nuevo'] {
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    0%, 100% { border-color: transparent; }
+    50% { border-color: #2563eb; }
+}
+
+/* ============================
+   BOTÓN NUEVO PROGRAMADOR
+   ============================ */
+.btn-nuevo {
     display: inline-flex;
     align-items: center;
-    background-color: $primary-color;
+    gap: 8px;
+
+    background: linear-gradient(135deg, #2563eb, #1e40af);
     color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: $radius;
-    text-decoration: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+
+    border: none;
+    font-size: 1rem;
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+
+    .icon {
+        font-size: 1.2rem;
+    }
 
     &:hover {
-        background-color: darken($primary-color, 5%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.20);
+    }
+
+    &:active {
+        transform: scale(0.97);
     }
 }
 
-// 2. Contenedor de la Tabla (para scroll en móviles y sombra)
-.table-container {
-    background: white;
-    border-radius: $radius;
-    box-shadow: $shadow;
-    overflow: hidden; // Para que los bordes redondeados no se corten
-    overflow-x: auto; // Scroll horizontal en pantallas pequeñas
-    margin-top: 1rem;
-}
-
+/* ============================
+   TABLA VISUAL MEJORADA
+   ============================ */
 table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
-    min-width: 600px; // Evita que se aplaste demasiado
+    margin-top: 1rem;
+
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
 }
 
 thead {
-    background-color: #f1f5f9;
+    background: #1e3a8a;
+    color: white;
 
     th {
-        padding: 1rem;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: $text-muted;
+        padding: 12px;
+        text-align: left;
         font-weight: 600;
-        border-bottom: 1px solid $border-color;
+        font-size: 0.95rem;
     }
 }
 
-tbody {
-    tr {
-        border-bottom: 1px solid $border-color;
-        transition: background-color 0.15s ease;
+tbody tr {
+    transition: background 0.2s ease;
 
-        &:last-child {
-            border-bottom: none;
-        }
-
-        &:hover {
-            background-color: #f8fafc; // Feedback visual al pasar el mouse
-        }
-
-        td {
-            padding: 1rem;
-            vertical-align: middle; // Centra verticalmente el contenido
-            color: $text-main;
-            font-size: 0.95rem;
-
-            // Estilo para la imagen (Avatar)
-            img {
-                border-radius: 50%; // Círculo perfecto
-                object-fit: cover;
-                border: 2px solid white;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                width: 50px; // Sobrescribe el width inline para consistencia
-                height: 50px;
-            }
-
-            // Enlace de Github
-            a {
-                color: $primary-color;
-                text-decoration: none;
-                font-weight: 500;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
+    &:hover {
+        background: #f1f5f9;
     }
 }
 
-// 3. Botones de Acción
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.93rem;
+}
+
+/* Fotos redondeadas */
+td img {
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+}
+
+/* ============================
+   BOTONES DE ACCIÓN
+   ============================ */
 .btn {
-    border: none;
-    padding: 0.5rem 0.8rem;
+    padding: 6px 12px;
     border-radius: 6px;
-    font-size: 0.8rem;
     font-weight: 600;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s;
-    margin-right: 0.5rem; // Espacio entre botones
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    transition: 0.2s ease;
+}
 
-    &:last-child {
-        margin-right: 0;
-    }
+.btn-danger {
+    background: #dc2626;
+    color: white;
 
-    // Estilos específicos
-    &-danger {
-        background-color: rgba($danger-color, 0.1);
-        color: $danger-color;
+    &:hover { background: #b91c1c; }
+}
 
-        &:hover {
-            background-color: $danger-color;
-            color: white;
-        }
-    }
+.btn-primary {
+    background: #2563eb;
+    color: white;
 
-    &-primary {
-        background-color: rgba($primary-color, 0.1);
-        color: $primary-color;
+    &:hover { background: #1e40af; }
+}
 
-        &:hover {
-            background-color: $primary-color;
-            color: white;
-        }
-    }
+.btn-info {
+    background: #0ea5e9;
+    color: white;
 
-    &-info {
-        background-color: rgba($info-color, 0.1);
-        color: $info-color;
-
-        &:hover {
-            background-color: $info-color;
-            color: white;
-        }
-    }
+    &:hover { background: #0284c7; }
 }
