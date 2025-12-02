@@ -1,26 +1,30 @@
-<h2>Nuevo programador</h2>
+<h2 class="title-typing">
+    <i class="fa-solid fa-user-plus"></i> Nuevo programador
+</h2>
 
 <form [formGroup]="form" (ngSubmit)="guardar()" class="form-programador">
 
+    <!-- NOMBRE -->
     <div class="form-row">
-        <label>Nombre</label>
+        <label><i class="fa-solid fa-id-card"></i> Nombre</label>
         <input formControlName="nombre" type="text" />
     </div>
 
+    <!-- ESPECIALIDAD -->
     <div class="form-row">
-        <label>Especialidad</label>
+        <label><i class="fa-solid fa-code"></i> Especialidad</label>
         <input formControlName="especialidad" type="text" />
     </div>
 
+    <!-- DESCRIPCIÓN -->
     <div class="form-row">
-        <label>Descripción</label>
+        <label><i class="fa-solid fa-file-lines"></i> Descripción</label>
         <textarea formControlName="descripcion" rows="4"></textarea>
     </div>
 
-    <!-- ================= FOTO SOLO ARCHIVO ================= -->
-
+    <!-- FOTO -->
     <div class="form-row">
-        <label>Foto (archivo)</label>
+        <label><i class="fa-solid fa-image"></i> Foto (archivo)</label>
         <input type="file" (change)="onFotoSeleccionada($event)" accept="image/*" />
 
         <div class="preview" *ngIf="previewUrl">
@@ -29,55 +33,54 @@
         </div>
     </div>
 
-    <!-- ================= CONTACTO ================= -->
-
+    <!-- CORREO -->
     <div class="form-row">
-        <label>Correo de contacto</label>
+        <label><i class="fa-solid fa-envelope"></i> Correo de contacto</label>
         <input formControlName="emailContacto" type="email" />
     </div>
 
+    <!-- WHATSAPP -->
     <div class="form-row">
-        <label>WhatsApp</label>
+        <label><i class="fa-brands fa-whatsapp"></i> WhatsApp</label>
         <input formControlName="whatsapp" type="text" />
     </div>
 
-    <!-- ================= REDES ================= -->
-
+    <!-- GITHUB -->
     <div class="form-row">
-        <label>GitHub</label>
+        <label><i class="fa-brands fa-github"></i> GitHub</label>
         <input formControlName="github" type="text" />
     </div>
 
+    <!-- LINKEDIN -->
     <div class="form-row">
-        <label>LinkedIn</label>
+        <label><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
         <input formControlName="linkedin" type="text" />
     </div>
 
+    <!-- PORTAFOLIO -->
     <div class="form-row">
-        <label>Portafolio</label>
+        <label><i class="fa-solid fa-globe"></i> Portafolio</label>
         <input formControlName="portafolio" type="text" />
     </div>
 
-    <!-- ================= DISPONIBILIDAD ================= -->
-
+    <!-- DISPONIBILIDAD -->
     <div class="form-row">
-        <label>Disponibilidad</label>
+        <label><i class="fa-solid fa-clock"></i> Disponibilidad</label>
         <textarea formControlName="disponibilidad" rows="3"
             placeholder="Ej: Lunes a Viernes de 14:00 a 18:00"></textarea>
     </div>
 
+    <!-- HORAS EXACTAS -->
     <div class="form-row">
-        <label>Horas exactas (separadas por coma)</label>
+        <label><i class="fa-solid fa-hourglass-half"></i> Horas exactas (separadas por coma)</label>
         <input formControlName="horasDisponiblesTexto" type="text" placeholder="09:00, 10:30, 16:00" />
     </div>
 
-    <!-- ================= MENSAJES ================= -->
-
+    <!-- MENSAJES -->
     <p *ngIf="mensaje" style="color: green;">{{ mensaje }}</p>
     <p *ngIf="error" style="color: red;">{{ error }}</p>
 
-    <!-- ================= BOTÓN ================= -->
-
+    <!-- BOTÓN -->
     <div class="form-actions">
         <button type="submit" [disabled]="cargando">
             {{ cargando ? 'Guardando...' : 'Guardar' }}

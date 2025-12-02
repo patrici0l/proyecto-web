@@ -26,8 +26,8 @@
             <td>{{ p.especialidad }}</td>
             <td><a *ngIf="p.github" [href]="p.github" target="_blank">Github</a></td>
             <td>
-                <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button>
-                <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button>
+                <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button>  |
+                <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button>  |
                 <button [routerLink]="['/admin/programadores', p.id, 'proyectos']" class="btn btn-info"> Proyectos</button>
             </td>
         </tr>
