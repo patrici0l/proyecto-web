@@ -2,17 +2,17 @@
 
 <form [formGroup]="form" (ngSubmit)="guardarCambios()">
 
-    <div>
+    <div class="form-group">
         <label>Nombre</label>
         <input type="text" formControlName="nombre">
     </div>
 
-    <div>
+    <div class="form-group">
         <label>Especialidad</label>
         <input type="text" formControlName="especialidad">
     </div>
 
-    <div>
+    <div class="form-group">
         <label>Descripción</label>
         <textarea formControlName="descripcion" rows="3"></textarea>
     </div>
@@ -22,8 +22,8 @@
 
         <input type="file" (change)="onFileSelected($event)" accept="image/*">
 
-        <div *ngIf="preview" style="margin-top: 10px;">
-            <img [src]="preview" alt="Previsualización" width="150" style="border-radius: 5px;">
+        <div *ngIf="preview" class="preview-box">
+            <img [src]="preview" alt="Previsualización" width="150">
         </div>
     </div>
 
@@ -31,12 +31,12 @@
 
     <h3>Contacto</h3>
 
-    <div>
+    <div class="form-group">
         <label>Email de contacto</label>
         <input type="email" formControlName="emailContacto">
     </div>
 
-    <div>
+    <div class="form-group">
         <label>WhatsApp</label>
         <input type="text" formControlName="whatsapp">
     </div>
@@ -45,12 +45,12 @@
 
     <h3>Redes</h3>
 
-    <div>
+    <div class="form-group">
         <label>GitHub</label>
         <input type="text" formControlName="github">
     </div>
 
-    <div>
+    <div class="form-group">
         <label>LinkedIn</label>
         <input type="text" formControlName="linkedin">
     </div>
@@ -61,11 +61,11 @@
 
     <div class="form-group">
         <label>Disponibilidad (Descripción general)</label>
-        <textarea formControlName="disponibilidad" rows="3" placeholder="Ej: Lunes a Viernes de 14:00 a 18:00">
-    </textarea>
+        <textarea formControlName="disponibilidad" rows="3"
+            placeholder="Ej: Lunes a Viernes de 14:00 a 18:00"></textarea>
     </div>
 
-    <div style="margin-top: 15px;">
+    <div class="form-group">
         <p class="ayuda">
             Horas específicas (HH:mm) para el calendario. Ej: <strong>09:00, 10:30, 16:00</strong>
         </p>

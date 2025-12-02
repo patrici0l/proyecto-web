@@ -1,65 +1,127 @@
-// login.scss
-
-// Variables de colores
+// ==========================================
+// 1. Variables de estilos
+// ==========================================
 $bg-page: #f0f2f5;
 $text-primary: #202124;
 $btn-bg: #ffffff;
 $btn-text: #3c4043;
 $btn-border: #dadce0;
 $btn-hover: #f7f8f8;
+$google-blue: #1a73e8;
 
+// ==========================================
+// 2. Contenedor General (Pantalla completa)
+// ==========================================
 :host {
-    // Configuración del contenedor principal (la página entera)
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; // Ocupa toda la altura de la ventana
-    background-color: $bg-page;
+    min-height: 100vh;
+    background: radial-gradient(circle, #ffffff, #eef1f5);
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    padding: 1rem;
+
+    animation: fadeIn 0.6s ease-out;
 }
 
+// ==========================================
+// 3. Título
+// ==========================================
 h2 {
     margin-bottom: 1.5rem;
     color: $text-primary;
-    font-size: 1.75rem;
-    font-weight: 500;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+
+    // Icono decorativo antes del texto
+    &::before {
+        content: "🔐";
+        font-size: 2.2rem;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+    }
 }
 
+// ==========================================
+// 4. Botón estilo Google mejorado
+// ==========================================
 button {
-    // Estilo base del botón (estilo Google Material)
     background-color: $btn-bg;
     color: $btn-text;
     border: 1px solid $btn-border;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 12px 24px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    min-width: 220px; // Ancho mínimo para que se vea bien
+    min-width: 240px;
+    letter-spacing: 0.2px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease-in-out;
-    letter-spacing: 0.25px;
+    transition: all 0.25s ease;
 
-    // Estado Hover (cuando pasas el mouse)
-    &:hover:not([disabled]) {
-        background-color: $btn-hover;
-        box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
-        border-color: #d2e3fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    // Icono Google
+    &::before {
+        content: "";
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
     }
 
-    // Estado Active (cuando haces click)
+    // Hover
+    &:hover:not([disabled]) {
+        background-color: $btn-hover;
+        border-color: lighten($btn-border, 10%);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    // Active
     &:active:not([disabled]) {
+        transform: translateY(-1px);
         background-color: #e8f0fe;
         box-shadow: none;
     }
 
-    // Estado Disabled (mientras carga)
+    // Estado cargando
     &:disabled {
         background-color: #f1f3f4;
         color: rgba(60, 64, 67, 0.38);
-        cursor: wait; // Muestra reloj de arena o spinner del sistema
         border-color: transparent;
+        cursor: wait;
         box-shadow: none;
+
+        // Cambiar icono por spinner animado
+        &::before {
+            background-image: none;
+            border: 3px solid rgba(0,0,0,0.2);
+            border-top-color: $google-blue;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 0.7s linear infinite;
+        }
     }
+}
+
+// ==========================================
+// 5. Animaciones
+// ==========================================
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
 }

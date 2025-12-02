@@ -3,10 +3,10 @@
 // ==========================================
 $primary-color: #2563eb; // Azul vibrante
 $primary-dark: #1e40af; // Azul oscuro para hover
-$text-main: #0f172a; // Negro suave (Slate 900)
-$text-secondary: #64748b; // Gris profesional (Slate 500)
-$bg-gradient-start: #f8fafc; // Fondo muy claro
-$bg-gradient-end: #e2e8f0; // Gris sutil
+$text-main: #0f172a; // Slate 900
+$text-secondary: #64748b; // Slate 500
+$bg-gradient-start: #f8fafc;
+$bg-gradient-end: #e2e8f0;
 $shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.3), 0 2px 4px -1px rgba(37, 99, 235, 0.15);
 
 // ==========================================
@@ -15,73 +15,93 @@ $shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.3), 0 2px 4px -1px rgba(37, 99, 
 :host {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; // Ocupa toda la altura de la pantalla
+    min-height: 100vh;
     font-family: 'Inter', system-ui, sans-serif;
     background-color: white;
 }
 
 // ==========================================
-// 3. Contenedor "Hero" (Centro de atención)
+// 3. Contenedor "Hero"
 // ==========================================
 .inicio-container {
-    flex: 1; // Ocupa todo el espacio restante bajo el menú
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; // Centrado vertical
-    align-items: center; // Centrado horizontal
+    justify-content: center;
+    align-items: center;
     padding: 2rem;
     text-align: center;
 
-    // Fondo sutil radial para dar profundidad
     background: radial-gradient(circle at center, white 0%, $bg-gradient-start 100%);
 
-    // Animación de entrada
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
     transform: translateY(20px);
 
-    // 3.1 Título Principal
+    // Título
     h1 {
-        font-size: 3.5rem; // Grande e impactante
+        position: relative;
+        font-size: 3.5rem;
         font-weight: 800;
         color: $text-main;
         margin: 0 0 1.5rem 0;
         line-height: 1.1;
         letter-spacing: -0.025em;
-        max-width: 800px;
 
-        // Detalle estético: Gradiente en el texto (opcional, se ve muy moderno)
         background: linear-gradient(135deg, $text-main 20%, #475569 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+
+        // Icono decorativo
+        &::before {
+            content: "🚀";
+            position: absolute;
+            left: -3rem;
+            top: 0.2rem;
+            font-size: 2.5rem;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
     }
 
-    // 3.2 Texto secundario
+    // Subtexto
     p {
         font-size: 1.25rem;
         color: $text-secondary;
         margin: 0 0 3rem 0;
         max-width: 600px;
         line-height: 1.6;
+
+        &::before {
+            content: "✨ ";
+            font-size: 1.4rem;
+        }
     }
 
-    // 3.3 Botón de Acción (Call to Action)
+    // Botón CTA
     button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
         font-size: 1.125rem;
         font-weight: 600;
         color: white;
         background-color: $primary-color;
         border: none;
         padding: 1rem 2.5rem;
-        border-radius: 50px; // Forma de "píldora"
+        border-radius: 50px;
         cursor: pointer;
         box-shadow: $shadow-btn;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-        // Heurística: Feedback claro al interactuar
+        &::before {
+            content: "📚";
+            font-size: 1.4rem;
+        }
+
         &:hover {
             background-color: $primary-dark;
-            transform: translateY(-4px); // Efecto de elevación física
+            transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
         }
 
@@ -92,7 +112,7 @@ $shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.3), 0 2px 4px -1px rgba(37, 99, 
 }
 
 // ==========================================
-// 4. Animación y Responsividad
+// 4. Animaciones
 // ==========================================
 @keyframes fadeUp {
     to {
@@ -101,12 +121,21 @@ $shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.3), 0 2px 4px -1px rgba(37, 99, 
     }
 }
 
+@keyframes floatIcon {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+}
+
+// ==========================================
+// 5. Responsive
+// ==========================================
 @media (max-width: 768px) {
     .inicio-container {
         padding: 1.5rem;
 
         h1 {
-            font-size: 2.25rem; // Ajuste para móviles
+            font-size: 2.4rem;
         }
 
         p {
@@ -114,8 +143,8 @@ $shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.3), 0 2px 4px -1px rgba(37, 99, 
         }
 
         button {
-            width: 100%; // Botón ancho completo para facilitar el toque (Ley de Fitts)
-            max-width: 320px;
+            width: 100%;
+            max-width: 300px;
         }
     }
 }

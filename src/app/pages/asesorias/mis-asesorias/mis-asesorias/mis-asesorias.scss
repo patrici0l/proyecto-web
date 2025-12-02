@@ -1,18 +1,20 @@
-// --- Variables de Diseño (Coherentes con el sistema) ---
+// --- Variables de Diseño ---
 $primary-color: #2c3e50;
 $accent-color: #3498db;
-$bg-light: #f8f9fa;
-$border-color: #e9ecef;
-$text-color: #333;
+$bg-light: #f4f6f8;
+$border-color: #e0e0e0;
+$text-color: #2d2d2d;
 $text-muted: #6c757d;
 
 // Estados
-$status-pending-bg: #fff3cd;
-$status-pending-text: #856404;
-$status-approved-bg: #d4edda;
-$status-approved-text: #155724;
-$status-rejected-bg: #f8d7da;
-$status-rejected-text: #721c24;
+$status-pending-bg: #fff4cc;
+$status-pending-text: #a07400;
+
+$status-approved-bg: #d9f7e3;
+$status-approved-text: #1e7a46;
+
+$status-rejected-bg: #ffd6d6;
+$status-rejected-text: #b02a37;
 
 :host {
     display: block;
@@ -21,35 +23,54 @@ $status-rejected-text: #721c24;
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    background: #ffffff;
 }
 
-// --- Encabezados y Estados de Carga ---
+// --- Encabezado ---
 h2 {
     color: $primary-color;
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     margin-bottom: 25px;
-    border-bottom: 2px solid $border-color;
-    padding-bottom: 10px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid $accent-color;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &::before {
+        content: "📘";
+        font-size: 1.8rem;
+    }
 }
 
+// --- Mensajes de carga / vacío ---
 div[ngIf="cargando"],
 div[ngIf*="asesorias.length === 0"] {
     text-align: center;
-    padding: 40px;
+    padding: 45px;
     background-color: $bg-light;
-    border-radius: 8px;
+    border-radius: 12px;
     color: $text-muted;
-    font-style: italic;
     margin-top: 20px;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+        content: "⏳";
+        font-size: 1.5rem;
+    }
 }
 
-// --- Contenedor Responsive (Recomendado) ---
+// --- Contenedor Responsive ---
 .table-container {
     width: 100%;
     overflow-x: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    margin-top: 25px;
 }
 
 // --- Tabla ---
@@ -57,7 +78,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-    min-width: 800px; // Evita que se aplaste en móviles
+    min-width: 850px;
 
     thead {
         background-color: $primary-color;
@@ -65,10 +86,17 @@ table {
 
         th {
             padding: 15px;
-            text-align: left;
             font-weight: 600;
             font-size: 0.95rem;
             white-space: nowrap;
+
+            &:first-child::before { content: "👨‍💻 "; }
+            &:nth-child(2)::before { content: "📅 "; }
+            &:nth-child(3)::before { content: "⏰ "; }
+            &:nth-child(4)::before { content: "💬 "; }
+            &:nth-child(5)::before { content: "🔖 "; }
+            &:nth-child(6)::before { content: "📩 "; }
+            &:nth-child(7)::before { content: "🔔 "; }
         }
     }
 
@@ -78,102 +106,91 @@ table {
             transition: background-color 0.2s;
 
             &:hover {
-                background-color: lighten($bg-light, 1%);
-            }
-
-            &:last-child {
-                border-bottom: none;
+                background-color: lighten($bg-light, 4%);
             }
         }
 
         td {
             padding: 15px;
-            vertical-align: top; // Alineación superior para mejor lectura de mensajes largos
-            font-size: 0.9rem;
-            line-height: 1.5;
+            vertical-align: top;
+            font-size: 0.92rem;
         }
     }
 }
 
-// --- Estilos de Columnas Específicas ---
-
-// 1. Badges de Estado
+// --- Badges de Estado ---
 span[class*='estado-'] {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 50px;
-    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 25px;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
 
     &.estado-pendiente {
         background-color: $status-pending-bg;
         color: $status-pending-text;
-        border: 1px solid rgba($status-pending-text, 0.2);
+        border: 1px solid rgba($status-pending-text, 0.3);
+
+        &::before { content: "⏳"; }
     }
 
     &.estado-aprobada {
         background-color: $status-approved-bg;
         color: $status-approved-text;
-        border: 1px solid rgba($status-approved-text, 0.2);
+        border: 1px solid rgba($status-approved-text, 0.3);
+
+        &::before { content: "✔"; }
     }
 
     &.estado-rechazada {
         background-color: $status-rejected-bg;
         color: $status-rejected-text;
-        border: 1px solid rgba($status-rejected-text, 0.2);
+        border: 1px solid rgba($status-rejected-text, 0.3);
+
+        &::before { content: "✖"; }
     }
 }
 
-// 2. Columna de Notificación Simulada
+// --- Columna de notificación ---
 td:last-child {
-    min-width: 250px; // Darle espacio suficiente al texto simulado
-    background-color: #fafafa; // Diferenciar sutilmente esta columna
+    min-width: 250px;
+    background-color: #fafafa;
+    border-left: 3px solid $accent-color;
+    border-radius: 4px;
 }
 
 .nota-notificacion {
     color: $accent-color;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    margin: 0 0 5px 0;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
+    gap: 6px;
 
     &::before {
-        content: 'ℹ'; // Icono visual simple con CSS
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 16px;
-        height: 16px;
-        background: $accent-color;
-        color: white;
-        border-radius: 50%;
-        font-size: 10px;
-        margin-right: 6px;
+        content: "ℹ️";
+        font-size: 1rem;
     }
 }
 
 small {
     display: block;
     background-color: white;
-    border: 1px dashed #ccc;
+    border: 1px dashed #cbd3da;
     padding: 10px;
     border-radius: 6px;
     color: #555;
-    font-family: 'Courier New', Courier, monospace; // Estilo "raw data" o email
+    font-family: 'Courier New', monospace;
     font-size: 0.8rem;
 }
 
 // --- Responsive ---
 @media (max-width: 768px) {
-    :host {
-        padding: 10px;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
+    :host { padding: 10px; }
+    h2 { font-size: 1.6rem; }
+    table { min-width: 600px; }
 }
