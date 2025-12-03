@@ -9,9 +9,7 @@
     <p>No tienes asesorías solicitadas por el momento.</p>
 </div>
 
-<!-- DEBUG -->
-<pre *ngIf="!cargando">{{ asesorias | json }}</pre>
-
+ 
 <div class="table-container">
     <table *ngIf="!cargando && asesorias.length > 0" class="tabla-asesorias">
         <thead>

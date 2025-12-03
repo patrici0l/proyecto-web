@@ -1,195 +1,216 @@
-// --- Variables ---
-$primary-color: #2c3e50;
-$accent-color: #3498db;
-$bg-light: #f8f9fa;
-$border-color: #e9ecef;
+// Variables de colores para mantener consistencia
+$primary-color: #3f51b5; // Azul moderno
+$success-color: #2e7d32; // Verde
+$danger-color: #d32f2f; // Rojo
+$warning-color: #ed6c02; // Naranja
 $text-color: #333;
-$text-muted: #6c757d;
+$bg-light: #f5f5f5;
+$border-color: #ddd;
 
-// Estados
-$status-pending-bg: #fff3cd;
-$status-pending-text: #856404;
-$status-approved-bg: #d4edda;
-$status-approved-text: #155724;
-$status-rejected-bg: #f8d7da;
-$status-rejected-text: #721c24;
-
-// Botones
-$btn-approve: #28a745;
-$btn-reject: #dc3545;
-$btn-info: #17a2b8;
-
-// --- Contenedor general ---
 :host {
     display: block;
-    font-family: 'Segoe UI', Roboto, Arial;
-    color: $text-color;
     padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    font-family: 'Roboto', 'Segoe UI', sans-serif; // O la fuente que uses en tu proyecto
+    color: $text-color;
 }
 
-// --- Título ---
+// Título principal
 h2 {
     color: $primary-color;
-    font-size: 1.9rem;
     margin-bottom: 20px;
+    font-size: 1.5rem;
+    border-bottom: 2px solid lighten($primary-color, 30%);
+    padding-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
 
-    .icon-title {
-        font-size: 1.5rem;
-        color: $accent-color;
-    }
-}
-
-// --- Cargando ---
-.loading {
-    text-align: center;
-    color: $text-muted;
-    font-size: 1.2rem;
-    padding: 40px;
-
     i {
-        font-size: 1.4rem;
-        margin-right: 8px;
-        color: $accent-color;
+        font-size: 1.2em;
     }
 }
 
-// --- Sin asesorías ---
+// Estados de Carga y Vacío
+.loading,
 .sin-asesorias {
     text-align: center;
-    font-size: 1.1rem;
-    color: $text-muted;
-    padding: 20px;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    color: #666;
 
     i {
-        font-size: 2rem;
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #ccc;
         display: block;
-        margin-bottom: 8px;
-        color: $accent-color;
+    }
+
+    p {
+        font-size: 1.1rem;
+        margin: 0;
     }
 }
 
-// --- Tabla contenedor ---
-.table-container {
-    width: 100%;
-    overflow-x: auto;
+.loading i {
+    color: $primary-color; // Spinner con color
 }
 
-// --- Tabla ---
+// Contenedor de la tabla (Scroll horizontal para móviles)
+.table-container {
+    width: 100%;
+    overflow-x: auto; // Crucial para responsividad
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+// Estilos de la Tabla
 .tabla-asesorias {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    min-width: 900px;
-    border-radius: 8px;
-    overflow: hidden;
+    min-width: 800px; // Asegura que no se rompa en pantallas muy pequeñas
 
     thead {
-        background: $primary-color;
-        color: white;
+        background-color: $bg-light;
+        border-bottom: 2px solid $border-color;
 
         th {
             padding: 15px;
-            font-size: 0.95rem;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap; // Evita que los títulos se rompan
 
             i {
                 margin-right: 5px;
+                color: $primary-color;
             }
         }
     }
 
-    tbody tr {
-        border-bottom: 1px solid $border-color;
+    tbody {
+        tr {
+            border-bottom: 1px solid $border-color;
+            transition: background-color 0.2s ease;
 
-        &:hover {
-            background: $bg-light;
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:hover {
+                background-color: lighten($bg-light, 2%);
+            }
+
+            td {
+                padding: 15px;
+                vertical-align: middle;
+                font-size: 0.95rem;
+            }
         }
-    }
-
-    td {
-        padding: 12px 15px;
-        font-size: 0.9rem;
     }
 }
 
-// --- Estados (Badges) ---
+// Etiquetas de Estado (Badges)
+[class^="estado-"] {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 80px;
+}
+
 .estado-pendiente {
-    @include badge-style($status-pending-bg, $status-pending-text);
+    background-color: lighten($warning-color, 45%);
+    color: darken($warning-color, 10%);
+    border: 1px solid lighten($warning-color, 30%);
 }
 
 .estado-aprobada {
-    @include badge-style($status-approved-bg, $status-approved-text);
+    background-color: lighten($success-color, 50%);
+    color: darken($success-color, 10%);
+    border: 1px solid lighten($success-color, 40%);
 }
 
 .estado-rechazada {
-    @include badge-style($status-rejected-bg, $status-rejected-text);
+    background-color: lighten($danger-color, 45%);
+    color: darken($danger-color, 10%);
+    border: 1px solid lighten($danger-color, 30%);
 }
 
-// Mixin para estados
-@mixin badge-style($bg, $text) {
-    background: $bg;
-    color: $text;
-    padding: 6px 12px;
-    border-radius: 30px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    display: inline-block;
-}
-
-// --- Acciones ---
+// Botones de Acción
 .acciones {
+    white-space: nowrap; // Mantiene los botones en línea
     display: flex;
     gap: 8px;
     align-items: center;
 
     button {
-        border: none;
         padding: 6px 12px;
-        border-radius: 6px;
+        border: none;
+        border-radius: 4px;
         cursor: pointer;
         font-size: 0.85rem;
-        color: white;
-        display: flex;
+        font-weight: 500;
+        display: inline-flex;
         align-items: center;
-        gap: 6px;
-        transition: 0.2s ease;
-
-        i {
-            font-size: 0.9rem;
-        }
+        gap: 5px;
+        transition: all 0.2s ease;
+        color: white;
 
         &:first-of-type {
-            background: $btn-approve;
+            // Botón Aprobar
+            background-color: $success-color;
+
+            &:hover {
+                background-color: darken($success-color, 5%);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
         }
 
-        &:nth-of-type(2) {
-            background: $btn-reject;
-        }
+        &:last-of-type {
+            // Botón Rechazar
+            background-color: $danger-color;
 
-        &:hover {
-            transform: translateY(-2px);
-            filter: brightness(0.9);
+            &:hover {
+                background-color: darken($danger-color, 5%);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
         }
     }
 
+    // Texto "Gestionada"
     .gestionado {
-        color: $primary-color;
-        font-weight: 600;
+        color: #777;
+        font-style: italic;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
 
         i {
-            color: $btn-approve;
+            color: $success-color;
         }
     }
 }
 
-// --- Responsive ---
-@media (max-width: 768px) {
-    .acciones {
-        flex-direction: column;
-        align-items: stretch;
-    }
+// Estilo para el Debug (opcional, para que no moleste visualmente)
+pre {
+    background: #222;
+    color: #0f0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    max-height: 200px;
+    overflow: auto;
+    margin-bottom: 20px;
 }
