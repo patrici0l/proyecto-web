@@ -1,150 +1,475 @@
-// ==========================================
-// 1. Variables & Tokens
-// ==========================================
-$primary-color: #2563eb; // Azul vibrante
-$primary-dark: #1e40af; // Azul oscuro para hover
-$text-main: #0f172a; // Slate 900
-$text-secondary: #64748b; // Slate 500
-$bg-gradient-start: #f8fafc;
-$bg-gradient-end: #e2e8f0;
-$shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.3), 0 2px 4px -1px rgba(37, 99, 235, 0.15);
+/* ==========================================
+   1) TOKENS / VARIABLES (Design System)
+   ========================================== */
 
-// ==========================================
-// 2. Layout Principal
-// ==========================================
-:host {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-family: 'Inter', system-ui, sans-serif;
-    background-color: white;
+/* -- Colores principales (mantener identidad) -- */
+$color-primary:      #2563eb; // color base proporcionado (azul vibrante)
+$color-primary-600:  #1d4ed8; // hover / dark
+$color-primary-400:  #60a5fa; // light accent
+$color-primary-100:  #e6f0ff; // ultra-light background
+
+/* -- Acentos y neutros -- */
+$color-accent:       #06b6d4; // acento secundario (cian)
+$color-success:      #10b981;
+$color-warning:      #f59e0b;
+$color-danger:       #ef4444;
+
+$gray-900:           #0f172a; // texto principal
+$gray-700:           #334155;
+$gray-500:           #64748b; // secundario
+$gray-200:           #e6eef8;
+$bg-base:            #ffffff;
+
+/* -- Tipografía & escalas -- */
+$font-sans:          'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+$font-mono:          'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+$fs-base:            16px;
+$line-height-base:   1.6;
+
+/* -- Espaciado (scale modular) -- */
+$space-xxs: 4px;
+$space-xs: 8px;
+$space-sm: 12px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 32px;
+$space-xxl: 48px;
+
+/* -- Bordes, radios, z-index -- */
+$radius-sm:          6px;
+$radius-md:          12px;
+$radius-lg:          20px;
+$border-width:       1px;
+$z-elev-low:         10;
+$z-elev-mid:         50;
+$z-elev-high:        100;
+
+/* -- Sombras (sutiles) -- */
+$shadow-sm: 0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06);
+$shadow-md: 0 6px 18px rgba(16,24,40,0.08);
+$shadow-lg: 0 20px 40px rgba(16,24,40,0.12);
+$shadow-primary: 0 6px 18px rgba(37,99,235,0.12);
+
+/* -- Transiciones / motion -- */
+$ease-quick: cubic-bezier(.25,.8,.25,1);
+$ease-soft: cubic-bezier(.16,1,.3,1);
+$dur-sm: 160ms;
+$dur-md: 300ms;
+$dur-lg: 450ms;
+
+/* ==========================================
+   2) UTILIDADES RÁPIDAS
+   ========================================== */
+%sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
-// ==========================================
-// 3. Contenedor "Hero"
-// ==========================================
-.inicio-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    text-align: center;
+/* ==========================================
+   3) ESTILOS BASE (body, tipografías, contenedores)
+   ========================================== */
+:root {
+  font-size: $fs-base;
+}
 
-    background: radial-gradient(circle at center, white 0%, $bg-gradient-start 100%);
+* { box-sizing: border-box; }
 
-    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+html, body, :host {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(180deg, $bg-base 0%, $color-primary-100 100%); // sutil
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: $font-sans;
+  color: $gray-900;
+  line-height: $line-height-base;
+}
+
+/* Container global para centrar y limitar ancho */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $space-md;
+  padding-right: $space-md;
+}
+
+/* Tipografías */
+h1, h2, h3, h4, h5 {
+  margin: 0 0 $space-sm 0;
+  font-weight: 700;
+  color: $gray-900;
+  line-height: 1.15;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 { font-size: 2.25rem; } // 36px
+h2 { font-size: 1.5rem; }  // 24px
+h3 { font-size: 1.125rem; } // 18px
+
+p {
+  margin: 0 0 $space-md 0;
+  color: $gray-700;
+  font-size: 1rem;
+}
+
+/* Links accesibles */
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $dur-sm $ease-quick;
+  &:hover, &:focus { color: $color-primary-600; text-decoration: underline; }
+  &:focus { outline: none; box-shadow: 0 0 0 4px rgba(37,99,235,0.12); border-radius: $radius-sm; }
+}
+
+/* ==========================================
+   4) HERO / INICIO (mejorado visualmente)
+   - Texto con gradiente, ícono sutil y botón CTA con microinteracciones
+   ========================================== */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: $space-xl;
+  align-items: center;
+  padding: $space-xxl 0;
+  position: relative;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    padding: $space-lg 0;
+  }
+
+  .hero-content {
+    animation: fadeUp $dur-md $ease-soft both;
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
 
-    // Título
     h1 {
-        position: relative;
-        font-size: 3.5rem;
-        font-weight: 800;
-        color: $text-main;
-        margin: 0 0 1.5rem 0;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
-
-        background: linear-gradient(135deg, $text-main 20%, #475569 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-
-        // Icono decorativo
-        &::before {
-            content: "🚀";
-            position: absolute;
-            left: -3rem;
-            top: 0.2rem;
-            font-size: 2.5rem;
-            animation: floatIcon 3s ease-in-out infinite;
-        }
+      font-size: clamp(2rem, 3.6vw, 3rem);
+      background: linear-gradient(90deg, $color-primary, $color-accent 60%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      padding-right: $space-sm;
+      position: relative;
+      &::after {
+        content: '';
+        width: 60px;
+        height: 6px;
+        background: linear-gradient(90deg, rgba(37,99,235,0.15), rgba(6,182,212,0.12));
+        position: absolute;
+        left: 0;
+        bottom: -$space-xs;
+        border-radius: 999px;
+      }
     }
 
-    // Subtexto
-    p {
-        font-size: 1.25rem;
-        color: $text-secondary;
-        margin: 0 0 3rem 0;
-        max-width: 600px;
-        line-height: 1.6;
-
-        &::before {
-            content: "✨ ";
-            font-size: 1.4rem;
-        }
+    p.lead {
+      margin-top: $space-sm;
+      color: $gray-700;
+      max-width: 60ch;
+      font-size: 1.05rem;
     }
 
-    // Botón CTA
-    button {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    .cta-row {
+      margin-top: $space-lg;
+      display:flex;
+      gap: $space-sm;
+      align-items:center;
 
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: white;
-        background-color: $primary-color;
-        border: none;
-        padding: 1rem 2.5rem;
-        border-radius: 50px;
-        cursor: pointer;
-        box-shadow: $shadow-btn;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      .btn {
+        @extend .btn-primary;
+      }
 
-        &::before {
-            content: "📚";
-            font-size: 1.4rem;
-        }
-
-        &:hover {
-            background-color: $primary-dark;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
-        }
-
-        &:active {
-            transform: translateY(-1px);
-        }
+      .btn-ghost {
+        @extend .btn-ghost;
+      }
     }
+  }
+
+  .hero-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(244,247,255,0.6));
+    border-radius: $radius-lg;
+    padding: $space-lg;
+    box-shadow: $shadow-lg;
+    border: $border-width solid rgba(16,24,40,0.03);
+    display:flex;
+    flex-direction:column;
+    gap: $space-sm;
+    justify-content:center;
+
+    .meta {
+      display:flex;
+      align-items:center;
+      gap: $space-sm;
+      img {
+        width: 56px; height: 56px; object-fit: cover; border-radius: 10px;
+        box-shadow: $shadow-sm;
+        border: 1px solid rgba(16,24,40,0.03);
+      }
+      .title { font-weight: 700; color: $gray-900; }
+      .sub { color: $gray-500; font-size: 0.95rem; }
+    }
+
+    .progress {
+      margin-top: $space-sm;
+      height: 10px;
+      background: rgba(16,24,40,0.05);
+      border-radius: 999px;
+      overflow: hidden;
+      &__bar {
+        height: 100%;
+        width: 56%;
+        background: linear-gradient(90deg, $color-primary, $color-primary-400);
+        box-shadow: $shadow-primary;
+        transition: width $dur-md $ease-soft;
+      }
+    }
+  }
 }
 
-// ==========================================
-// 4. Animaciones
-// ==========================================
+/* ==========================================
+   5) BOTONES (sistema de botones con feedback)
+   ========================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 0.6rem 1.05rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: transform $dur-sm $ease-quick, box-shadow $dur-sm $ease-quick, background-color $dur-sm $ease-quick;
+  will-change: transform;
+  &:focus { outline: none; box-shadow: 0 6px 18px rgba(37,99,235,0.14); transform: translateY(-2px); }
+  &:active { transform: translateY(0); }
+}
+
+/* Primary (filled) */
+.btn-primary {
+  @extend .btn;
+  background: linear-gradient(90deg, $color-primary, $color-primary-400);
+  color: white;
+  box-shadow: $shadow-primary;
+  padding-left: 1.15rem;
+  padding-right: 1.15rem;
+  &:hover { transform: translateY(-4px); background: $color-primary-600; box-shadow: 0 12px 30px rgba(37,99,235,0.14); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+}
+
+/* Ghost / outline */
+.btn-ghost {
+  @extend .btn;
+  background: transparent;
+  color: $color-primary;
+  border: 1px solid rgba(37,99,235,0.12);
+  &:hover { background: rgba(37,99,235,0.04); transform: translateY(-2px); }
+}
+
+/* Icon-only (circular) */
+.btn-icon {
+  width: 44px; height: 44px; padding: 0; justify-content:center; border-radius: 12px;
+  background: rgba(16,24,40,0.04);
+  &:hover { background: rgba(16,24,40,0.06); transform: translateY(-2px); }
+}
+
+/* ==========================================
+   6) TARJETAS (cards) — imágenes adaptadas y heurísticas
+   ========================================== */
+.card {
+  background: $bg-base;
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+  border: $border-width solid rgba(16,24,40,0.03);
+  overflow: hidden; // garantiza que imágenes no se salgan
+  transition: transform $dur-md $ease-soft, box-shadow $dur-md $ease-soft;
+  &:hover { transform: translateY(-6px); box-shadow: $shadow-lg; }
+
+  &__media {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02));
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // images se ven completas y adaptadas
+      display: block;
+      transition: transform $dur-lg $ease-soft;
+    }
+    &:hover img { transform: scale(1.04); } // microinteraction
+  }
+
+  &__body {
+    padding: $space-md;
+    display:flex;
+    flex-direction:column;
+    gap: $space-sm;
+  }
+
+  &__title { font-size: 1.05rem; color: $gray-900; font-weight: 700; }
+  &__text { color: $gray-700; font-size: 0.95rem; }
+  &__meta { display:flex; justify-content:space-between; align-items:center; gap:$space-sm; color: $gray-500; font-size: 0.875rem; }
+}
+
+/* Card grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: $space-lg;
+}
+
+/* ==========================================
+   7) CONTENEDORES DESTACADOS (callouts)
+   ========================================== */
+.callout {
+  display:flex;
+  gap: $space-md;
+  align-items:flex-start;
+  padding: $space-md;
+  border-radius: $radius-md;
+  border: 1px solid rgba(16,24,40,0.03);
+  background: linear-gradient(90deg, rgba(37,99,235,0.03), rgba(6,182,212,0.02));
+  box-shadow: $shadow-sm;
+
+  .icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, $color-primary-400, $color-primary);
+    color: white; font-weight:700; font-size:1.25rem;
+    box-shadow: 0 6px 18px rgba(6,182,212,0.12);
+  }
+
+  .content { flex:1; }
+  .content h4 { margin: 0; color: $gray-900; }
+  .content p { margin: 6px 0 0 0; color: $gray-700; font-size:0.95rem; }
+}
+
+/* ==========================================
+   8) TIMELINE (sección animada y accesible)
+   ========================================== */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, $color-primary-100, rgba(37,99,235,0.12));
+    border-radius: 2px;
+  }
+
+  .item {
+    position: relative;
+    padding: $space-sm 0 $space-lg 0;
+    animation: fadeSlideIn $dur-md $ease-soft both;
+    opacity: 0;
+    transform: translateX(-8px);
+
+    &:nth-child(odd) { @include appear-delay(0.03); }
+    &:nth-child(even) { @include appear-delay(0.06); }
+
+    .dot {
+      position: absolute;
+      left: -3px;
+      top: 6px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: $bg-base;
+      border: 3px solid $color-primary;
+      box-shadow: 0 2px 6px rgba(16,24,40,0.06);
+    }
+
+    .body {
+      margin-left: $space-md;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(244,247,255,0.6));
+      padding: $space-sm;
+      border-radius: $radius-sm;
+      border: 1px solid rgba(16,24,40,0.03);
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+/* Small utility mixin for staggering */
+@mixin appear-delay($s) {
+  animation-delay: $s * 1s;
+}
+
+/* ==========================================
+   9) FORMULARIOS (inputs accesibles)
+   ========================================== */
+.input {
+  display:flex; flex-direction:column; gap: $space-xs;
+  label { font-size: 0.9rem; color: $gray-700; }
+  input, textarea, select {
+    padding: 0.6rem 0.75rem;
+    border-radius: $radius-sm;
+    border: 1px solid rgba(16,24,40,0.06);
+    background: white;
+    font-size: 1rem;
+    transition: box-shadow $dur-sm $ease-quick, border-color $dur-sm $ease-quick;
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 8px 20px rgba(37,99,235,0.08);
+    }
+  }
+}
+
+/* ==========================================
+   10) ANIMACIONES / KEYFRAMES
+   ========================================== */
 @keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes floatIcon {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0); }
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-// ==========================================
-// 5. Responsive
-// ==========================================
+/* small floating decorative icon */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+/* ==========================================
+   11) ACCESIBILIDAD Y CONTRASTE
+   - Aseguramos focus states y contraste suficiente.
+   ========================================== */
+/* High-contrast helper */
+.text-strong { color: $gray-900; font-weight:700; }
+.text-muted { color: $gray-500; }
+
+/* Focus visible for keyboard users */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.14);
+  border-radius: $radius-sm;
+}
+
+/* ==========================================
+   12) RESPONSIVE BREAKPOINTS (simple y útil)
+   ========================================== */
+@media (max-width: 1100px) { .container { max-width: 920px; } }
 @media (max-width: 768px) {
-    .inicio-container {
-        padding: 1.5rem;
-
-        h1 {
-            font-size: 2.4rem;
-        }
-
-        p {
-            font-size: 1.1rem;
-        }
-
-        button {
-            width: 100%;
-            max-width: 300px;
-        }
-    }
+  .hero { grid-template-columns: 1fr; }
+  .card { &__media { height: 140px; } }
 }
+

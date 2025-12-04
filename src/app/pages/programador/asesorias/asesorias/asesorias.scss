@@ -1,216 +1,536 @@
-// Variables de colores para mantener consistencia
-$primary-color: #3f51b5; // Azul moderno
-$success-color: #2e7d32; // Verde
-$danger-color: #d32f2f; // Rojo
-$warning-color: #ed6c02; // Naranja
-$text-color: #333;
-$bg-light: #f5f5f5;
-$border-color: #ddd;
+// =========================================
+// 1. VARIABLES DEL SISTEMA DE DISEÑO
+// =========================================
 
-:host {
+// -- Colores principales (mantengo tu primary #3f51b5 y lo extiendo)
+$color-primary: #3f51b5;            // azul moderno (base)
+$color-primary-600: #334296;
+$color-primary-400: #5b6bd6;
+$color-primary-200: #dfe6ff;
+$color-accent: #7c4dff;             // acento púrpura para dinámica visual
+$color-success: #2e7d32;            // verde (mantengo)
+$color-danger: #d32f2f;             // rojo (mantengo)
+$color-warning: #ed6c02;            // naranja (mantengo)
+
+$color-bg: #0f172a;                 // fondo oscuro alternativo (moderno)
+$color-surface: #ffffff;            // tarjeta / superficie principal
+$color-muted: #6b7280;              // textos secundarios
+$color-text: #111827;               // texto principal (contraste)
+$color-border: #e6e9ef;             // bordes suaves
+$color-bg-light: #f7f8fb;           // fondo de áreas claras
+
+// -- Tonos semitransparentes para sombras/overlays
+$overlay-strong: rgba(15, 23, 42, 0.6);
+$shadow-dark: rgba(2, 6, 23, 0.08);
+
+// -- Tipografías y tamaños
+$font-sans: "Inter", "Roboto", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+$font-size-base: 16px;
+$line-height-base: 1.45;
+
+$h1: 2.0rem;
+$h2: 1.5rem;
+$h3: 1.125rem;
+$text-small: 0.875rem;
+
+// -- Espaciado (sistema modular)
+$space-xxs: 4px;
+$space-xs: 8px;
+$space-sm: 12px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 32px;
+$radius-sm: 6px;
+$radius-md: 12px;
+$radius-lg: 18px;
+
+// -- Sombras y bordes
+$shadow-sm: 0 1px 2px $shadow-dark;
+$shadow-md: 0 6px 18px $shadow-dark;
+$shadow-lg: 0 24px 48px rgba(2,6,23,0.12);
+$glass-border: 1px solid rgba(255,255,255,0.06);
+
+// -- Animaciones
+$anim-fast: 0.12s;
+$anim-medium: 0.28s;
+$anim-slow: 0.45s;
+
+// -- Z-index
+$z-top: 9999;
+
+// =========================================
+// 2. MIXINS / UTILIDADES
+// =========================================
+
+@mixin flex-center($dir: row, $jc: center, $ai: center) {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: $jc;
+  align-items: $ai;
+}
+
+@mixin transition($props...) {
+  transition: #{join($props, ", ")} $anim-medium cubic-bezier(.2,.9,.3,1);
+}
+
+@mixin card-surface {
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+  border: 1px solid $color-border;
+}
+
+// truncar texto
+@mixin ellipsis($lines: 1) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}
+
+// =========================================
+// 3. ESTILOS BASE (body, tipografías, links)
+// =========================================
+
+:root {
+  font-family: $font-sans;
+  font-size: $font-size-base;
+  color-scheme: light;
+}
+
+/* Host (útil para componentes Angular / Web Components) */
+:host, body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(180deg, $color-bg-light 0%, #ffffff 100%);
+  color: $color-text;
+  font-family: $font-sans;
+  line-height: $line-height-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Contenedor general */
+.app-container {
+  padding: $space-lg;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Encabezados */
+h1, h2, h3, h4 {
+  color: $color-text;
+  margin: 0 0 $space-sm 0;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: $h1; font-weight: 700; }
+h2 { font-size: $h2; font-weight: 650; color: $color-primary-600; }
+h3 { font-size: $h3; font-weight: 600; }
+p { margin: 0 0 $space-sm 0; color: $color-text; }
+
+// enlaces
+a {
+  color: $color-primary;
+  text-decoration: none;
+  @include transition(color, transform);
+  &:hover { color: $color-primary-400; transform: translateY(-1px); }
+}
+
+// formulario / inputs base
+input, textarea, select {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: $space-sm $space-md;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+  background: #fff;
+  color: $color-text;
+  @include transition(border-color, box-shadow);
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.08);
+  }
+}
+
+// =========================================
+// 4. COMPONENTES VISUALES
+// =========================================
+
+// ---------- Contenedores destacados ----------
+.hero {
+  @include card-surface;
+  padding: $space-lg;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $space-md;
+  align-items: center;
+  background: linear-gradient(135deg, $color-primary-200 0%, rgba($color-accent,0.06) 100%);
+  border: 1px solid rgba($color-primary-400, 0.12);
+
+  .hero-info {
+    h2 { color: $color-primary-600; }
+    p { color: $color-muted; font-size: $text-small; }
+  }
+
+  .hero-cta {
+    @include flex-center(column, center, center);
+    gap: $space-xs;
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---------- Tarjetas (cards) ----------
+.card {
+  @include card-surface;
+  padding: $space-md;
+  border-radius: $radius-md;
+  overflow: hidden;
+  position: relative;
+  @include transition(transform, box-shadow);
+  background-clip: padding-box;
+
+  &.elevated { box-shadow: $shadow-lg; }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(2,6,23,0.10);
+  }
+
+  // Header interno de la card
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $space-sm;
+    margin-bottom: $space-sm;
+
+    .title { font-weight: 700; color: $color-text; }
+    .meta { color: $color-muted; font-size: $text-small; }
+  }
+
+  .card-body {
+    color: $color-text;
+    font-size: 0.95rem;
+  }
+
+  .card-footer {
+    margin-top: $space-md;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $space-sm;
+  }
+}
+
+// ---------- Tarjeta con imagen (image card) ----------
+.card-media {
+  @extend .card;
+  padding: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 180px 1fr;
+  min-height: 220px;
+
+  .media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;               // imagen ocupa el contenedor
     display: block;
-    padding: 20px;
-    font-family: 'Roboto', 'Segoe UI', sans-serif; // O la fuente que uses en tu proyecto
-    color: $text-color;
+    border-bottom-left-radius: $radius-md;
+    border-bottom-right-radius: $radius-md;
+  }
+
+  .media-overlay {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 180px;
+    background: linear-gradient(180deg, rgba(15,23,42,0.0) 0%, rgba(15,23,42,0.45) 100%);
+    pointer-events: none;
+  }
+
+  .card-body {
+    padding: $space-md;
+  }
+
+  // Asegura que la imagen nunca sea circular y siempre cubra la tarjeta
+  img { border-radius: 0; }
 }
 
-// Título principal
-h2 {
-    color: $primary-color;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    border-bottom: 2px solid lighten($primary-color, 30%);
-    padding-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+// =========================================
+// 5. BOTONES (clase .btn)
+// =========================================
 
-    i {
-        font-size: 1.2em;
-    }
+.btn {
+  @include flex-center(row, center, center);
+  padding: 10px 14px;
+  font-weight: 600;
+  border-radius: $radius-sm;
+  border: none;
+  cursor: pointer;
+  min-height: 40px;
+  @include transition(transform, box-shadow, background-color);
+  box-shadow: $shadow-sm;
+  text-decoration: none;
+
+  &--primary {
+    background: linear-gradient(180deg, $color-primary 0%, $color-primary-600 100%);
+    color: #fff;
+    &:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(51,66,150,0.14); }
+    &:active { transform: translateY(0); }
+  }
+
+  &--secondary {
+    background: transparent;
+    color: $color-primary;
+    border: 1px solid rgba($color-primary,0.12);
+    &:hover { background: rgba($color-primary,0.04); }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-muted;
+    &:hover { background: $color-bg-light; color: $color-text; }
+  }
+
+  &--danger {
+    background: linear-gradient(180deg, $color-danger, darken($color-danger,6%));
+    color: #fff;
+  }
+
+  // iconos dentro de botones
+  i { font-size: 1rem; margin-right: 8px; opacity: 0.95; }
 }
 
-// Estados de Carga y Vacío
-.loading,
-.sin-asesorias {
-    text-align: center;
-    padding: 40px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    margin-top: 20px;
-    color: #666;
+// =========================================
+// 6. BADGES / ESTADOS
+// =========================================
 
-    i {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        color: #ccc;
-        display: block;
-    }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: none;
+  border: 1px solid rgba(0,0,0,0.04);
 
-    p {
-        font-size: 1.1rem;
-        margin: 0;
-    }
+  &--pending {
+    background: linear-gradient(90deg, lighten($color-warning, 42%), rgba($color-warning, 0.06));
+    color: darken($color-warning, 8%);
+    border-color: lighten($color-warning, 30%);
+  }
+
+  &--approved {
+    background: linear-gradient(90deg, lighten($color-success, 42%), rgba($color-success, 0.06));
+    color: darken($color-success, 8%);
+    border-color: lighten($color-success, 30%);
+  }
+
+  &--rejected {
+    background: linear-gradient(90deg, lighten($color-danger, 42%), rgba($color-danger, 0.06));
+    color: darken($color-danger, 8%);
+    border-color: lighten($color-danger, 30%);
+  }
 }
 
-.loading i {
-    color: $primary-color; // Spinner con color
-}
+// =========================================
+// 7. TABLA RESPONSIVA (contenedor + tabla)
+// =========================================
 
-// Contenedor de la tabla (Scroll horizontal para móviles)
 .table-container {
-    width: 100%;
-    overflow-x: auto; // Crucial para responsividad
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
+  width: 100%;
+  overflow-x: auto;
+  border-radius: $radius-md;
+  background: linear-gradient(180deg, #fff, #fff);
+  padding: $space-sm;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-sm;
 }
 
-// Estilos de la Tabla
-.tabla-asesorias {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 800px; // Asegura que no se rompa en pantallas muy pequeñas
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  font-size: 0.95rem;
 
-    thead {
-        background-color: $bg-light;
-        border-bottom: 2px solid $border-color;
+  thead th {
+    text-align: left;
+    padding: $space-sm $space-md;
+    background: transparent;
+    color: $color-muted;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.6px;
+  }
 
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: #555;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            white-space: nowrap; // Evita que los títulos se rompan
+  tbody tr {
+    border-bottom: 1px solid $color-border;
+    transition: background-color $anim-fast ease, transform $anim-medium;
+    &:hover { background: rgba(59,130,246,0.02); transform: translateY(-2px); }
+  }
 
-            i {
-                margin-right: 5px;
-                color: $primary-color;
-            }
-        }
+  td {
+    padding: $space-sm $space-md;
+    vertical-align: middle;
+  }
+
+  .col-actions { white-space: nowrap; }
+}
+
+// =========================================
+// 8. LOADING / STATES VACÍOS
+// =========================================
+
+.loading-state, .empty-state {
+  @include card-surface;
+  @include flex-center(column, center, center);
+  padding: $space-lg;
+  gap: $space-sm;
+  color: $color-muted;
+  text-align: center;
+
+  i { font-size: 2.2rem; color: $color-primary; opacity: 0.92; }
+  p { margin: 0; }
+}
+
+// =========================================
+// 9. TIMELINE SENCILLO (opcional / animado)
+// =========================================
+
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, $color-primary, rgba($color-primary,0.28));
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: $space-sm 0 $space-sm $space-md;
+    margin-bottom: $space-sm;
+
+    .dot {
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: $color-surface;
+      border: 4px solid $color-primary;
+      box-shadow: 0 6px 20px rgba(51,66,150,0.08);
     }
 
-    tbody {
-        tr {
-            border-bottom: 1px solid $border-color;
-            transition: background-color 0.2s ease;
-
-            &:last-child {
-                border-bottom: none;
-            }
-
-            &:hover {
-                background-color: lighten($bg-light, 2%);
-            }
-
-            td {
-                padding: 15px;
-                vertical-align: middle;
-                font-size: 0.95rem;
-            }
-        }
-    }
+    .content { padding-left: $space-xs; }
+  }
 }
 
-// Etiquetas de Estado (Badges)
-[class^="estado-"] {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-align: center;
-    min-width: 80px;
+// =========================================
+// 10. ANIMACIONES / MICROINTERACCIONES
+// =========================================
+
+@keyframes pulse-weak {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.95; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-.estado-pendiente {
-    background-color: lighten($warning-color, 45%);
-    color: darken($warning-color, 10%);
-    border: 1px solid lighten($warning-color, 30%);
+.pulse {
+  animation: pulse-weak 3s ease-in-out infinite;
 }
 
-.estado-aprobada {
-    background-color: lighten($success-color, 50%);
-    color: darken($success-color, 10%);
-    border: 1px solid lighten($success-color, 40%);
+.fade-in {
+  animation: fadeIn $anim-slow ease both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.estado-rechazada {
-    background-color: lighten($danger-color, 45%);
-    color: darken($danger-color, 10%);
-    border: 1px solid lighten($danger-color, 30%);
+// =========================================
+// 11. ACCESIBILIDAD Y CONTRASTE
+// =========================================
+
+.high-contrast {
+  color: #0b1220;
+  background: #fff;
+  border-color: darken($color-border, 6%);
 }
 
-// Botones de Acción
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+// =========================================
+// 12. AJUSTES RESPONSIVOS
+// =========================================
+
+@media (max-width: 1024px) {
+  .app-container { padding: $space-md; }
+  .card-media { grid-template-rows: 160px 1fr; }
+}
+
+@media (max-width: 720px) {
+  h1 { font-size: 1.5rem; }
+  .btn { min-height: 44px; width: 100%; justify-content: center; }
+  .table { min-width: 600px; }
+}
+
+// =========================================
+// 13. EJEMPLOS DE USO (clases que encajan con tu HTML existente)
+// =========================================
+
+/* Encabezado con icono similar a tu h2 */
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  padding-bottom: $space-sm;
+  border-bottom: 2px solid rgba($color-primary-400, 0.08);
+
+  i { color: $color-primary; font-size: 1.2rem; }
+}
+
+/* Acciones (botones) para cada fila - namespace .acciones */
 .acciones {
-    white-space: nowrap; // Mantiene los botones en línea
-    display: flex;
-    gap: 8px;
+  display: inline-flex;
+  gap: $space-xs;
+  align-items: center;
+
+  button {
+    @extend .btn;
+    padding: 8px 10px;
+    min-height: 36px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .btn-aprobar { @extend .btn--primary; background: linear-gradient(90deg, $color-success, darken($color-success, 6%)); }
+  .btn-rechazar { @extend .btn--danger; }
+  .gestionado {
+    color: $color-muted;
+    font-style: italic;
+    display: inline-flex;
+    gap: 6px;
     align-items: center;
-
-    button {
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        transition: all 0.2s ease;
-        color: white;
-
-        &:first-of-type {
-            // Botón Aprobar
-            background-color: $success-color;
-
-            &:hover {
-                background-color: darken($success-color, 5%);
-                transform: translateY(-1px);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
-        }
-
-        &:last-of-type {
-            // Botón Rechazar
-            background-color: $danger-color;
-
-            &:hover {
-                background-color: darken($danger-color, 5%);
-                transform: translateY(-1px);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
-        }
-    }
-
-    // Texto "Gestionada"
-    .gestionado {
-        color: #777;
-        font-style: italic;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-
-        i {
-            color: $success-color;
-        }
-    }
-}
-
-// Estilo para el Debug (opcional, para que no moleste visualmente)
-pre {
-    background: #222;
-    color: #0f0;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    max-height: 200px;
-    overflow: auto;
-    margin-bottom: 20px;
+  }
 }

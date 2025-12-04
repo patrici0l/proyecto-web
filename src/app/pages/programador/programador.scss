@@ -1,4 +1,537 @@
-.programador-container {
-    max-width: 900px;
-    margin: 20px auto;
+// ------------------------------
+// 1. Variables — Colores, tipografías, espacio, sombras, animaciones
+// ------------------------------
+$font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+$font-mono: "Fira Code", "Courier New", monospace;
+
+// Paleta principal (manteniendo identidad pero mejorada)
+// Tonos pensados para elegancia + contraste
+$brand-primary: #0f172a;        // tono oscuro base (mantener identidad)
+$brand-primary-600: #0b1220;
+$brand-primary-400: #152033;
+$brand-primary-200: #2a3a4f;
+$accent: #3b82f6;               // acento vibrante (azul)
+$accent-variant: #60a5fa;
+$accent-soft: rgba(59,130,246,0.12);
+
+$neutral-100: #f7fafc;
+$neutral-200: #eef2f7;
+$neutral-300: #e2e8f0;
+$neutral-500: #94a3b8;
+$neutral-700: #334155;
+$neutral-900: #0b1220;
+
+$success: #10b981;
+$danger: #ef4444;
+$warning: #f59e0b;
+
+// Gradientes sutiles
+$gradient-card: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+
+// Espaciado / Tipografía / Rounding
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 18px;
+
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 40px;
+
+$font-size-base: 16px;
+$line-height-base: 1.45;
+
+// Sombras (sutiles y jerárquicas)
+$shadow-1: 0 1px 6px rgba(11,17,32,0.04);
+$shadow-2: 0 6px 20px rgba(11,17,32,0.08);
+$shadow-3: 0 12px 40px rgba(11,17,32,0.12);
+
+// Transiciones y tiempos
+$duration-fast: 160ms;
+$duration-medium: 280ms;
+$duration-slow: 420ms;
+$easing: cubic-bezier(.2,.9,.3,1);
+
+// Z-index
+$z-pop: 900;
+$z-modal: 1000;
+
+// Preferencias de animación reducido
+@media (prefers-reduced-motion: reduce) {
+  // we'll override animations later where needed
 }
+
+// ==============================
+// 2. Utilidades comunes
+// ==============================
+%visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Utility for image-fit inside cards so images always show fully */
+@mixin image-fit-cover {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// Small focus ring for accessibility
+@mixin focus-ring($color: $accent) {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(red($color), green($color), blue($color), 0.14);
+  border-radius: $radius-sm;
+}
+
+// ==============================
+// 3. Reset + estilos base
+// ==============================
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: $font-size-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: $font-sans;
+  line-height: $line-height-base;
+  color: $neutral-900;
+  background: linear-gradient(180deg, $neutral-100 0%, $neutral-200 100%);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background $duration-medium $easing;
+}
+
+// Container proporcionado por el usuario (incluido y mejorado)
+.programador-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: $space-lg;
+  background: white;
+  border-radius: $radius-md;
+  box-shadow: $shadow-2;
+  border: 1px solid rgba(11,17,32,0.03);
+}
+
+// Tipografía
+h1, h2, h3, h4 {
+  font-weight: 700;
+  color: $brand-primary-600;
+  line-height: 1.15;
+  margin: 0 0 $space-sm 0;
+}
+
+h1 { font-size: 2.125rem; } // ~34px
+h2 { font-size: 1.5rem; }   // ~24px
+h3 { font-size: 1.125rem; } // ~18px
+
+p {
+  margin: 0 0 $space-md 0;
+  color: $neutral-700;
+  font-size: 0.975rem;
+}
+
+// Links
+a {
+  color: $accent;
+  text-decoration: none;
+  transition: color $duration-fast $easing;
+  &:hover, &:focus {
+    color: $accent-variant;
+    text-decoration: underline;
+  }
+}
+
+// Small helper for muted text
+.muted { color: $neutral-500; font-size: 0.94rem; }
+
+// ==============================
+// 4. Componentes — Botones
+// ==============================
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: 10px 16px;
+  border-radius: $radius-md;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform $duration-fast $easing, box-shadow $duration-fast $easing, background $duration-fast $easing;
+  user-select: none;
+  will-change: transform, box-shadow;
+
+  // Icon sizing inside buttons
+  .btn-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    line-height: 0;
+  }
+
+  &:focus {
+    @include focus-ring($accent);
+  }
+
+  &:active {
+    transform: translateY(1px) scale(0.998);
+  }
+}
+
+// Primary button (accent)
+.button--primary {
+  background: linear-gradient(180deg, $accent, $accent-variant);
+  color: white;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.18), $shadow-1;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(59,130,246,0.20);
+  }
+}
+
+// Secondary / neutral button
+.button--secondary {
+  background: white;
+  color: $brand-primary-400;
+  border: 1px solid rgba($brand-primary-400, 0.06);
+  box-shadow: $shadow-1;
+
+  &:hover {
+    background: $neutral-100;
+    transform: translateY(-2px);
+  }
+}
+
+// Ghost / link-like
+.button--ghost {
+  background: transparent;
+  color: $brand-primary-600;
+  padding: 8px 10px;
+
+  &:hover { color: $accent; }
+}
+
+// Small micro ripple effect (pure CSS)
+.button {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    transition: width $duration-medium $easing, height $duration-medium $easing, opacity $duration-medium $easing;
+    opacity: 0;
+  }
+
+  &:hover::after {
+    width: 220%;
+    height: 220%;
+    opacity: 1;
+  }
+
+  // reduce motion honor
+  @media (prefers-reduced-motion: reduce) {
+    &::after { transition: none; }
+    &:hover::after { width: 220%; height: 220%; }
+  }
+}
+
+// ==============================
+// 5. Tarjetas (Card) — imagen completa y contenido
+// ==============================
+
+.card {
+  background: $gradient-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-2;
+  border: 1px solid rgba(11,17,32,0.04);
+  transition: transform $duration-medium $easing, box-shadow $duration-medium $easing;
+  will-change: transform, box-shadow;
+
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-3;
+  }
+
+  // Imagen de cabecera que se adapta (no recorta innecesariamente)
+  &__media {
+    width: 100%;
+    height: 220px;
+    position: relative;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.00));
+    overflow: hidden;
+
+    img {
+      @include image-fit-cover; // asegura que la imagen llene el contenedor y quede completa visualmente
+      transition: transform $duration-medium $easing;
+    }
+
+    // ligero zoom en hover para dar dinamismo
+    .card:hover & img {
+      transform: scale(1.04);
+    }
+  }
+
+  &__body {
+    padding: $space-md;
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    color: $brand-primary-600;
+    margin-bottom: $space-xs;
+  }
+
+  &__meta {
+    display: flex;
+    gap: $space-sm;
+    align-items: center;
+    color: $neutral-500;
+    font-size: 0.9rem;
+  }
+
+  &__actions {
+    margin-top: $space-sm;
+    display: flex;
+    gap: $space-sm;
+    align-items: center;
+  }
+}
+
+// ==============================
+// 6. Contenedores destacados / Hero pequeño
+// ==============================
+.hero {
+  padding: $space-lg;
+  border-radius: $radius-lg;
+  background: linear-gradient(180deg, rgba($accent-variant,0.06), rgba(255,255,255,0));
+  border: 1px solid rgba(59,130,246,0.06);
+  box-shadow: $shadow-1;
+  display: flex;
+  gap: $space-lg;
+  align-items: center;
+  justify-content: space-between;
+
+  &__left {
+    flex: 1;
+  }
+
+  &__right {
+    min-width: 220px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: $accent-soft;
+    color: $accent;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+}
+
+// ==============================
+// 7. Timeline / Sección animada
+// ==============================
+
+.timeline {
+  position: relative;
+  padding-left: 36px;
+  margin: $space-lg 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, $accent, transparent 70%);
+    border-radius: 4px;
+    opacity: 0.95;
+  }
+
+  &__item {
+    position: relative;
+    margin-bottom: $space-lg;
+    padding: $space-sm 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid $accent;
+      box-shadow: 0 2px 6px rgba(11,17,32,0.06);
+    }
+
+    &__card {
+      background: white;
+      border-radius: $radius-md;
+      padding: $space-md;
+      box-shadow: $shadow-1;
+      transition: transform $duration-medium $easing, box-shadow $duration-medium $easing;
+
+      &:hover {
+        transform: translateX(6px);
+        box-shadow: $shadow-2;
+      }
+    }
+  }
+}
+
+// ==============================
+// 8. Badges, chips y estados
+// ==============================
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  background: rgba(11,17,32,0.04);
+  color: $brand-primary-600;
+  box-shadow: none;
+}
+
+// Estado success / danger
+.badge--success { background: rgba($success, 0.08); color: $success; }
+.badge--danger  { background: rgba($danger, 0.08); color: $danger; }
+
+// ==============================
+// 9. Form controls (accesible y elegante)
+// ==============================
+.input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: $radius-sm;
+  border: 1px solid rgba(11,17,32,0.06);
+  background: white;
+  font-size: 0.95rem;
+  transition: box-shadow $duration-fast $easing, border-color $duration-fast $easing;
+
+  &:focus {
+    @include focus-ring($accent);
+    border-color: $accent;
+  }
+}
+
+.label {
+  display: block;
+  margin-bottom: $space-xs;
+  color: $neutral-700;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+// ==============================
+// 10. Microinteracciones y animaciones
+// ==============================
+
+// Small fade-up entrance
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fadeUp $duration-slow $easing both;
+}
+
+// Floating subtle effect
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.float-subtle { animation: float 6s ease-in-out infinite; }
+
+// Honor reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  .fade-up, .float-subtle, .card, .timeline__item__card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+// ==============================
+// 11. Layout responsivo y helpers
+// ==============================
+.row {
+  display: flex;
+  gap: $space-lg;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+  min-width: 240px;
+}
+
+// Helpers
+.text-center { text-align: center; }
+.d-flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+
+// ==============================
+// 12. Ejemplos de uso (clase combinada)
+// ==============================
+
+.card--horizontal {
+  display: flex;
+  gap: $space-md;
+  align-items: center;
+
+  &__media {
+    width: 140px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    &__media { width: 100%; height: 160px; }
+  }
+}
+

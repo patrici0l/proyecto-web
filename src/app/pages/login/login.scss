@@ -1,127 +1,485 @@
-// ==========================================
-// 1. Variables de estilos
-// ==========================================
-$bg-page: #f0f2f5;
-$text-primary: #202124;
-$btn-bg: #ffffff;
-$btn-text: #3c4043;
-$btn-border: #dadce0;
-$btn-hover: #f7f8f8;
-$google-blue: #1a73e8;
+// =======================================================
+// SCSS Profesional — Paleta extendida, variables y componentes
+// Autor: Generado por ChatGPT (Marcelo) — Entrega completa
+// Comentarios en español para cada sección
+// =======================================================
 
-// ==========================================
-// 2. Contenedor General (Pantalla completa)
-// ==========================================
-:host {
+// ---------------------------------------
+// 1) Paleta y variables globales
+// ---------------------------------------
+// Mantengo los colores principales que entregaste y los extiendo.
+$bg-page:       #f0f2f5 !default;   // fondo general (mantener identidad)
+$text-primary:  #202124 !default;   // color principal del texto
+$google-blue:   #1a73e8 !default;   // color emblemático que pediste mantener
+
+// Paleta extendida (tonos claros, medios, oscuros y acentos)
+$palette: (
+  primary:    $google-blue,
+  primary-600: #1669d6,
+  primary-400: #6fa8ff,
+  neutral-100: #ffffff,
+  neutral-200: #f7f8fa,
+  neutral-300: #eef1f5,
+  neutral-500: #d6dbe6,
+  neutral-700: #8b939f,
+  text-strong: $text-primary,
+  accent-1:    #f59e0b,  // ámbar para acentos
+  accent-2:    #10b981   // verde para éxito
+);
+
+// Extraigo helpers rápidos
+$color-primary: map-get($palette, primary);
+$color-primary-600: map-get($palette, primary-600);
+$color-primary-400: map-get($palette, primary-400);
+$neutral-100: map-get($palette, neutral-100);
+$neutral-200: map-get($palette, neutral-200);
+$neutral-300: map-get($palette, neutral-300);
+$neutral-500: map-get($palette, neutral-500);
+$neutral-700: map-get($palette, neutral-700);
+$accent-1: map-get($palette, accent-1);
+$accent-2: map-get($palette, accent-2);
+
+// Tipografías
+$font-sans:   'Inter', 'Roboto', Helvetica, Arial, sans-serif;
+$font-mono:   'SFMono-Regular', Menlo, Monaco, monospace;
+
+// Espaciados y escala
+$space-xxs: 4px;
+$space-xs: 8px;
+$space-sm: 12px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 32px;
+$space-xxl: 48px;
+
+// Borde y radio
+$radius-sm: 6px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$card-radius: 14px;
+
+// Sombras (sutiles, accesibles)
+$shadow-xs: 0 1px 2px rgba(16,24,40,0.04);
+$shadow-sm: 0 4px 12px rgba(16,24,40,0.06);
+$shadow-md: 0 10px 30px rgba(16,24,40,0.08);
+$shadow-focus: 0 0 0 4px rgba(26,115,232,0.12);
+
+// Transiciones y animaciones
+$transition-fast: 160ms;
+$transition-base: 260ms;
+$transition-slow: 420ms;
+$easing: cubic-bezier(.2,.9,.25,1);
+
+// Z-index
+$z-modal: 900;
+$z-tooltip: 800;
+
+// ---------------------------------------
+// 2) Mixins y funciones utilitarias
+// ---------------------------------------
+@mixin focus-ring {
+  outline: none;
+  box-shadow: $shadow-focus;
+  border-color: $color-primary;
+}
+
+@mixin card-reset {
+  background: $neutral-100;
+  border-radius: $card-radius;
+  box-shadow: $shadow-sm;
+  border: 1px solid $neutral-300;
+}
+
+@mixin interactive {
+  transition: transform $transition-base $easing, box-shadow $transition-base $easing,
+              opacity $transition-fast $easing, background-color $transition-base $easing;
+  will-change: transform;
+}
+
+// Preferencias de movimiento reducidas
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation-duration: 0.01ms !important; }
+}
+
+// ---------------------------------------
+// 3) Reset/Estilos base y layout global
+// ---------------------------------------
+:root {
+  --bg-page: #{$bg-page};
+  --text-primary: #{$text-primary};
+  --primary: #{$color-primary};
+}
+
+* { box-sizing: border-box; }
+html, body, :host { height: 100%; }
+body {
+  background: radial-gradient(circle at 10% 10%, $neutral-100 0%, $neutral-300 45%, $bg-page 100%);
+  color: $text-primary;
+  font-family: $font-sans;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+// Contenedor principal reutilizable
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $space-lg;
+}
+
+// Tipografía: títulos y textos
+h1, h2, h3, h4 {
+  color: $text-primary;
+  margin: 0 0 $space-sm 0;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.125rem; }
+
+p {
+  margin: 0 0 $space-md 0;
+  color: rgba($text-primary, 0.9);
+  font-size: 0.98rem;
+}
+
+// Links accesibles
+a {
+  color: $color-primary;
+  text-decoration: none;
+  @include interactive;
+  &:hover, &:focus { text-decoration: underline; }
+  &:focus { @include focus-ring; }
+}
+
+// ---------------------------------------
+// 4) Utilities (espaciado, grid, helpers)
+// ---------------------------------------
+.u-row {
+  display: flex;
+  gap: $space-lg;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.u-col {
+  flex: 1 1 0;
+  min-width: 220px;
+}
+
+// Small helpers
+.text-muted { color: $neutral-700; font-size: .92rem; }
+.shadow-soft { box-shadow: $shadow-xs; }
+
+// ---------------------------------------
+// 5) Botones (primarios, ghost, icon) — accesibles y con feedback
+// ---------------------------------------
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: $space-sm $space-lg;
+  border-radius: $radius-md;
+  border: 1px solid transparent;
+  background: $neutral-100;
+  color: $text-primary;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  @include interactive;
+  &:focus { @include focus-ring; }
+
+  // Icon dentro (si usas svg en markup)
+  svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  &--primary {
+    background: linear-gradient(180deg, $color-primary 0%, $color-primary-600 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(26,115,232,0.16);
+    &:hover { transform: translateY(-3px); box-shadow: $shadow-md; }
+    &:active { transform: translateY(-1px); box-shadow: $shadow-sm; }
+    &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+  }
+
+  &--ghost {
+    background: transparent;
+    border: 1px solid $neutral-500;
+    color: $text-primary;
+    &:hover { background: $neutral-200; transform: translateY(-2px); }
+  }
+
+  &--link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: $color-primary;
+    font-weight: 600;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// Botón "Google" mejorado: mantiene icono y spinner si disabled (tu ejemplo)
+.btn-google {
+  @extend .btn;
+  @extend .btn--primary;
+  min-width: 240px;
+  padding: $space-sm $space-lg;
+  position: relative;
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 18px; height: 18px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 8px;
+    transform: translateY(0.5px);
+  }
+  &:disabled {
+    &::before { background-image: none; border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; width: 16px; height: 16px; animation: spin 0.7s linear infinite; }
+  }
+}
+
+// ---------------------------------------
+// 6) Tarjetas (card) — imágenes adaptadas y jerarquía visual
+// ---------------------------------------
+.card {
+  @include card-reset;
+  padding: $space-md;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  overflow: hidden;
+  background-clip: padding-box;
+  position: relative;
+
+  // Header / imagen
+  &__media {
+    width: 100%;
+    border-radius: calc($card-radius - 4px);
+    overflow: hidden;
+    display: block;
+    aspect-ratio: 16 / 9; // asegura proporción consistente
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // mantiene imagen completa y recorta centrado (lo pediste)
+      display: block;
+    }
+  }
+
+  &__body {
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: radial-gradient(circle, #ffffff, #eef1f5);
-    font-family: 'Roboto', Helvetica, Arial, sans-serif;
-    padding: 1rem;
+    gap: $space-xs;
+  }
 
-    animation: fadeIn 0.6s ease-out;
-}
-
-// ==========================================
-// 3. Título
-// ==========================================
-h2 {
-    margin-bottom: 1.5rem;
-    color: $text-primary;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-
-    // Icono decorativo antes del texto
-    &::before {
-        content: "🔐";
-        font-size: 2.2rem;
-        margin-right: 0.5rem;
-        vertical-align: middle;
-    }
-}
-
-// ==========================================
-// 4. Botón estilo Google mejorado
-// ==========================================
-button {
-    background-color: $btn-bg;
-    color: $btn-text;
-    border: 1px solid $btn-border;
-    border-radius: 6px;
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    min-width: 240px;
-    letter-spacing: 0.2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: all 0.25s ease;
-
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: $space-xs;
+  }
 
-    // Icono Google
-    &::before {
-        content: "";
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-    }
+  &__meta {
+    font-size: 0.88rem;
+    color: $neutral-700;
+  }
 
-    // Hover
-    &:hover:not([disabled]) {
-        background-color: $btn-hover;
-        border-color: lighten($btn-border, 10%);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
+  &--compact {
+    padding: $space-sm;
+  }
 
-    // Active
-    &:active:not([disabled]) {
-        transform: translateY(-1px);
-        background-color: #e8f0fe;
-        box-shadow: none;
-    }
-
-    // Estado cargando
-    &:disabled {
-        background-color: #f1f3f4;
-        color: rgba(60, 64, 67, 0.38);
-        border-color: transparent;
-        cursor: wait;
-        box-shadow: none;
-
-        // Cambiar icono por spinner animado
-        &::before {
-            background-image: none;
-            border: 3px solid rgba(0,0,0,0.2);
-            border-top-color: $google-blue;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            animation: spin 0.7s linear infinite;
-        }
-    }
+  // Badge decorativo
+  &__badge {
+    position: absolute;
+    top: $space-sm;
+    right: $space-sm;
+    background: linear-gradient(90deg, rgba($accent-1,0.12), rgba($color-primary,0.08));
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: .85rem;
+    color: $text-primary;
+    box-shadow: $shadow-xs;
+  }
 }
 
-// ==========================================
-// 5. Animaciones
-// ==========================================
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+// Ejemplo: tarjeta con acción al hover
+.card--interactive {
+  @include interactive;
+  &:hover { transform: translateY(-4px); box-shadow: $shadow-md; border-color: rgba($color-primary,0.08); }
+  &:focus-within { @include focus-ring; transform: translateY(-2px); }
+}
+
+// ---------------------------------------
+// 7) Contenedores destacados / hero
+// ---------------------------------------
+.hero {
+  @include card-reset;
+  padding: $space-lg;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: $space-lg;
+  align-items: center;
+  background: linear-gradient(180deg, rgba($color-primary-400,0.06), transparent 60%);
+  border: 1px solid rgba($color-primary,0.06);
+
+  &__kicker { text-transform: uppercase; font-weight: 700; color: $accent-1; font-size: .85rem; letter-spacing: .08em; }
+  &__title { font-size: 1.75rem; }
+  &__cta { margin-top: $space-md; }
+  &__visual { display:flex; align-items:center; justify-content:center; }
+}
+
+// ---------------------------------------
+// 8) Timeline / Sección animada
+// ---------------------------------------
+// Línea vertical con items animados al entrar (microinteracciones)
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  &:before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, $color-primary 0%, rgba($color-primary,0.12) 100%);
+    border-radius: 999px;
+  }
+
+  &__item {
+    position: relative;
+    margin-bottom: $space-lg;
+    padding-left: $space-sm;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity $transition-base $easing, transform $transition-base $easing;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: $space-sm;
+  }
+
+  &__dot {
+    position: absolute;
+    left: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: $neutral-100;
+    border: 3px solid $color-primary;
+    box-shadow: $shadow-xs;
+  }
+
+  &__title { font-weight: 700; }
+  &__meta { color: $neutral-700; font-size: .9rem; }
+
+  // class to reveal (you can toggle with JS when in viewport)
+  &__item.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ---------------------------------------
+// 9) Form controls y chips
+// ---------------------------------------
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  label { font-size: .9rem; color: $neutral-700; }
+  input, textarea, select {
+    padding: $space-sm;
+    border-radius: $radius-sm;
+    border: 1px solid $neutral-300;
+    background: $neutral-100;
+    font-size: 1rem;
+    transition: border-color $transition-fast $easing, box-shadow $transition-fast $easing;
+    &:focus { border-color: $color-primary; @include focus-ring; }
+  }
+}
+
+// Chips / tag
+.chip {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 10px; border-radius: 999px;
+  background: linear-gradient(180deg, rgba($neutral-200,1), rgba($neutral-300,1));
+  font-weight:600; font-size:.85rem;
+}
+
+// ---------------------------------------
+// 10) Microinteracciones y animaciones
+// ---------------------------------------
+@keyframes floatUp {
+  from { transform: translateY(6px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+  from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+}
+
+/* Microinteraction composer: small pulse on success */
+.pulse-success {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 8px 24px rgba($accent-2,0.14);
+    opacity: 0;
+    transform: scale(0.94);
+    transition: opacity 320ms $easing, transform 320ms $easing;
+  }
+  &.is-active::after { opacity: 1; transform: scale(1.03); }
+}
+
+// ---------------------------------------
+// 11) Responsive tweaks
+// ---------------------------------------
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; }
+  .container { padding: $space-md; }
+}
+
+// ---------------------------------------
+// 12) Ejemplos de uso (clases de muestra)
+// ---------------------------------------
+/* Usa estas clases en tu HTML para crear un layout rápido */
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-lg;
+  @media (max-width: 980px) { grid-template-columns: repeat(1, 1fr); }
+}
+
+/* small note: accesibilidad del contraste */
+.alert {
+  padding: $space-sm $space-md;
+  border-radius: $radius-sm;
+  font-weight: 600;
+  &--info { background: linear-gradient(90deg, rgba($color-primary,0.08), rgba($color-primary,0.02)); color: $color-primary; border: 1px solid rgba($color-primary,0.08); }
+  &--danger { background: linear-gradient(90deg, rgba(#ef4444,0.06), rgba(#ef4444,0.02)); color: #b91c1c; border: 1px solid rgba(#ef4444,0.06); }
+}
+
+/* Utilities para centrado */
+.center {
+  display:flex; align-items:center; justify-content:center;
 }
