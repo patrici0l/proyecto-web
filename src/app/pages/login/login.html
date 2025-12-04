@@ -1,5 +1,20 @@
-<h2>Iniciar sesión</h2>
+<div class="login-container">
+  <div class="login-card">
 
-<button (click)="loginGoogle()" [disabled]="cargando">
-  {{ cargando ? 'Conectando...' : 'Entrar con Google' }}
-</button>
+    <div class="icon">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+
+    <h2 class="typing-text">Bienvenido a la plataforma</h2>
+
+    <p class="descripcion">
+      Inicia sesión de forma segura y rápida para continuar.
+    </p>
+
+    <button (click)="loginGoogle()" [disabled]="cargando" class="google-btn">
+      <i class="fab fa-google"></i>
+      {{ cargando ? 'Conectando...' : 'Entrar con Google' }}
+    </button>
+
+  </div>
+</div>

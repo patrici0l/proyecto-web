@@ -1,137 +1,285 @@
-// ======================================
-// VARIABLES (Sistema de Diseño)
-// ======================================
-$primary: #2563eb;
-$primary-light: #60a5fa;
-$primary-dark: #1d4ed8;
-$accent: #10b981;
-$danger: #ef4444;
-$warning: #f59e0b;
-$gray-100: #f1f5f9;
-$gray-200: #e2e8f0;
-$text-dark: #1e293b;
-$text-light: #64748b;
+// ==========================================
+// 1. Variables del Sistema de Diseño
+// ==========================================
 
-// ======================================
-// CONTENEDOR GENERAL
-// ======================================
-.portafolio-card {
-    background: white;
-    border-radius: 18px;
-    padding: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform .2s ease, box-shadow .2s ease;
-    cursor: pointer;
+// Paleta principal (mejorada)
+$color-primary: #0f172a;      // Azul oscuro elegante
+$color-primary-light: #1e293b;
+$color-primary-dark: #0a0f1f;
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
+$color-accent: #3b82f6;       // Azul vibrante
+$color-accent-light: #60a5fa;
+$color-accent-dark: #1d4ed8;
+
+$color-success: #22c55e;
+$color-warning: #f59e0b;
+$color-danger: #ef4444;
+
+// Fondos
+$color-bg-page: #f1f5f9;
+$color-bg-card: #ffffff;
+
+// Texto
+$text-main: #1e293b;
+$text-secondary: #64748b;
+
+// Bordes, sombras, radios
+$border-radius: 18px;
+$shadow-soft: 0 6px 12px rgba(0, 0, 0, 0.08);
+$shadow-hover: 0 20px 26px rgba(0, 0, 0, 0.12);
+
+// Animaciones globales
+$transition-base: 0.3s ease-in-out;
+
+
+// ==========================================
+// 2. General
+// ==========================================
+:host {
+  display: block;
+  padding: 2rem;
+  background-color: $color-bg-page;
+  min-height: 100vh;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
-// ======================================
-// IMAGEN AJUSTADA CORRECTAMENTE
-// ======================================
-.portafolio-img-container {
-    width: 100%;
-    height: 220px; // <-- Tamaño uniforme
-    overflow: hidden;
-    border-radius: 14px;
+h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: $text-main;
+  text-align: center;
+  margin-bottom: 2.5rem;
 
+  i {
+    color: $color-accent;
+    margin-right: 8px;
+  }
+}
+
+
+// ==========================================
+// 3. Estados (Cargando / Vacío)
+// ==========================================
+.estado {
+  text-align: center;
+  padding: 2.5rem;
+  font-size: 1.1rem;
+  border-radius: $border-radius;
+  max-width: 520px;
+  margin: 0 auto 2rem auto;
+  background: white;
+  box-shadow: $shadow-soft;
+  color: $text-secondary;
+
+  i {
+    margin-right: 8px;
+    color: $color-accent;
+  }
+
+  &.vacio i {
+    color: $color-warning;
+  }
+}
+
+
+// ==========================================
+// 4. GRID inteligente
+// ==========================================
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.8rem;
+  max-width: 1400px;
+  margin: auto;
+  justify-content: center;
+}
+
+
+// ==========================================
+// 5. Tarjeta
+// ==========================================
+.card {
+  background: $color-bg-card;
+  border-radius: $border-radius;
+  box-shadow: $shadow-soft;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: 320px;
+  margin: auto;
+  transition: $transition-base;
+
+  .foto {
+    width: 100%;
+    height: 180px;
+    background: #e2e8f0;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background: #f8fafc;
-}
+    // ⛔ Quitamos redondeado heredado
+    border-radius: 0 !important;
 
-.portafolio-img-container img {
-    width: 100%;
-    height: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+      transition: transform 0.3s ease;
 
-    object-fit: contain; // <-- La imagen NO SE RECORTA
-    object-position: center;
+      // ⛔ Sin redondeado NUNCA
+      border-radius: 0 !important;
 
-    display: block;
-}
-
-// ======================================
-// TEXTO Y SECCIONES
-// ======================================
-.portafolio-nombre {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 1rem 0 0.3rem;
-    color: $text-dark;
-}
-
-.portafolio-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .4rem;
-    margin-bottom: .8rem;
-
-    span {
-        background: $gray-100;
-        padding: .3rem .6rem;
-        border-radius: 10px;
-        font-size: .85rem;
-        font-weight: 500;
-        color: $primary-dark;
+      &:hover {
+        transform: scale(1.03);
+      }
     }
-}
+  }
 
-.portafolio-desc {
-    font-size: .95rem;
-    color: $text-light;
-    min-height: 48px;
-    margin-bottom: 1rem;
-}
-
-.portafolio-horario {
-    background: #d1fae5;
-    padding: .6rem .8rem;
-    border-radius: 10px;
-    font-size: .9rem;
-    font-weight: 600;
-    color: #065f46;
-    margin-bottom: 1rem;
-}
-
-// ======================================
-// BOTONES
-// ======================================
-.btn-portafolio {
-    width: 100%;
-    padding: .8rem;
-    border-radius: 12px;
-    border: none;
-    font-size: 1rem;
-    font-weight: 600;
-    background: linear-gradient(90deg, $primary, $primary-light);
-    color: white;
-    cursor: pointer;
-    transition: .2s;
-
-    &:hover {
-        background: linear-gradient(90deg, $primary-dark, $primary);
-    }
-}
-
-// Footer links
-.portafolio-links {
+  // Información interna
+  .info {
+    padding: 1.2rem;
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
+    flex-direction: column;
+    gap: 0.6rem;
 
-    a {
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $text-main;
+
+      i {
+        color: $color-primary;
+        margin-right: 6px;
+      }
+    }
+
+    // Badge
+    .badge-especialidad {
+      background: mix($color-accent, white, 10%);
+      color: $color-accent;
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      width: fit-content;
+
+      i {
+        margin-right: 6px;
+      }
+    }
+
+    .descripcion {
+      color: $text-secondary;
+      font-size: 0.95rem;
+      line-height: 1.45;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .disponibilidad {
+      background: mix($color-success, white, 10%);
+      color: $color-success;
+      padding: 0.35rem 0.6rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      width: fit-content;
+
+      i {
+        margin-right: 6px;
+      }
+    }
+
+    .links {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.6rem;
+
+      a {
+        font-size: 0.9rem;
         font-weight: 600;
-        color: $primary;
-        transition: .2s;
+        text-decoration: none;
+        color: $text-main;
+        transition: 0.2s ease;
+
+        i {
+          margin-right: 6px;
+          color: $color-accent;
+        }
 
         &:hover {
-            color: $primary-dark;
+          color: $color-accent;
         }
+      }
     }
+
+    // Botones
+    .acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: auto;
+
+      button {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        border: none;
+        transition: $transition-base;
+
+        i {
+          margin-right: 8px;
+        }
+
+        &:first-child {
+          background: $color-primary;
+          color: white;
+
+          &:hover {
+            background: mix($color-primary, white, 15%);
+          }
+        }
+
+        &:last-child {
+          background: transparent;
+          border: 2px solid #cbd5e1;
+          color: $text-main;
+
+          &:hover {
+            border-color: $color-accent;
+            color: $color-accent;
+            background: mix($color-accent, white, 8%);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// ==========================================
+// Responsivo
+// ==========================================
+@media (max-width: 480px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
+  .card .foto {
+    height: 150px;
+  }
 }

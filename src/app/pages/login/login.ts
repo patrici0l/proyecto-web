@@ -56,4 +56,7 @@ export class LoginComponent {
       this.cargando = false;
     }
   }
+  toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
 }
