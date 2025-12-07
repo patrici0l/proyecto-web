@@ -1,14 +1,16 @@
+@use "sass:color";
+
 // ==========================================
 // PALETA FUTURISTA PREMIUM
 // ==========================================
-$primary: #6d28d9;              // Violeta neon
+$primary: #6d28d9;
 $primary-light: #a78bfa;
 $primary-dark: #4c1d95;
 
-$accent: #00e5ff;               // Cyan futurista
+$accent: #00e5ff;
 $accent-glow: rgba(0, 229, 255, 0.55);
 
-$bg-body: #eef1f8;             
+$bg-body: #eef1f8;
 $text-main: #0f172a;
 $text-muted: #6b7280;
 
@@ -20,7 +22,7 @@ $shadow-glass: 0 25px 50px rgba(0, 0, 0, 0.18);
 $shadow-glow: 0 0 18px rgba(0, 229, 255, 0.45);
 
 // ==========================================
-// CONTENEDOR PRINCIPAL (NEO GLASS CARD)
+// CONTENEDOR PRINCIPAL
 // ==========================================
 :host {
     display: block;
@@ -32,7 +34,6 @@ $shadow-glow: 0 0 18px rgba(0, 229, 255, 0.45);
     backdrop-filter: blur(20px) saturate(180%);
     border-radius: $radius;
     border: 1px solid rgba(255, 255, 255, 0.45);
-
     box-shadow: $shadow-glass;
     animation: fadeUp 0.75s ease-out;
 
@@ -41,36 +42,40 @@ $shadow-glow: 0 0 18px rgba(0, 229, 255, 0.45);
 
     font-family: 'Inter', system-ui, sans-serif;
 
-    // Glow ambiental
     &::before {
         content: "";
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        background: radial-gradient(circle at 20% 20%, rgba(167,139,250,0.35), transparent),
-                    radial-gradient(circle at 80% 80%, rgba(0,229,255,0.25), transparent);
+        background: radial-gradient(circle at 20% 20%, rgba(167, 139, 250, 0.35), transparent),
+            radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.25), transparent);
         z-index: -1;
     }
 }
 
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(35px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(35px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 // ==========================================
-// TÍTULO FUTURISTA
+// HEADER
 // ==========================================
 h2 {
     font-size: 2rem;
     font-weight: 900;
     text-align: center;
     color: $primary-dark;
-    letter-spacing: -0.03em;
     margin-bottom: 2.4rem;
     position: relative;
 
-    // Icono animado estilo Material You
     &::before {
         content: "🚀";
         position: absolute;
@@ -84,51 +89,129 @@ h2 {
 }
 
 @keyframes floatIcon {
-    0% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -10px); }
-    100% { transform: translate(-50%, 0); }
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, -10px);
+    }
+
+    100% {
+        transform: translate(-50%, 0);
+    }
 }
 
 // ==========================================
-// HEADER DEL PROGRAMADOR (NEO-GLASS)
+// MINI CALENDARIO — CUADRADO, GLASS Y ESTÉTICO
 // ==========================================
-.programador-header {
+.calendario {
+    margin: 1rem 0 2rem 0;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 1.6rem;
-    padding: 1.3rem;
+    gap: 1rem;
 
-    background: linear-gradient(135deg, #f5f3ff, #eef2ff);
+    background: rgba(255, 255, 255, 0.55);
+    padding: 0.8rem 1.3rem;
     border-radius: $radius-input;
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    box-shadow: 0 12px 28px rgba(79, 70, 229, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
 
-    transition: 0.3s ease;
+.calendario .nav {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, $primary-light, $primary-dark);
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: .25s ease;
+    box-shadow: 0 6px 18px rgba($primary, 0.35);
 
     &:hover {
         transform: translateY(-3px);
-        box-shadow: 0 16px 35px rgba(79, 70, 229, 0.22);
+        box-shadow: 0 10px 28px rgba($primary, 0.45);
+    }
+}
+
+.calendario .fecha {
+    text-align: center;
+    font-weight: 700;
+    color: $text-main;
+    font-size: 1rem;
+    padding: .3rem .6rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.55);
+}
+
+// ==========================================
+// HORAS DISPONIBLES — CUADRADOS PERFECTOS
+// ==========================================
+.horas-wrapper h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: $primary-dark;
+    font-weight: 800;
+}
+
+.horas-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+    gap: 0.9rem;
+}
+
+.hora-btn {
+    padding: 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(10px);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: .25s ease;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+    &:hover:not(.ocupado) {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba($primary, 0.25), 0 0 12px $accent-glow;
+        border-color: $primary-light;
     }
 
-    img {
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
-        object-fit: cover;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    small {
+        margin-top: 4px;
+        color: #b91c1c;
+        font-size: .75rem;
     }
+}
 
-    h3 {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: $text-main;
-    }
+// OCUPADO
+.hora-btn.ocupado {
+    background: rgba(255, 0, 72, 0.14);
+    border-color: rgba(255, 0, 72, 0.45);
+    color: #b91c1c;
+    cursor: not-allowed;
+    opacity: .7;
+}
 
-    p {
-        margin: 0.2rem 0 0;
-        color: $primary;
-        font-weight: 600;
-    }
+// SELECCIONADO
+.hora-btn.seleccionado {
+    background: linear-gradient(135deg, $primary-light, $primary-dark);
+    color: white !important;
+    border-color: transparent;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 35px rgba($primary, 0.4), 0 0 16px $accent-glow;
 }
 
 // ==========================================
@@ -152,77 +235,34 @@ form {
     }
 
     input,
-    select,
     textarea {
         width: 100%;
         padding: 1rem 1.2rem;
         border-radius: $radius-input;
-
         background: rgba(255, 255, 255, 0.7);
-        border: 1px solid rgba(0,0,0,0.09);
+        border: 1px solid rgba(0, 0, 0, 0.09);
         font-size: 1rem;
-        color: $text-main;
-        transition: 0.28s ease;
-        backdrop-filter: blur(6px);
+        transition: .28s ease;
 
-        // Hover suave
-        &:hover {
-            border-color: $primary-light;
-        }
-
-        // Focus futurista
         &:focus {
             border-color: $accent;
             background: white;
             box-shadow: 0 0 0 4px $accent-glow;
         }
-
-        &::placeholder {
-            color: lighten($text-muted, 22%);
-        }
     }
 
-    textarea {
-        min-height: 140px;
-        resize: vertical;
-    }
-
-    // Select con icono
-    select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-        background-position: right 1.1rem center;
-        background-repeat: no-repeat;
-        background-size: 1.3rem;
-        padding-right: 2.8rem;
-    }
-
-    .ayuda {
-        margin-top: 0.4rem;
-        font-size: 0.9rem;
-        color: $text-muted;
-        font-style: italic;
-
-        &::before {
-            content: "💡 ";
-        }
-    }
-
-    // BOTÓN NEÓN PREMIUM
     button {
         margin-top: 1rem;
         padding: 1.15rem;
         font-size: 1.15rem;
         font-weight: 700;
-
         border-radius: $radius-input;
         color: white;
-
         background: linear-gradient(135deg, $primary-light, $primary-dark);
         border: none;
         cursor: pointer;
+        transition: .28s ease;
 
-        transition: 0.28s ease;
         box-shadow: 0 12px 30px rgba($primary, 0.35), $shadow-glow;
 
         &:hover:not(:disabled) {
@@ -250,8 +290,11 @@ form {
         font-size: 1.5rem;
     }
 
-    .programador-header {
-        flex-direction: column;
-        text-align: center;
+    .horas-list {
+        grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+    }
+
+    .calendario {
+        transform: scale(.95);
     }
 }

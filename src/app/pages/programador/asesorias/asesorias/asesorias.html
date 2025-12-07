@@ -19,21 +19,27 @@
             <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
         <tr *ngFor="let a of asesorias">
+
             <td>{{ a.nombreSolicitante }}</td>
             <td>{{ a.fecha }}</td>
             <td>{{ a.hora }}</td>
             <td>{{ a.comentario || '-' }}</td>
+
             <td>{{ a.estado | titlecase }}</td>
+
             <td>
-                <button type="button" (click)="cambiarEstado(a, 'aprobada')" [disabled]="a.estado === 'aprobada'">
+                <button type="button" (click)="cambiarEstado(a, 'aprobada')" [disabled]="a.estado !== 'pendiente'">
                     Aprobar
                 </button>
-                <button type="button" (click)="cambiarEstado(a, 'rechazada')" [disabled]="a.estado === 'rechazada'">
+
+                <button type="button" (click)="cambiarEstado(a, 'rechazada')" [disabled]="a.estado !== 'pendiente'">
                     Rechazar
                 </button>
             </td>
+
         </tr>
     </tbody>
 </table>
