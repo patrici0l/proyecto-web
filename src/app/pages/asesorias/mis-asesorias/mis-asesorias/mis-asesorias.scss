@@ -1,275 +1,328 @@
-// --- NUEVA PALETA FUTURISTA ---
-$primary-color: #4f46e5;        // Indigo eléctrico
-$accent-color: #7c3aed;         // Púrpura brillante
-$bg-light: rgba(255, 255, 255, 0.6);
-$border-color: #d9e0f1;
-$text-color: #0f172a;
-$text-muted: #64748b;
-
-// Estados futuristas con iconos
-$status-pending-bg: #fff9d6;
-$status-pending-text: #b98500;
-
-$status-approved-bg: #d8ffe8;
-$status-approved-text: #15803d;
-
-$status-rejected-bg: #ffe0e5;
-$status-rejected-text: #c81e1e;
-
-// --- CONTENEDOR PRINCIPAL GLASS ---
 :host {
   display: block;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  color: $text-color;
-
-  padding: 35px;
   max-width: 1200px;
   margin: 0 auto;
-
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  border-radius: 28px;
-
-  box-shadow:
-    0 8px 22px rgba(0,0,0,0.08),
-    0 0 40px rgba($accent-color, 0.15);
-
-  animation: fadeUp 0.6s cubic-bezier(.22,.61,.36,1);
+  padding: 2.2rem 1.4rem;
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
+    var(--color-bg);
+  animation: mis-asesorias-fade-in 0.35s ease-out;
 }
 
-// --- TITULO FUTURISTA ---
-h2 {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: $primary-color;
-  margin-bottom: 25px;
+/* =========================
+   TÍTULO
+   ========================= */
 
+h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1.6rem;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0.7rem;
+  color: var(--color-text);
+  text-shadow: 0 2px 10px rgba(15, 23, 42, 0.6);
+  letter-spacing: 0.02em;
+  border-bottom: 3px solid rgba(148, 163, 184, 0.4);
+  padding-bottom: 0.8rem;
 
   &::before {
     content: "🛡️";
-    font-size: 2.2rem;
-    animation: popIn 0.4s ease;
-    filter: drop-shadow(0 2px 4px rgba($primary-color, 0.4));
+    font-size: 2rem;
+    filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.7));
   }
-
-  border-bottom: 5px solid $accent-color;
-  padding-bottom: 14px;
-
-  text-shadow: 0 2px 8px rgba($accent-color, 0.25);
 }
 
-// --- MENSAJES DE CARGA O VACÍO ---
-div[ngIf="cargando"],
-div[ngIf*="asesorias.length === 0"] {
+/* =========================
+   ESTADOS CARGANDO / VACÍO
+   (Opcional: agrega clases si quieres afinar más)
+   ========================= */
+
+div[ng-reflect-ng-if],
+div[ng-reflect-ng-if='false']+div {
+  /* Fallback muy suave por si Angular refleja atributos */
   text-align: center;
-  padding: 45px;
+  padding: 1.4rem 1.2rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+  border: 1px dashed rgba(148, 163, 184, 0.6);
+  color: var(--color-text-muted);
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
 
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(10px);
+/* Si decides usar clases en el HTML:
+   <div *ngIf="cargando" class="estado-msg cargando"> ... </div>
+   <div *ngIf="..." class="estado-msg vacio"> ... </div>
+*/
 
-  border-radius: 18px;
-  color: $text-muted;
-
-  margin-top: 25px;
-  font-size: 1.15rem;
-  border: 1px solid rgba($border-color, 0.4);
-
+.estado-msg {
+  text-align: center;
+  padding: 1.4rem 1.2rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+  border: 1px dashed rgba(148, 163, 184, 0.6);
+  color: var(--color-text-muted);
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
-
-  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-
-  animation: fadeIn 0.3s ease;
-
-  &::before {
-    content: "🔄";
-    font-size: 1.9rem;
-    animation: spin 1s infinite linear;
-  }
+  justify-content: center;
+  gap: 0.55rem;
 }
 
-// --- TABLA CON EFECTO FLOTANTE ---
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-
-  border-radius: 18px;
-  padding: 6px;
-
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(12px);
-
-  box-shadow: 0 8px 22px rgba(0,0,0,0.05);
-
-  transition: all 0.4s ease;
-
-  &:hover {
-    box-shadow: 0 12px 36px rgba($primary-color, 0.25);
-    transform: translateY(-2px);
-  }
-
-  margin-top: 28px;
+.estado-msg.cargando::before {
+  content: "⏳";
+  animation: asesorias-spin 1s linear infinite;
 }
 
-// --- TABLA ---
+.estado-msg.vacio::before {
+  content: "📭";
+}
+
+/* =========================
+   TABLA PRINCIPAL
+   ========================= */
+
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 950px;
-
-  background: rgba(255,255,255,0.8);
-
-  border-radius: 18px;
+  margin-top: 1.8rem;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-
-  thead {
-    background: linear-gradient(90deg, $primary-color, $accent-color);
-    color: white;
-
-    th {
-      padding: 16px;
-      font-size: 1rem;
-      font-weight: 600;
-      white-space: nowrap;
-      letter-spacing: 0.4px;
-
-      // ICONOS MATERIAL MÁS MODERNOS
-      &:first-child::before { content: "👤 "; }
-      &:nth-child(2)::before { content: "📆 "; }
-      &:nth-child(3)::before { content: "⏱️ "; }
-      &:nth-child(4)::before { content: "💬 "; }
-      &:nth-child(5)::before { content: "🏷️ "; }
-      &:nth-child(6)::before { content: "✉️ "; }
-      &:nth-child(7)::before { content: "🔔 "; }
-    }
-  }
-
-  tbody {
-    tr {
-      border-bottom: 1px solid $border-color;
-      transition: 0.25s ease;
-
-      &:hover {
-        background: rgba($primary-color, 0.07);
-        transform: scale(1.01);
-      }
-    }
-
-    td {
-      padding: 16px;
-      font-size: 0.95rem;
-    }
-  }
+  box-shadow: var(--shadow-elevated);
+  animation: mis-asesorias-table-in 0.32s ease-out;
+  min-width: 900px;
 }
 
-// --- BADGES FUTURISTAS ---
-span[class*="estado-"] {
+thead {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.98),
+      rgba(15, 23, 42, 0.98));
+}
+
+thead th {
+  padding: 0.9rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: left;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+/* Iconos por columna (header) */
+
+thead th:nth-child(1)::before {
+  content: "👤 ";
+}
+
+thead th:nth-child(2)::before {
+  content: "📆 ";
+}
+
+thead th:nth-child(3)::before {
+  content: "⏱️ ";
+}
+
+thead th:nth-child(4)::before {
+  content: "💬 ";
+}
+
+thead th:nth-child(5)::before {
+  content: "🏷️ ";
+}
+
+thead th:nth-child(6)::before {
+  content: "✉️ ";
+}
+
+thead th:nth-child(7)::before {
+  content: "🔔 ";
+}
+
+tbody tr {
+  border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgba(15, 23, 42, 0.55);
+}
+
+tbody tr:hover {
+  background-color: var(--color-bg-hover);
+  transform: translateY(-1px);
+}
+
+tbody td {
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+
+/* =========================
+   BADGES DE ESTADO
+   ========================= */
+
+span.estado-pendiente,
+span.estado-aprobada,
+span.estado-rechazada {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-
-  padding: 7px 16px;
-  border-radius: 50px;
-
-  font-size: 0.85rem;
+  gap: 0.45rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
   font-weight: 700;
-
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
 
-  animation: fadeIn 0.3s ease;
+/* Pendiente */
 
-  &.estado-pendiente {
-    background: $status-pending-bg;
-    color: $status-pending-text;
-    &::before { content: "🕓"; }
-  }
+span.estado-pendiente {
+  background: rgba(250, 204, 21, 0.12);
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.45);
 
-  &.estado-aprobada {
-    background: $status-approved-bg;
-    color: $status-approved-text;
-    &::before { content: "✔️"; animation: pulse 1s infinite; }
-  }
-
-  &.estado-rechazada {
-    background: $status-rejected-bg;
-    color: $status-rejected-text;
-    &::before { content: "❌"; }
+  &::before {
+    content: "🕓";
   }
 }
 
-// --- NOTIFICACIONES ---
-td:last-child {
-  min-width: 260px;
-  background: rgba(247, 247, 255, 0.8);
-  backdrop-filter: blur(8px);
+/* Aprobada */
 
-  border-left: 4px solid $accent-color;
-  border-radius: 6px;
+span.estado-aprobada {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--color-success);
+  border: 1px solid rgba(34, 197, 94, 0.55);
+
+  &::before {
+    content: "✔️";
+    animation: asesorias-pulse 1.3s infinite;
+  }
+}
+
+/* Rechazada */
+
+span.estado-rechazada {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.55);
+
+  &::before {
+    content: "❌";
+  }
+}
+
+/* =========================
+   COLUMNA DE NOTIFICACIÓN
+   ========================= */
+
+tbody td:last-child {
+  min-width: 260px;
+  background: rgba(15, 23, 42, 0.7);
+  border-left: 3px solid var(--color-info);
+  border-radius: 0.4rem;
 }
 
 .nota-notificacion {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: $accent-color;
-
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-info);
+  margin-bottom: 0.4rem;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 0.35rem;
 
   &::before {
     content: "🔔";
-    animation: pulse 1.4s infinite;
+    animation: asesorias-pulse 1.4s infinite;
   }
 }
 
-small {
+tbody td:last-child small {
   display: block;
-  background: white;
-  border: 1px dashed rgba(#cbd3da, 0.7);
-  padding: 11px;
-  border-radius: 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  color: #555;
+  margin-top: 0.1rem;
+  background: var(--color-bg);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
 }
 
-// --- ANIMACIONES ---
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* =========================
+   ANIMACIONES
+   ========================= */
+
+@keyframes mis-asesorias-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes mis-asesorias-table-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-@keyframes popIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes asesorias-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes asesorias-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.18); }
-  100% { transform: scale(1); }
-}
+/* =========================
+   RESPONSIVE
+   ========================= */
 
-// --- RESPONSIVE ---
-@media (max-width: 768px) {
-  :host { padding: 15px; }
-  h2 { font-size: 1.8rem; }
-  table { min-width: 700px; }
+@media (max-width: 900px) {
+  :host {
+    padding: 1.6rem 0.8rem;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+  }
 }
