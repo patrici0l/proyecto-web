@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 // Se importan los tipos necesarios para los arrays
 import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
+import { NotificacionesService } from '../../../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
 
 @Component({
   selector: 'app-proyecto-editar',
@@ -39,7 +40,8 @@ export class ProyectoEditarComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private proyectosService: ProyectosService
+    private proyectosService: ProyectosService,
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {
@@ -87,11 +89,11 @@ export class ProyectoEditarComponent implements OnInit {
 
     try {
       await this.proyectosService.actualizarProyecto(this.idProyecto, cambios);
-      alert('Proyecto actualizado correctamente.');
+      this.noti.exito('Proyecto actualizado correctamente.');
       this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
     } catch (err) {
       console.error(err);
-      alert('Error al actualizar el proyecto');
+    this.noti.error('Error al actualizar el proyecto');
     } finally {
       // finally se ejecuta haya error o éxito
       this.cargando = false;

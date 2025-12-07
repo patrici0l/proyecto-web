@@ -1,104 +1,149 @@
-// PALETA DASHBOARD PROFESIONAL
-$header-bg: #0f172a;        // Navy oscuro (fondo principal)
-$text-light: #e2e8f0;
-$text-white: #ffffff;
-$hover-color: #38bdf8;      // Celeste profesional
-$active-color: #3b82f6;     // Azul de selección
-$bg-body: #f8fafc;
+/* ========== LAYOUT PROGRAMADOR ========== */
 
-// SOMBRAS Y ESTILO
-$radius: 8px;
-$transition: 0.25s ease;
-
-// ==========================
-// LAYOUT PRINCIPAL
-// ==========================
 .layout {
     min-height: 100vh;
-    background: $bg-body;
+    display: flex;
+    flex-direction: column;
+    background: #0b1120;
+    color: #e5e7eb;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+}
 
-    header {
-        background: $header-bg;
-        padding: 1rem 2rem;
+/* ========== HEADER SUPERIOR ========== */
+
+header {
+    padding: 0.9rem 1.5rem;
+    background: radial-gradient(circle at top left, #1d4ed8, #020617);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    h2 {
+        margin: 0;
+        font-size: 1.3rem;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        color: $text-white;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        gap: 0.5rem;
 
-        h2 {
+        i {
             font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            i {
-                font-size: 1.4rem;
-                color: $hover-color;
-            }
-        }
-
-        // ==========================
-        // NAV
-        // ==========================
-        nav {
-            display: flex;
-            gap: 1.3rem;
-
-            a {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                color: $text-light;
-                font-size: 0.95rem;
-                font-weight: 500;
-                text-decoration: none;
-                padding: .5rem .8rem;
-                border-radius: $radius;
-                transition: $transition;
-
-                i {
-                    font-size: 1.1rem;
-                    opacity: .85;
-                }
-
-                &:hover {
-                    background: rgba(255, 255, 255, 0.08);
-                    color: $text-white;
-
-                    i {
-                        color: $hover-color;
-                    }
-                }
-
-                &.activo {
-                    background: rgba($active-color, 0.25);
-                    color: $text-white;
-                    border-left: 3px solid $active-color;
-                    padding-left: .6rem;
-
-                    i {
-                        color: $active-color;
-                    }
-                }
-            }
+            color: #93c5fd;
         }
     }
 
-    // ==========================
-    // CONTENIDO
-    // ==========================
-    main {
-        padding: 2rem;
-        min-height: calc(100vh - 80px);
-        animation: fadeIn .3s ease;
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        a,
+        button {
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+            background: transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                color 0.2s ease,
+                transform 0.1s ease;
+
+            i {
+                font-size: 1rem;
+            }
+
+            &:hover {
+                background: rgba(15, 23, 42, 0.8);
+                border-color: rgba(148, 163, 184, 0.7);
+                transform: translateY(-1px);
+            }
+        }
+
+        a.activo {
+            background: #0f172a;
+            border-color: #60a5fa;
+            color: #e0f2fe;
+            font-weight: 600;
+        }
+
+        button {
+            border-color: rgba(239, 68, 68, 0.6);
+            color: #fecaca;
+        }
+
+        button:hover {
+            background: rgba(127, 29, 29, 0.85);
+            border-color: rgba(248, 113, 113, 0.9);
+        }
     }
 }
 
-// ANIMACIÓN SUAVE DE ENTRADA
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to   { opacity: 1; transform: translateY(0); }
+/* ========== CONTENIDO ========== */
+
+main {
+    flex: 1;
+    padding: 1.4rem 1.8rem;
+    background: radial-gradient(circle at top, #020617 0, #020617 55%, #020617 100%);
+    color: #e5e7eb;
+    overflow-x: hidden;
+}
+
+/* el contenido interno (componentes) se encargan de sus fondos propios */
+main>* {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 900px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        nav {
+            flex-wrap: wrap;
+
+            a,
+            button {
+                margin-top: 0.1rem;
+            }
+        }
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    header nav {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+
+        a,
+        button {
+            flex: 1 1 48%;
+            justify-content: center;
+        }
+
+        button {
+            flex-basis: 100%;
+        }
+    }
+
+    main>* {
+        max-width: 100%;
+    }
 }

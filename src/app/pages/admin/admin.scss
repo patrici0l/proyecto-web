@@ -1,159 +1,133 @@
-/* ===============================
-   PALETA CYBERPUNK CLARA
-   =============================== */
-$cp-blue: #00eaff; // cian neón
-$cp-pink: #ff00e6; // magenta fuerte 80s
-$cp-purple: #8b5cf6; // púrpura vivo
-$cp-text: #0f172a; // texto oscuro (no modo oscuro)
-$cp-text-secondary: #475569;
-
-$cp-bg: #f4f7fb; // fondo claro futurista
-$cp-card: rgba(255, 255, 255, 0.7);
-
-$glow-strong: 0 0 18px rgba(0, 234, 255, 0.9);
-$glow-pink: 0 0 14px rgba(255, 0, 230, 0.65);
-
-/* ===============================
-   ANIMACIONES
-   =============================== */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(25px); }
-  to   { opacity: 1; transform: translateY(0); }
+.admin-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
 }
 
-@keyframes hologramFloat {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(3deg) scale(1.08); }
-  100% { transform: rotate(0deg) scale(1); }
-}
+/* HEADER */
 
-@keyframes neonPulse {
-  0%, 100% { filter: drop-shadow(0 0 2px $cp-blue); }
-  50% { filter: drop-shadow(0 0 14px $cp-blue); }
-}
-
-/* ===============================
-   CONTENEDOR
-   =============================== */
-.admin-container {
-  max-width: 1150px;
-  margin: 40px auto;
-  padding: 20px 25px;
-  background: $cp-bg;
-  animation: fadeUp 0.9s ease both;
-}
-
-/* ===============================
-   HEADER
-   =============================== */
 .admin-header {
-  text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 1.5rem;
+}
 
-  h1 {
-    font-size: 2.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    color: $cp-text;
-    font-weight: 700;
+.admin-title-block {
+  background: linear-gradient(135deg, #eff6ff, #eef2ff);
+  border-radius: 16px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
 
-    i {
-      font-size: 2.6rem;
-      background: linear-gradient(135deg, $cp-blue, $cp-pink);
-      -webkit-background-clip: text;
-      color: transparent;
-      animation: neonPulse 2.2s infinite ease-in-out;
-    }
-  }
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
 
-  p {
-    font-size: 1.1rem;
-    color: $cp-text-secondary;
+.admin-title-block h1 {
+  margin: 0.2rem 0;
+  font-size: 1.6rem;
+}
+
+.admin-title-block p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+/* CARDS */
+
+.admin-cards {
+  margin-top: 1.6rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #ffffff;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  border-color: #c7d2fe;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+}
+
+.card-icon-blue {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.card-icon-indigo {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.card-icon-green {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.admin-card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.admin-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.card-link {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+  .admin-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* ===============================
-   TARJETAS CYBERPUNK
-   =============================== */
-.admin-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 28px;
-  margin-top: 25px;
+@media (max-width: 640px) {
+  .admin-wrapper {
+    padding: 1rem;
+  }
 
-  .card {
-    background: $cp-card;
-    backdrop-filter: blur(18px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    border-radius: 18px;
-    padding: 30px;
-    text-align: center;
-
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    transition: 0.35s ease;
-    position: relative;
-    overflow: hidden;
-
-    /* Entrada animada */
-    animation: fadeUp 0.8s ease both;
-    animation-delay: calc(var(--i) * 0.1s);
-
-    /* Líneas de luz */
-    &:before {
-      content: "";
-      position: absolute;
-      height: 140%;
-      width: 3px;
-      top: -20%;
-      left: -30px;
-      background: linear-gradient($cp-blue, $cp-pink);
-      filter: blur(3px);
-      transform: rotate(25deg);
-      opacity: 0;
-      transition: 0.3s ease;
-    }
-
-    i {
-      font-size: 2.8rem;
-      background: linear-gradient(135deg, $cp-blue, $cp-purple, $cp-pink);
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 15px;
-      animation: hologramFloat 3s infinite ease-in-out;
-    }
-
-    h3 {
-      font-size: 1.35rem;
-      margin-bottom: 8px;
-      color: $cp-text;
-      font-weight: 700;
-    }
-
-    p {
-      color: $cp-text-secondary;
-      font-size: 0.95rem;
-    }
-
-    /* Hover cyberpunk PRO */
-    &:hover {
-      transform: translateY(-10px) scale(1.03);
-      box-shadow: 
-        0 10px 40px rgba(0,0,0,0.12),
-        $glow-strong;
-
-      background: rgba(255, 255, 255, 0.9);
-
-      &:before {
-        opacity: 1;
-        left: 110%;
-      }
-
-      i {
-        transform: scale(1.18) rotate(8deg);
-        filter: drop-shadow(0 0 10px $cp-pink);
-      }
-    }
+  .admin-cards {
+    grid-template-columns: 1fr;
   }
 }

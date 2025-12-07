@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+import { NotificacionesService } from '../../../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
 
 @Component({
   selector: 'app-proyectos-admin',
@@ -22,7 +23,8 @@ export class ProyectosAdminComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private proyectosService: ProyectosService
+    private proyectosService: ProyectosService,
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {

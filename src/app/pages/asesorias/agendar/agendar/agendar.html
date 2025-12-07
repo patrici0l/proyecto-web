@@ -1,116 +1,85 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
+<div class="main-container" *ngIf="programador">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="">
+    <div class="glass-card">
+        <header class="header-section">
+            <h2>Agendar con <span class="highlight">{{ programador.nombre }}</span></h2>
+            <p class="sub">Sincronización de agenda</p>
+        </header>
 
-</head>
-
-<body>
-    <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-    <script src="" async defer></script>
-</body>
-
-</html>
->
-<div class="agendar-container" *ngIf="programador">
-    <h2>Agendar asesoría con {{ programador.nombre }}</h2>
-
-    <!-- SUBTÍTULO -->
-    <p class="sub">Selecciona un día y una hora disponible.</p>
-
-    <!-- MINI CALENDARIO -->
-    <div class="calendario">
-
-        <button class="nav" (click)="diaAnterior()">◀</button>
-
-        <div class="fecha">
-            <strong>{{ fechaSeleccionada | date:'EEEE d MMMM yyyy' }}</strong>
-        </div>
-
-        <button class="nav" (click)="diaSiguiente()">▶</button>
-
-    </div>
-
-    <!-- HORAS DISPONIBLES -->
-    <div class="horas-wrapper" *ngIf="disponibilidadDiaSeleccionado.length > 0">
-
-        <h3>Horas disponibles</h3>
-
-        <div class="horas-list">
-
-            <button class="hora-btn" *ngFor="let slot of disponibilidadDiaSeleccionado" [class.ocupado]="slot.ocupado"
-                [class.seleccionado]="form.value.hora === slot.hora && form.value.fecha === fechaSeleccionadaStr"
-                [disabled]="slot.ocupado" (click)="seleccionarHora(slot)">
-                {{ slot.hora }}
-                <small *ngIf="slot.ocupado">(Ocupado)</small>
+        <div class="hud-control">
+            <button class="nav-btn left" (click)="diaAnterior()">
+                <span class="icon">❮</span>
             </button>
 
+            <div class="hud-display">
+                <span class="label">FECHA SELECCIONADA</span>
+                <strong class="date-text">{{ fechaSeleccionada | date:'EEEE d MMMM':'':'es' }}</strong>
+                <span class="year">{{ fechaSeleccionada | date:'yyyy' }}</span>
+            </div>
+
+            <button class="nav-btn right" (click)="diaSiguiente()">
+                <span class="icon">❯</span>
+            </button>
         </div>
-    </div>
 
-    <div *ngIf="disponibilidadDiaSeleccionado.length === 0">
-        <p>No hay horas configuradas por el administrador.</p>
-    </div>
+        <hr class="divider-glow">
 
-    <hr>
+        <div class="slots-section" *ngIf="disponibilidadDiaSeleccionado.length > 0">
+            <h3>Bloques Temporales Disponibles</h3>
 
-    <!-- FORMULARIO DE SOLICITUD -->
-    <form [formGroup]="form" (ngSubmit)="enviarSolicitud()">
+            <div class="slots-grid">
+                <button class="slot-btn" *ngFor="let slot of disponibilidadDiaSeleccionado"
+                    [class.ocupado]="slot.ocupado"
+                    [class.seleccionado]="form.value.hora === slot.hora && form.value.fecha === fechaSeleccionadaStr"
+                    [disabled]="slot.ocupado" (click)="seleccionarHora(slot)">
 
-        <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" formControlName="nombreSolicitante">
-            <div class="error" *ngIf="form.get('nombreSolicitante')?.touched && form.get('nombreSolicitante')?.invalid">
-                Nombre requerido
+                    <span class="time">{{ slot.hora }}</span>
+                    <div class="status-dot"></div>
+                </button>
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" formControlName="emailSolicitante">
-            <div class="error" *ngIf="form.get('emailSolicitante')?.touched && form.get('emailSolicitante')?.invalid">
-                Email inválido
+        <div class="empty-state" *ngIf="disponibilidadDiaSeleccionado.length === 0">
+            <p>⚠️ No hay bloques de tiempo configurados.</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="enviarSolicitud()" class="future-form">
+
+            <div class="input-group">
+                <label>Identidad (Nombre)</label>
+                <input type="text" formControlName="nombreSolicitante" placeholder="Ingresa tu nombre">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>Fecha seleccionada</label>
-            <input type="text" value="{{ fechaSeleccionadaStr }}" disabled>
-        </div>
+            <div class="input-group">
+                <label>Enlace de contacto (Email)</label>
+                <input type="email" formControlName="emailSolicitante" placeholder="correo@ejemplo.com">
+            </div>
 
-        <div class="form-group">
-            <label>Hora seleccionada</label>
-            <input type="text" formControlName="hora" [disabled]="true" placeholder="Selecciona una hora del listado">
+            <div class="data-readout">
+                <div class="readout-item">
+                    <span>Fecha:</span> {{ fechaSeleccionadaStr }}
+                </div>
+                <div class="readout-item">
+                    <span>Hora:</span> {{ form.value.hora || '--:--' }}
+                </div>
+            </div>
 
-        </div>
+            <div class="input-group">
+                <label>Datos adicionales</label>
+                <textarea formControlName="comentario" rows="2" placeholder="Comentarios opcionales..."></textarea>
+            </div>
 
-        <div class="form-group">
-            <label>Comentario (opcional)</label>
-            <textarea formControlName="comentario" rows="3"></textarea>
-        </div>
+            <button class="btn-action" type="submit" [disabled]="cargando || form.invalid">
+                <span class="btn-content">
+                    {{ cargando ? 'PROCESANDO...' : 'CONFIRMAR ENLACE' }}
+                </span>
+            </button>
 
-        <button class="btn-enviar" type="submit" [disabled]="cargando">
-            {{ cargando ? 'Enviando...' : 'Enviar solicitud' }}
-        </button>
-
-    </form>
-
+        </form>
+    </div>
 </div>
 
-<!-- SI NO EXISTE PROGRAMADOR -->
-<div *ngIf="!programador">
-    <p>Cargando datos del programador...</p>
+<div *ngIf="!programador" class="loading-screen">
+    <div class="spinner"></div>
+    <p>Cargando sistema...</p>
 </div>

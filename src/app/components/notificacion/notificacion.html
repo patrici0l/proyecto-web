@@ -1,0 +1,19 @@
+<div class="notificacion-contenedor" *ngIf="visible">
+    <div class="notificacion" [ngClass]="tipo">
+
+        <div class="icono">
+            <ng-container [ngSwitch]="tipo">
+                <i *ngSwitchCase="'exito'" class="bi bi-check-circle-fill"></i>
+                <i *ngSwitchCase="'error'" class="bi bi-x-circle-fill"></i>
+                <i *ngSwitchDefault class="bi bi-info-circle-fill"></i>
+            </ng-container>
+        </div>
+
+        <div class="mensaje">{{ mensaje }}</div>
+
+        <button class="cerrar" (click)="cerrar()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+    </div>
+</div>

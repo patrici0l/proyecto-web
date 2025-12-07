@@ -1,54 +1,42 @@
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
-import { Auth, authState } from '@angular/fire/auth';
-import { from, map, of, switchMap } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { AuthService } from '../services/auth';
+import { map } from 'rxjs/operators';
 
-export const rolGuard: CanActivateFn = (route, state) => {
-  const auth = inject(Auth);
-  const firestore = inject(Firestore);
-  const router = inject(Router);
+@Injectable({
+  providedIn: 'root'
+})
+export class rolGuard implements CanActivate {
 
-  const rolRequerido = route.data?.['rol'] as 'admin' | 'programador' | 'usuario' | undefined;
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) { }
 
-  return authState(auth).pipe(
-    switchMap(user => {
-      if (!user) {
-        // no logueado → al login
-        return of(router.createUrlTree(['/login']));
-      }
+  canActivate(route: any) {
+    const rolRequerido = route.data?.rol;
 
-      if (!rolRequerido) {
-        // si la ruta no pide rol específico, solo exige estar logueado
-        return of(true);
-      }
+    return this.auth.usuario$.pipe(
+      map(usuario => {
 
-      const ref = doc(firestore, 'usuarios', user.uid);
-      return from(getDoc(ref)).pipe(
-        map(snap => {
-          const data = snap.data() as any | undefined;
-          const rolUsuario = data?.rol as string | undefined;
+        // ❌ No hay usuario → debe iniciar sesión
+        if (!usuario) {
+          this.router.navigate(['/login']);
+          return false;
+        }
 
-          if (!rolUsuario) {
-            // usuario sin rol → lo mandamos al inicio
-            return router.createUrlTree(['/inicio']);
-          }
+        // ✔ Usuario logueado sin rol requerido → permitido
+        if (!rolRequerido) return true;
 
-          // Reglas simples:
-          // - admin solo entra donde rolRequerido === 'admin'
-          // - programador solo donde rol === 'programador'
-          // - usuario normal solo donde rol === 'usuario' (si llegas a usarlo)
-          if (rolUsuario === rolRequerido) {
-            return true;
-          }
+        // ❌ Tiene rol incorrecto
+        if (usuario.rol !== rolRequerido) {
+          this.router.navigate(['/inicio']);
+          return false;
+        }
 
-          // Si quieres que el admin pueda entrar a todo, puedes descomentar:
-          // if (rolUsuario === 'admin') return true;
-
-          // rol no coincide → redirigir
-          return router.createUrlTree(['/inicio']);
-        })
-      );
-    })
-  );
-};
+        // ✔ Todo OK
+        return true;
+      })
+    );
+  }
+}

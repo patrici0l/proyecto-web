@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ProgramadoresService } from '../../../services/programadores';
+import { NotificacionesService } from '../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
 
 @Component({
     selector: 'app-programador-nuevo',
@@ -23,7 +24,8 @@ export class ProgramadorNuevoComponent {
     constructor(
         private fb: FormBuilder,
         private programadoresService: ProgramadoresService, // Servicio inyectado
-        private router: Router
+        private router: Router,
+        private noti: NotificacionesService
     ) {
         this.form = this.fb.group({
             nombre: ['', Validators.required],
@@ -101,21 +103,20 @@ export class ProgramadorNuevoComponent {
         };
 
         try {
-            //  CORRECCIÓN CLAVE:
-            // Pasamos 'data' y el archivo 'this.archivoFoto' por separado.
-            // El servicio subirá la foto a Storage y actualizará el documento.
             await this.programadoresService.crearProgramador(data, this.archivoFoto);
 
-            this.mensaje = 'Programador agregado correctamente';
+            // Notificación bonita ✅
+            this.noti.exito('Programador agregado correctamente');
 
-            // Esperar un poco para que el usuario vea el mensaje o redirigir
-            setTimeout(() => {
-                this.router.navigate(['/admin/programadores']);
-            }, 1000);
+            // Redirigir al listado
+            this.router.navigate(['/admin/programadores']);
 
         } catch (e) {
             console.error(e);
-            this.error = 'Ocurrió un error al guardar el programador';
+
+            // Notificación de error ✅
+            this.noti.error('Ocurrió un error al guardar el programador');
+
         } finally {
             this.cargando = false;
         }

@@ -1,16 +1,70 @@
-<header class="public-header">
-    <h1><i class="bi bi-globe2"></i> DevPortafolios</h1>
+<!-- NAV para usuario logueado -->
+<header class="public-header" *ngIf="usuario$ | async as usuario; else headerPublico">
+
+    <h1>
+        <i class="bi bi-globe2"></i>
+        DevPortafolios
+    </h1>
 
     <nav>
-        <a routerLink="/usuarios" routerLinkActive="activo">
-            <i class="bi bi-people"></i> Explorar Programadores
+        <!-- enlaces comunes -->
+        <a routerLink="/inicio" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+            <i class="bi bi-house-door"></i> Inicio
         </a>
 
-        <a routerLink="/login" routerLinkActive="activo">
-            <i class="bi bi-box-arrow-in-right"></i> Ingresar
+        <a routerLink="/usuarios" routerLinkActive="activo">
+            <i class="bi bi-people"></i> Explorar programadores
         </a>
+
+        <a routerLink="/mis-asesorias" routerLinkActive="activo">
+            <i class="bi bi-calendar-check"></i> Mis asesorías
+        </a>
+
+        <!-- solo ADMIN -->
+        <ng-container *ngIf="usuario.rol === 'admin'">
+            <a routerLink="/admin" routerLinkActive="activo">
+                <i class="bi bi-shield-lock"></i> Panel administrador
+            </a>
+        </ng-container>
+
+        <!-- solo PROGRAMADOR -->
+        <ng-container *ngIf="usuario.rol === 'programador'">
+            <a routerLink="/programador" routerLinkActive="activo">
+                <i class="bi bi-code-slash"></i> Panel programador
+            </a>
+        </ng-container>
+
+        <!-- info de usuario + salir -->
+        <span class="user-pill">
+            <i class="bi bi-person-circle"></i>
+            {{ usuario.nombre }} ({{ usuario.rol }})
+        </span>
+
+        <button type="button" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
     </nav>
 </header>
+
+<!-- NAV cuando NO hay sesión -->
+<ng-template #headerPublico>
+    <header class="public-header">
+        <h1>
+            <i class="bi bi-globe2"></i>
+            DevPortafolios
+        </h1>
+
+        <nav>
+            <a routerLink="/usuarios" routerLinkActive="activo">
+                <i class="bi bi-people"></i> Explorar Programadores
+            </a>
+
+            <a routerLink="/login" routerLinkActive="activo">
+                <i class="bi bi-box-arrow-in-right"></i> Ingresar
+            </a>
+        </nav>
+    </header>
+</ng-template>
 
 <main class="public-content">
     <router-outlet></router-outlet>
@@ -19,3 +73,4 @@
 <footer class="public-footer">
     © 2025 – DevPortafolios – Proyecto Académico
 </footer>
+<app-notificacion></app-notificacion>

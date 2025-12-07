@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { MenuComponent } from '../../components/menu/menu';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [MenuComponent],
   templateUrl: './admin.html',
-  styleUrl: './admin.scss',
+  styleUrls: ['./admin.scss'],
+  imports: [CommonModule, RouterModule]
 })
 export class AdminComponent { }

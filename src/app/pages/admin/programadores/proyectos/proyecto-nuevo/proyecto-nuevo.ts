@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 // Se agregan TipoProyecto y TipoParticipacion a los imports
 import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
+import { NotificacionesService } from '../../../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
 
 @Component({
   selector: 'app-proyecto-nuevo',
@@ -37,7 +38,8 @@ export class ProyectoNuevoComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private proyectosService: ProyectosService
+    private proyectosService: ProyectosService,
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {
@@ -77,11 +79,11 @@ export class ProyectoNuevoComponent implements OnInit {
 
     try {
       await this.proyectosService.crearProyecto(proyecto);
-      alert('Proyecto creado correctamente.');
+    this.noti.exito('Proyecto creado correctamente.');
       this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
     } catch (err) {
       console.error(err);
-      alert('Error al crear el proyecto');
+      this.noti.error('Error al crear el proyecto');
     } finally {
       // El bloque finally asegura que el spinner se apague pase lo que pase
       this.cargando = false;

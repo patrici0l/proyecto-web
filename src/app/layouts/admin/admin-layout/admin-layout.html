@@ -1,33 +1,59 @@
-<div class="admin-container">
+<div class="admin-shell" *ngIf="usuario$ | async as usuario">
 
-  <aside class="sidebar">
-      <h2><i class="bi bi-speedometer2"></i> Admin</h2>
+    <!-- TOPBAR ADMIN -->
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <div class="brand">
+                <i class="bi bi-speedometer2"></i>
+                <span>Admin</span>
+            </div>
 
-      <nav>
-          <a routerLink="/admin" routerLinkActive="activo">
-              <i class="bi bi-grid-fill"></i> Dashboard
-          </a>
+            <nav class="admin-nav">
+                <a routerLink="/admin" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+                    <i class="bi bi-grid-fill"></i>
+                    Dashboard
+                </a>
 
-          <a routerLink="/admin/programadores" routerLinkActive="activo">
-              <i class="bi bi-code-slash"></i> Programadores
-          </a>
+                <a routerLink="/admin/programadores" routerLinkActive="activo">
+                    <i class="bi bi-code-slash"></i>
+                    Programadores
+                </a>
 
-          <a routerLink="/admin/usuarios" routerLinkActive="activo">
-              <i class="bi bi-people-fill"></i> Usuarios
-          </a>
+                <a routerLink="/usuarios" routerLinkActive="activo">
+                    <i class="bi bi-folder2-open"></i>
+                    Portafolios públicos
+                </a>
 
-          <a routerLink="/usuarios" routerLinkActive="activo">
-              <i class="bi bi-folder2-open"></i> Explorar portafolios
-          </a>
+                <a routerLink="/mis-asesorias" routerLinkActive="activo">
+                    <i class="bi bi-calendar-check"></i>
+                    Mis asesorías
+                </a>
+            </nav>
+        </div>
 
-          <a routerLink="/login" class="cerrar">
-              <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-          </a>
-      </nav>
-  </aside>
+        <div class="topbar-right">
+            <div class="user-card">
+                <div class="avatar">
+                    {{ usuario.nombre ? (usuario.nombre[0] | uppercase) : 'A' }}
+                </div>
+                <div class="user-text">
+                    <div class="name">{{ usuario.nombre }}</div>
+                    <div class="role">{{ usuario.rol | titlecase }}</div>
+                </div>
+                <button type="button" class="logout-btn" (click)="logout()">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </header>
 
-  <main class="content">
-      <router-outlet></router-outlet>
-  </main>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="admin-content">
+
+        <router-outlet></router-outlet>
+        <app-notificacion></app-notificacion>
+
+    </main>
+<app-notificacion></app-notificacion>
 
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { AuthService, UsuarioApp } from '../../../../services/auth';
+import { NotificacionesService } from '../../../../services/notificaciones';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -23,7 +24,8 @@ export class ProgramadorAsesoriasComponent implements OnInit {
 
   constructor(
     private asesoriasService: AsesoriasService,
-    private auth: AuthService
+    private auth: AuthService,
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {
@@ -45,6 +47,7 @@ export class ProgramadorAsesoriasComponent implements OnInit {
           error: (err) => {
             console.error(err);
             this.error = 'Ocurrió un error al cargar las asesorías.';
+            this.noti.error('No se pudieron cargar las asesorías');
             this.cargando = false;
           }
         });
@@ -69,6 +72,7 @@ Motivo: (aquí el programador puede añadir una breve justificación).`;
 
     if (!asesoria.id) {
       console.error('La asesoría no tiene id');
+      this.noti.error('No se pudo identificar la asesoría a actualizar');
       return;
     }
 
@@ -77,6 +81,13 @@ Motivo: (aquí el programador puede añadir una breve justificación).`;
         // actualizar en memoria
         asesoria.estado = nuevoEstado;
         asesoria.respuestaProgramador = textoBase;
+
+        // notificación visual al programador
+        this.noti.exito(
+          nuevoEstado === 'aprobada'
+            ? 'Asesoría aprobada correctamente'
+            : 'Asesoría rechazada correctamente'
+        );
 
         // construir la “notificación simulada”
         this.mensajeSimulado =
@@ -88,7 +99,7 @@ ${textoBase}`;
       })
       .catch(err => {
         console.error(err);
-        alert('Error al actualizar la asesoría');
+        this.noti.error('Error al actualizar el estado de la asesoría');
       });
   }
 

@@ -1,1 +1,173 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.scss (global) */
+
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+
+    /* similar al toast (oscuro + blur) */
+    background: rgba(2, 6, 23, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+    z-index: 10000;
+
+    padding: 1rem;
+}
+
+.confirm-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Modal con acento "peligro" (eliminar) */
+.confirm-modal {
+    --danger: #ef4444;
+
+    width: min(92vw, 460px);
+    color: #f8fafc;
+
+    background: rgba(2, 6, 23, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 1rem;
+    padding: 1.35rem 1.35rem;
+
+    box-shadow:
+        0 22px 55px rgba(0, 0, 0, 0.62),
+        0 0 0 1px rgba(148, 163, 184, 0.14);
+
+    border-left: 6px solid var(--danger);
+    position: relative;
+    overflow: hidden;
+
+    transform: translateY(10px) scale(0.98);
+    opacity: 0;
+    animation: confirm-in 0.22s cubic-bezier(.2, .9, .2, 1) forwards;
+
+    /* brillo superior */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(900px 140px at 18% 0%,
+                rgba(255, 255, 255, 0.10),
+                transparent 60%);
+        pointer-events: none;
+    }
+
+    /* glow suave rojo en el lado izquierdo */
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg,
+                color-mix(in oklab, var(--danger) 30%, transparent),
+                transparent 55%);
+        opacity: 0.18;
+        pointer-events: none;
+    }
+}
+
+.confirm-modal h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.confirm-modal p {
+    margin: 0 0 1.15rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: rgba(248, 250, 252, 0.85);
+}
+
+.botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+}
+
+/* Botones con estilo consistente */
+.btn-ok,
+.btn-cancelar {
+    border: 0;
+    border-radius: 0.85rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: transform .12s ease, background .12s ease, opacity .12s ease, box-shadow .12s ease;
+    user-select: none;
+
+    &:active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(239, 68, 68, 0.45);
+        outline-offset: 2px;
+    }
+}
+
+/* Acción principal: ELIMINAR (rojo, más notorio) */
+.btn-ok {
+    background: linear-gradient(180deg,
+            color-mix(in oklab, #ef4444 88%, white),
+            #ef4444);
+    color: #fff;
+    font-weight: 700;
+
+    box-shadow:
+        0 14px 30px rgba(239, 68, 68, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.10) inset;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow:
+            0 18px 36px rgba(239, 68, 68, 0.32),
+            0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+    }
+}
+
+/* Secundario: cancelar (oscuro “neutro” tipo toast) */
+.btn-cancelar {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(248, 250, 252, 0.92);
+
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-1px);
+    }
+}
+
+/* Entrada del modal */
+@keyframes confirm-in {
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    .confirm-modal {
+        animation: none;
+        transform: none;
+        opacity: 1;
+    }
+
+    .btn-ok,
+    .btn-cancelar {
+        transition: none;
+    }
+}

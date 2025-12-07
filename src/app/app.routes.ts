@@ -22,98 +22,87 @@ import { MisAsesoriasComponent } from './pages/asesorias/mis-asesorias/mis-aseso
 
 import { rolGuard } from './guards/rol.guard';
 
+import { PublicLayoutComponent } from './layouts/public/public-layout/public-layout';
+import { AdminLayoutComponent } from './layouts/admin/admin-layout/admin-layout';
+import { ProgramadorLayoutComponent } from './layouts/programador/programador-layout/programador-layout';
+
 export const routes: Routes = [
-  // redirección inicial
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  // redirección inicial -> a la página pública de inicio
+  { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
-  // públicas básicas
+  // login queda fuera de los layouts
   { path: 'login', component: LoginComponent },
-  { path: 'inicio', component: InicioComponent },
 
-  // vista pública para explorar programadores (usuario externo)
+  // ===========================
+  // LAYOUT PÚBLICO (usuario externo / general)
+  // ===========================
   {
-    path: 'usuarios',
-    component: UsuariosComponent
-    // pública: cualquiera puede ver portafolios
+    path: '',
+    component: PublicLayoutComponent,
+    children: [
+      // página principal pública
+      { path: 'inicio', component: InicioComponent },
+
+      // explorar programadores
+      { path: 'usuarios', component: UsuariosComponent },
+
+      // portafolio público de un programador
+      { path: 'portafolio/:id', component: PortafolioComponent },
+
+      // agendar asesoría (permitido sin login)
+      { path: 'asesoria/:idProgramador', component: AgendarAsesoriaComponent },
+
+      // mis asesorías (requiere estar logueado, pero usa el layout público)
+      {
+        path: 'mis-asesorias',
+        component: MisAsesoriasComponent,
+        canActivate: [rolGuard] // sin data.rol -> basta estar logueado
+      }
+    ]
   },
 
-  // portafolio público de un programador
-  {
-    path: 'portafolio/:id',
-    component: PortafolioComponent
-    // pública
-  },
-
-  // agendar asesoría con un programador específico (permitimos sin login)
-  {
-    path: 'asesoria/:idProgramador',
-    component: AgendarAsesoriaComponent
-  },
-
-  // PANEL ADMIN → solo ADMIN
+  // ===========================
+  // LAYOUT ADMIN (solo rol admin)
+  // ===========================
   {
     path: 'admin',
-    component: AdminComponent,
+    component: AdminLayoutComponent,
     canActivate: [rolGuard],
-    data: { rol: 'admin' }
-  },
-  {
-    path: 'admin/programadores',
-    component: ProgramadoresComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'admin' }
-  },
-  {
-    path: 'admin/programadores/nuevo',
-    component: ProgramadorNuevoComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'admin' }
-  },
-  {
-    path: 'admin/programadores/editar/:id',
-    component: EditarComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'admin' }
-  },
-  {
-    path: 'admin/programadores/:id/proyectos',
-    component: ProyectosAdminComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'admin' }
-  },
-  {
-    path: 'admin/programadores/:id/proyectos/nuevo',
-    component: ProyectoNuevoComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'admin' }
-  },
-  {
-    path: 'admin/programadores/:id/proyectos/editar/:idProyecto',
-    component: ProyectoEditarComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'admin' }
+    data: { rol: 'admin' },
+    children: [
+      // dashboard admin
+      { path: '', component: AdminComponent },
+
+      // gestión de programadores
+      { path: 'programadores', component: ProgramadoresComponent },
+      { path: 'programadores/nuevo', component: ProgramadorNuevoComponent },
+      { path: 'programadores/editar/:id', component: EditarComponent },
+
+      // gestión de proyectos de un programador
+      { path: 'programadores/:id/proyectos', component: ProyectosAdminComponent },
+      { path: 'programadores/:id/proyectos/nuevo', component: ProyectoNuevoComponent },
+      { path: 'programadores/:id/proyectos/editar/:idProyecto', component: ProyectoEditarComponent }
+    ]
   },
 
-  // PANEL PROGRAMADOR → solo PROGRAMADOR
+  // ===========================
+  // LAYOUT PROGRAMADOR (solo rol programador)
+  // ===========================
   {
     path: 'programador',
-    component: ProgramadorComponent,
+    component: ProgramadorLayoutComponent,
     canActivate: [rolGuard],
-    data: { rol: 'programador' }
-  },
-  {
-    path: 'programador/asesorias',
-    component: ProgramadorAsesoriasComponent,
-    canActivate: [rolGuard],
-    data: { rol: 'programador' }
-  },
+    data: { rol: 'programador' },
+    children: [
+      // dashboard / gestión de proyectos del propio programador
+      { path: '', component: ProgramadorComponent },
 
-  // PANEL USUARIO → cualquier usuario logueado (sin rol específico)
-  {
-    path: 'mis-asesorias',
-    component: MisAsesoriasComponent,
-    canActivate: [rolGuard]
-    // sin data.rol → basta estar logueado
+      // alias para /programador/proyectos
+      { path: 'proyectos', component: ProgramadorComponent },
+
+      // asesorías que recibe el programador
+      { path: 'asesorias', component: ProgramadorAsesoriasComponent }
+    ]
   },
 
   // wildcard al final

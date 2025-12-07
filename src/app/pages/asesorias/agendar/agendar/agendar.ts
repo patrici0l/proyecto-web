@@ -6,6 +6,11 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { ProgramadoresService, Programador } from '../../../../services/programadores';
 import { AuthService, UsuarioApp } from '../../../../services/auth';
+import { NotificacionesService } from '../../../../services/notificaciones';
+
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs);
 
 @Component({
   selector: 'app-agendar-asesoria',
@@ -21,22 +26,15 @@ export class AgendarAsesoriaComponent implements OnInit {
   programador: Programador | null = null;
   cargando = false;
 
-  // Horas configuradas por el admin
   horasDisponibles: string[] = [];
-
-  // Usuario logueado (si lo hay)
   usuarioActual: UsuarioApp | null = null;
-
-  // Asesorías ya agendadas con este programador
   asesoriasProgramador: Asesoria[] = [];
 
-  // Manejo de fechas para el mini-calendario
   hoy!: Date;
-  hoyStr!: string;                  // 'YYYY-MM-DD'
+  hoyStr!: string;
   fechaSeleccionada!: Date;
-  fechaSeleccionadaStr!: string;    // 'YYYY-MM-DD'
+  fechaSeleccionadaStr!: string;
 
-  // Horas de la fecha seleccionada con estado ocupado/libre
   disponibilidadDiaSeleccionado: {
     hora: string;
     ocupado: boolean;
@@ -48,11 +46,11 @@ export class AgendarAsesoriaComponent implements OnInit {
     private router: Router,
     private asesoriasService: AsesoriasService,
     private programadoresService: ProgramadoresService,
-    private authService: AuthService
+    private authService: AuthService,
+    private noti: NotificacionesService       // ✔ Notificaciones agregadas
   ) { }
 
   ngOnInit(): void {
-    // id del programador desde la URL
     this.idProgramador = this.route.snapshot.paramMap.get('idProgramador')!;
 
     // Inicializar fechas
@@ -61,7 +59,6 @@ export class AgendarAsesoriaComponent implements OnInit {
     this.hoyStr = this.formatearFecha(this.hoy);
     this.fechaSeleccionadaStr = this.hoyStr;
 
-    // Formulario para solicitar la asesoría
     this.form = this.fb.group({
       nombreSolicitante: ['', Validators.required],
       emailSolicitante: ['', [Validators.required, Validators.email]],
@@ -70,24 +67,22 @@ export class AgendarAsesoriaComponent implements OnInit {
       comentario: ['']
     });
 
-    // Cargar datos del programador y sus horas disponibles
+    // Traer datos del programador
     this.programadoresService.getProgramador(this.idProgramador)
-      .subscribe((p: Programador | undefined) => {
+      .subscribe((p) => {
         this.programador = p || null;
         this.horasDisponibles = p?.horasDisponibles || [];
-
-        // Recalcular disponibilidad para el día seleccionado
         this.actualizarDisponibilidadDiaSeleccionado();
       });
 
-    // Cargar asesorías ya agendadas de este programador
+    // Traer asesorías ya agendadas
     this.asesoriasService.getAsesoriasPorProgramador(this.idProgramador)
       .subscribe(lista => {
         this.asesoriasProgramador = lista;
         this.actualizarDisponibilidadDiaSeleccionado();
       });
 
-    // Nos suscribimos una vez y guardamos el usuario
+    // Usuario actual
     this.authService.usuario$.subscribe(usuario => {
       this.usuarioActual = usuario;
 
@@ -100,12 +95,11 @@ export class AgendarAsesoriaComponent implements OnInit {
     });
   }
 
-  // Normaliza la fecha (solo año/mes/día)
+  // Normaliza la fecha
   private normalizarFecha(fecha: Date): Date {
     return new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
   }
 
-  // 'YYYY-MM-DD'
   private formatearFecha(fecha: Date): string {
     const yyyy = fecha.getFullYear();
     const mm = String(fecha.getMonth() + 1).padStart(2, '0');
@@ -114,7 +108,6 @@ export class AgendarAsesoriaComponent implements OnInit {
   }
 
   private actualizarDisponibilidadDiaSeleccionado() {
-    // Si no hay horas definidas por el admin, no mostramos nada
     if (!this.horasDisponibles || this.horasDisponibles.length === 0) {
       this.disponibilidadDiaSeleccionado = [];
       return;
@@ -127,31 +120,26 @@ export class AgendarAsesoriaComponent implements OnInit {
       const ocupado = this.asesoriasProgramador.some(a =>
         a.fecha === fechaStr &&
         a.hora === horaSlot &&
-        a.estado !== 'rechazada' // las rechazadas NO bloquean
+        a.estado !== 'rechazada'
       );
 
-      return {
-        hora: horaSlot,
-        ocupado
-      };
+      return { hora: horaSlot, ocupado };
     });
   }
 
   diaSiguiente() {
     this.fechaSeleccionada = this.normalizarFecha(
-      new Date(this.fechaSeleccionada.getTime() + 24 * 60 * 60 * 1000)
+      new Date(this.fechaSeleccionada.getTime() + 86400000)
     );
     this.actualizarDisponibilidadDiaSeleccionado();
   }
 
   diaAnterior() {
-    // No permitimos ir antes de hoy
     const fechaAnterior = this.normalizarFecha(
-      new Date(this.fechaSeleccionada.getTime() - 24 * 60 * 60 * 1000)
+      new Date(this.fechaSeleccionada.getTime() - 86400000)
     );
-    const fechaAnteriorStr = this.formatearFecha(fechaAnterior);
 
-    if (fechaAnteriorStr < this.hoyStr) {
+    if (this.formatearFecha(fechaAnterior) < this.hoyStr) {
       return;
     }
 
@@ -159,11 +147,8 @@ export class AgendarAsesoriaComponent implements OnInit {
     this.actualizarDisponibilidadDiaSeleccionado();
   }
 
-  // Cuando el usuario hace click en una hora disponible
   seleccionarHora(slot: { hora: string; ocupado: boolean }) {
-    if (slot.ocupado) {
-      return;
-    }
+    if (slot.ocupado) return;
 
     this.form.patchValue({
       fecha: this.fechaSeleccionadaStr,
@@ -174,11 +159,11 @@ export class AgendarAsesoriaComponent implements OnInit {
   async enviarSolicitud() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.noti.error("Debes completar todos los campos obligatorios");
       return;
     }
 
     this.cargando = true;
-
     const formValue = this.form.value;
 
     const data: Asesoria = {
@@ -192,18 +177,20 @@ export class AgendarAsesoriaComponent implements OnInit {
       creadoEn: new Date().toISOString()
     };
 
-    // Si hay usuario logueado, guardamos su ID
     if (this.usuarioActual) {
       data.idSolicitante = this.usuarioActual.uid;
     }
 
     try {
       await this.asesoriasService.crearAsesoria(data);
-      alert('Solicitud de asesoría enviada. El programador la revisará en su panel.');
+
+      this.noti.exito("Tu solicitud fue enviada correctamente. El programador la revisará.");
+
       this.router.navigate(['/portafolio', this.idProgramador]);
+
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al enviar la solicitud');
+      this.noti.error("Ocurrió un error al enviar la solicitud");
     } finally {
       this.cargando = false;
     }

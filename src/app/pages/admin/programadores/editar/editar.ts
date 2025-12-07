@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 
 import { ProgramadoresService, Programador } from '../../../../services/programadores';
+import { NotificacionesService } from '../../../../services/notificaciones';
 
 @Component({
   selector: 'app-editar-programador',
@@ -27,7 +28,8 @@ export class EditarComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private programadoresService: ProgramadoresService,
-    private router: Router
+    private router: Router,
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {
@@ -42,8 +44,8 @@ export class EditarComponent implements OnInit {
       portafolio: [''],
       emailContacto: [''],
       whatsapp: [''],
-      disponibilidad: [''],           // NUEVO
-      horasDisponiblesTexto: ['']     // NUEVO
+      disponibilidad: [''],
+      horasDisponiblesTexto: ['']
     });
 
     this.cargarDatos();
@@ -67,9 +69,10 @@ export class EditarComponent implements OnInit {
           horasDisponiblesTexto: data.horasDisponibles?.join(', ') || ''
         });
 
+        // Foto actual
         if (data.foto) {
           this.preview = data.foto;
-        } else if ((data as any)['fotoUrl']) { // En caso de que en tu modelo se llame fotoUrl
+        } else if ((data as any)['fotoUrl']) {
           this.preview = (data as any)['fotoUrl'];
         }
       });
@@ -91,6 +94,7 @@ export class EditarComponent implements OnInit {
   async guardarCambios() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.noti.info("Por favor completa todos los campos obligatorios.");
       return;
     }
 
@@ -120,17 +124,23 @@ export class EditarComponent implements OnInit {
     };
 
     try {
+      // Enviar cambios + foto opcional
       await this.programadoresService.updateProgramador(
         this.id,
         datos,
         this.archivoFotoNuevo
       );
 
-      alert('Programador actualizado correctamente');
-      this.router.navigate(['/admin/programadores']);
+      this.noti.exito("Programador actualizado correctamente.");
+
+      // Redirigir después de 1 segundo para UX suave
+      setTimeout(() => {
+        this.router.navigate(['/admin/programadores']);
+      }, 800);
+
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al actualizar el programador');
+      this.noti.error('Ocurrió un error al actualizar el programador.');
     } finally {
       this.cargando = false;
     }

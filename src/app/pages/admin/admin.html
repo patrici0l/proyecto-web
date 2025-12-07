@@ -1,30 +1,54 @@
-<app-menu></app-menu>
+<div class="admin-wrapper">
 
-<div class="admin-container">
-
-    <div class="admin-header">
-        <h1><i class="bi bi-shield-lock-fill"></i> Panel de Administrador</h1>
-        <p>Bienvenido. Aquí puedes gestionar los programadores, portafolios y asesorías del sistema.</p>
-    </div>
-
-    <div class="admin-cards">
-        <div class="card">
-            <i class="bi bi-code-slash"></i>
-            <h3>Programadores</h3>
-            <p>Gestión de perfiles, habilidades y estados.</p>
+    <header class="admin-header">
+        <div class="admin-title-block">
+            <span class="admin-pill">
+                <i class="bi bi-shield-lock"></i>
+                Panel de administración
+            </span>
+            <h1>Panel de Administrador</h1>
+            <p>
+                Bienvenido. Aquí puedes gestionar los programadores, portafolios y asesorías del sistema.
+            </p>
         </div>
+    </header>
 
-        <div class="card">
-            <i class="bi bi-folder2-open"></i>
-            <h3>Portafolios</h3>
-            <p>Revisión, aprobación y seguimiento.</p>
-        </div>
+    <section class="admin-cards">
+        <a class="admin-card" [routerLink]="['/admin']">
+            <div class="card-icon card-icon-blue">
+                <i class="bi bi-speedometer2"></i>
+            </div>
+            <h2>Resumen</h2>
+            <p>Vista general del panel y accesos rápidos.</p>
+            <span class="card-link">
+                Mantenerse aquí
+                <i class="bi bi-arrow-right-short"></i>
+            </span>
+        </a>
 
-        <div class="card">
-            <i class="bi bi-clipboard-check"></i>
-            <h3>Asesorías</h3>
-            <p>Control de solicitudes y validaciones.</p>
-        </div>
-    </div>
+        <a class="admin-card" [routerLink]="['/admin/programadores']">
+            <div class="card-icon card-icon-indigo">
+                <i class="bi bi-code-slash"></i>
+            </div>
+            <h2>Programadores</h2>
+            <p>Gestión de perfiles, habilidades y disponibilidad.</p>
+            <span class="card-link">
+                Gestionar programadores
+                <i class="bi bi-arrow-right-short"></i>
+            </span>
+        </a>
+
+        <a class="admin-card" [routerLink]="['/usuarios']">
+            <div class="card-icon card-icon-green">
+                <i class="bi bi-folder2-open"></i>
+            </div>
+            <h2>Portafolios públicos</h2>
+            <p>Explorar los portafolios tal como los ve un usuario externo.</p>
+            <span class="card-link">
+                Ver portafolios
+                <i class="bi bi-arrow-right-short"></i>
+            </span>
+        </a>
+    </section>
 
 </div>

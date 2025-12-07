@@ -1,79 +1,216 @@
-.admin-container {
-  display: flex;
+/* ========== LAYOUT ADMIN CON TOPBAR ========== */
+
+.admin-shell {
   min-height: 100vh;
   background: #f1f5f9;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 250px;
-  background: #0f172a;  /* más elegante */
-  color: #e2e8f0;
-  padding: 2rem 1.5rem;
+  color: #0f172a;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #1e293b;
+}
 
-  h2 {
-    font-size: 1.4rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
-  }
+/* ===== TOPBAR ===== */
 
-  nav {
-    display: flex;
-    flex-direction: column;
-    gap: .8rem;
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 1.6rem;
+  background: #020617;
+  border-bottom: 1px solid #0b1120;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.6);
+}
 
-    a {
-      color: #cbd5e1;
-      text-decoration: none;
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.95rem;
-      transition: background 0.25s, transform 0.1s, color 0.25s;
+/* lado izquierdo: marca + navegación */
 
-      i {
-        font-size: 18px;
-      }
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
 
-      &:hover {
-        background: #1e293b;
-        color: #fff;
-        transform: translateX(4px);
-      }
-    }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e5e7eb;
 
-    /* Activo del router */
-    a.activo {
-      background: #334155;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    /* Cerrar sesión separado y rojo */
-    a.cerrar {
-      margin-top: 1.5rem;
-      color: #f87171; /* rojo suave */
-      font-weight: 600;
-    }
-
-    a.cerrar:hover {
-      background: #451a1a;
-      color: #ffffff;
-      transform: translateX(4px);
-    }
+  i {
+    font-size: 1.3rem;
+    color: #60a5fa;
   }
 }
 
-/* Contenido */
-.content {
+.admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #cbd5e1;
+    border: 1px solid transparent;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      transform 0.1s ease;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: #0b1120;
+      border-color: rgba(148, 163, 184, 0.7);
+      color: #f9fafb;
+      transform: translateY(-1px);
+    }
+  }
+
+  a.activo {
+    background: #0f172a;
+    border-color: #60a5fa;
+    color: #e0f2fe;
+    font-weight: 600;
+  }
+}
+
+/* lado derecho: tarjeta de usuario */
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: radial-gradient(circle at top left, #0f172a, #020617);
+  color: #e5e7eb;
+}
+
+.user-card .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #eff6ff;
+}
+
+.user-card .user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.user-card .name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.user-card .role {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.logout-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  color: #f97373;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  &:hover {
+    background: #451a1a;
+    color: #fee2e2;
+    transform: translateX(1px);
+  }
+}
+
+/* ===== CONTENIDO ===== */
+
+.admin-content {
   flex: 1;
-  padding: 2rem;
+  padding: 1.8rem;
+  min-width: 0;
+}
+
+.admin-content > * {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 992px) {
+  .admin-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.7rem 1rem;
+  }
+
+  .admin-content {
+    padding: 1.3rem 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-nav {
+    flex-wrap: wrap;
+
+    a {
+      flex: 1 1 48%;
+      justify-content: center;
+    }
+  }
+
+  .topbar-right {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 0.4rem;
+  }
+
+  .user-card {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .admin-content > * {
+    max-width: 100%;
+  }
 }

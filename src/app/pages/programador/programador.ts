@@ -10,6 +10,7 @@ import {
   TipoParticipacion
 } from '../../services/proyectos';
 import { AuthService, UsuarioApp } from '../../services/auth';
+import { NotificacionesService } from '../../services/notificaciones';
 
 @Component({
   selector: 'app-programador',
@@ -29,26 +30,26 @@ export class ProgramadorComponent implements OnInit {
 
   form!: FormGroup;
 
-  tiposProyecto: { valor: TipoProyecto; label: string }[] = [
-    { valor: 'academico', label: 'Académico' },
-    { valor: 'laboral', label: 'Laboral' }
+  tiposProyecto = [
+    { valor: 'academico' as TipoProyecto, label: 'Académico' },
+    { valor: 'laboral' as TipoProyecto, label: 'Laboral' }
   ];
 
-  tiposParticipacion: { valor: TipoParticipacion; label: string }[] = [
-    { valor: 'frontend', label: 'Frontend' },
-    { valor: 'backend', label: 'Backend' },
-    { valor: 'bd', label: 'Base de datos' },
-    { valor: 'fullstack', label: 'Fullstack' }
+  tiposParticipacion = [
+    { valor: 'frontend' as TipoParticipacion, label: 'Frontend' },
+    { valor: 'backend' as TipoParticipacion, label: 'Backend' },
+    { valor: 'bd' as TipoParticipacion, label: 'Base de datos' },
+    { valor: 'fullstack' as TipoParticipacion, label: 'Fullstack' }
   ];
 
   constructor(
     private auth: AuthService,
     private proyectosService: ProyectosService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {
-    // Formulario para crear/editar proyecto
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -59,11 +60,10 @@ export class ProgramadorComponent implements OnInit {
       demoUrl: ['']
     });
 
-    // Usuario logueado
     this.auth.usuario$.subscribe(usuario => {
       this.usuario = usuario;
 
-      if (usuario && usuario.idProgramador) {
+      if (usuario?.idProgramador) {
         this.cargarProyectos(usuario.idProgramador);
       } else {
         this.cargando = false;
@@ -116,13 +116,14 @@ export class ProgramadorComponent implements OnInit {
   }
 
   async guardarProyecto() {
-    if (!this.usuario || !this.usuario.idProgramador) {
-      alert('No se encontró el idProgramador asociado al usuario.');
+    if (!this.usuario?.idProgramador) {
+      this.noti.error('Error: No se encontró el ID del programador.');
       return;
     }
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.noti.confirmar('Complete todos los campos requeridos.');
       return;
     }
 
@@ -131,6 +132,7 @@ export class ProgramadorComponent implements OnInit {
 
     try {
       if (this.modo === 'nuevo') {
+
         const proyecto: Proyecto = {
           idProgramador: this.usuario.idProgramador,
           nombre: valores.nombre,
@@ -144,8 +146,10 @@ export class ProgramadorComponent implements OnInit {
         };
 
         await this.proyectosService.crearProyecto(proyecto);
-        alert('Proyecto creado correctamente.');
+        this.noti.exito('Proyecto creado correctamente.');
+
       } else if (this.modo === 'editar' && this.proyectoEditando?.id) {
+
         const cambios: Partial<Proyecto> = {
           nombre: valores.nombre,
           descripcion: valores.descripcion,
@@ -157,7 +161,7 @@ export class ProgramadorComponent implements OnInit {
         };
 
         await this.proyectosService.actualizarProyecto(this.proyectoEditando.id, cambios);
-        alert('Proyecto actualizado correctamente.');
+        this.noti.exito('Proyecto actualizado correctamente.');
       }
 
       this.modo = 'lista';
@@ -168,7 +172,7 @@ export class ProgramadorComponent implements OnInit {
 
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al guardar el proyecto.');
+      this.noti.error('Ocurrió un error al guardar el proyecto.');
     } finally {
       this.cargando = false;
     }
@@ -177,18 +181,23 @@ export class ProgramadorComponent implements OnInit {
   async eliminarProyecto(p: Proyecto) {
     if (!p.id) return;
 
-    const ok = confirm('¿Eliminar este proyecto?');
-    if (!ok) return;
+    const confirmar = await this.noti.confirmar(
+      '¿Eliminar este proyecto?',
+      'Esta acción no se puede deshacer.'
+    );
+
+    if (!confirmar) return;
     if (!this.usuario?.idProgramador) return;
 
     this.cargando = true;
 
     try {
       await this.proyectosService.eliminarProyecto(p.id);
+      this.noti.exito('Proyecto eliminado correctamente.');
       this.cargarProyectos(this.usuario.idProgramador);
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al eliminar el proyecto.');
+      this.noti.error('Ocurrió un error al eliminar el proyecto.');
       this.cargando = false;
     }
   }
