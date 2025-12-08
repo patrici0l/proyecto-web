@@ -1,404 +1,508 @@
-// =========================================
-// 🎨 Variables & Diseño Heurístico
-// =========================================
-$primary-color: #4f46e5; // Indigo moderno
-$primary-hover: #4338ca;
-$secondary-color: #0ea5e9; // Sky blue
-$danger-color: #ef4444; // Rojo suave
-$success-color: #10b981; // Verde esmeralda
-$warning-bg: #fff7ed;
-$warning-text: #c2410c;
-$bg-color: #f8fafc; // Gris muy claro para fondo
-$card-bg: #ffffff;
-$text-main: #1e293b;
-$text-muted: #64748b;
-$border-color: #e2e8f0;
-$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-$radius: 0.75rem;
-
-// =========================================
-// 🎬 Animaciones
-// =========================================
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulseButton {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.02);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-// =========================================
-// 🚀 Estilos Globales del Contenedor
-// =========================================
 :host {
   display: block;
-  background-color: $bg-color;
   min-height: 100vh;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  color: $text-main;
+  background:
+    radial-gradient(circle at top, rgba(29, 185, 84, 0.18), transparent 55%),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
+
+/* =========================================
+   CONTENEDOR GENERAL
+   ========================================= */
 
 .programador-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem;
-  animation: fadeIn 0.6s ease-out;
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: $text-main;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.025em;
-    border-bottom: 2px solid $border-color;
-    padding-bottom: 1rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    color: $text-main;
-    margin: 2rem 0 1rem;
-    font-weight: 600;
-  }
+  padding: 2rem 1.4rem;
+  animation: prog-fade-in 0.35s ease-out;
 }
 
-// =========================================
-// ⚠️ Alertas
-// =========================================
-.alerta {
-  background-color: $warning-bg;
-  border-left: 4px solid $warning-text;
-  color: $warning-text;
-  padding: 1rem 1.5rem;
-  border-radius: $radius;
-  box-shadow: $shadow-sm;
-  margin-bottom: 1.5rem;
+.programador-container h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 1.2rem;
+  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
-  animation: slideInUp 0.4s ease-out;
-
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-
-  code {
-    background-color: rgba(0, 0, 0, 0.05);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-  }
+  gap: 0.6rem;
+  color: var(--color-text);
+  text-shadow: 0 2px 10px rgba(15, 23, 42, 0.7);
+  padding-bottom: 0.7rem;
+  border-bottom: 3px solid rgba(148, 163, 184, 0.55);
 }
 
-// =========================================
-// 🔘 Botón Principal (Nuevo Proyecto)
-// =========================================
-// Selector específico para el botón que está directamente bajo el contenedor o div condicional
-.programador-container>div>button {
-  background: linear-gradient(135deg, $primary-color, $primary-hover);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: $radius;
-  cursor: pointer;
-  box-shadow: $shadow-md;
-  transition: all 0.3s ease;
+.programador-container h1::before {
+  content: "🧑‍💻";
+  font-size: 2rem;
+  filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.8));
+}
+
+.programador-container h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.8rem 0 1rem;
+  color: var(--color-text);
+}
+
+/* =========================================
+   MENSAJES GENERALES (sin usuario / sin id)
+   ========================================= */
+
+.programador-container>div>p {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.2rem;
+}
+
+/* =========================================
+   ALERTA SIN idProgramador
+   ========================================= */
+
+.alerta {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(248, 113, 113, 0.7);
+  padding: 1rem 1.1rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
   margin-bottom: 1.5rem;
+  animation: prog-slide-in 0.35s ease-out;
+}
+
+.alerta p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #fecaca;
+}
+
+.alerta code {
+  background: rgba(15, 23, 42, 0.9);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.78rem;
+}
+
+/* =========================================
+   BOTÓN "NUEVO PROYECTO"
+   (el primero dentro del bloque con proyectos)
+   ========================================= */
+
+.programador-container>div>h2+button {
+  margin-top: 0.2rem;
+  margin-bottom: 1.3rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-lg;
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
+  gap: 0.4rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    filter var(--transition-fast);
 }
 
-// =========================================
-// 📊 Tabla de Proyectos
-// =========================================
+.programador-container>div>h2+button::before {
+  content: "➕";
+  font-size: 1rem;
+}
+
+.programador-container>div>h2+button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.95);
+}
+
+.programador-container>div>h2+button:active {
+  transform: translateY(0);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85);
+}
+
+/* =========================================
+   ESTADOS: CARGANDO / SIN PROYECTOS
+   ========================================= */
+
+div[ngIf="cargando"],
+p[ngIf="!cargando && proyectos.length === 0"] {
+  margin-top: 0.6rem;
+  padding: 1.1rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+div[ngIf="cargando"]::before {
+  content: "⏳";
+  margin-right: 0.45rem;
+  animation: prog-spin 1s linear infinite;
+}
+
+/* =========================================
+   TABLA DE PROYECTOS
+   ========================================= */
+
 table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: $card-bg;
-  border-radius: $radius;
-  overflow: hidden; // Para respetar el border-radius en las esquinas
-  box-shadow: $shadow-md;
-  margin-bottom: 2rem;
-  animation: fadeIn 0.8s ease-out;
-
-  thead {
-    background-color: #f1f5f9;
-
-    th {
-      text-align: left;
-      padding: 1rem 1.5rem;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 700;
-      color: $text-muted;
-      border-bottom: 1px solid $border-color;
-    }
-  }
-
-  tbody {
-    tr {
-      transition: background-color 0.2s;
-
-      &:last-child td {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background-color: #f8fafc;
-      }
-
-      td {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid $border-color;
-        color: $text-main;
-        vertical-align: middle;
-
-        // Acciones (Botones dentro de la tabla)
-        button {
-          padding: 0.4rem 0.8rem;
-          font-size: 0.85rem;
-          border-radius: 6px;
-          border: 1px solid transparent;
-          cursor: pointer;
-          transition: all 0.2s;
-          margin-right: 0.5rem;
-          font-weight: 500;
-
-          // Botón Editar
-          &:first-of-type {
-            background-color: rgba($secondary-color, 0.1);
-            color: darken($secondary-color, 10%);
-
-            &:hover {
-              background-color: $secondary-color;
-              color: white;
-            }
-          }
-
-          // Botón Eliminar
-          &:last-of-type {
-            background-color: rgba($danger-color, 0.1);
-            color: darken($danger-color, 10%);
-
-            &:hover {
-              background-color: $danger-color;
-              color: white;
-            }
-          }
-        }
-      }
-    }
-  }
+  border-collapse: collapse;
+  margin-top: 0.8rem;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-elevated);
+  animation: prog-table-in 0.32s ease-out;
 }
 
-// Mensaje de carga o vacío
-div>p,
-div>div {
-
-  &.cargando,
-  &:empty {
-    color: $text-muted;
-    font-style: italic;
-    padding: 1rem;
-  }
+thead {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.98),
+      rgba(15, 23, 42, 0.98));
 }
 
-// =========================================
-// 📝 Formulario (Crear/Editar)
-// =========================================
+thead th {
+  padding: 0.8rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: left;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+/* Iconos en header */
+
+thead th:nth-child(1)::before {
+  content: "📁 ";
+}
+
+thead th:nth-child(2)::before {
+  content: "📂 ";
+}
+
+thead th:nth-child(3)::before {
+  content: "🎯 ";
+}
+
+thead th:nth-child(4)::before {
+  content: "💻 ";
+}
+
+thead th:nth-child(5)::before {
+  content: "⚙️ ";
+}
+
+tbody tr {
+  border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgba(15, 23, 42, 0.55);
+}
+
+tbody tr:hover {
+  background-color: var(--color-bg-hover);
+  transform: translateY(-1px);
+}
+
+tbody td {
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+/* Nombre más marcado */
+
+tbody td:first-child {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Acciones centradas */
+
+tbody td:last-child {
+  white-space: nowrap;
+}
+
+/* =========================================
+   BOTONES DENTRO DE LA TABLA
+   ========================================= */
+
+tbody td button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.35rem;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.65);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Editar (primer botón) */
+tbody td button:first-of-type {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--color-info);
+  border-color: rgba(56, 189, 248, 0.7);
+}
+
+/* Eliminar (segundo botón) */
+tbody td button:last-of-type {
+  background: rgba(239, 68, 68, 0.16);
+  color: var(--color-danger);
+  border-color: rgba(239, 68, 68, 0.7);
+}
+
+tbody td button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
+}
+
+tbody td button:active {
+  transform: translateY(0);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================
+   FORMULARIO NUEVO / EDITAR PROYECTO
+   ========================================= */
+
 .proyecto-form {
-  background-color: $card-bg;
-  padding: 2rem;
-  border-radius: $radius;
-  box-shadow: $shadow-lg;
-  border: 1px solid $border-color;
-  animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: 2rem;
+  padding: 1.7rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-elevated);
+  animation: prog-form-in 0.4s ease-out;
+}
 
-  h3 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    color: $primary-color;
-    font-size: 1.25rem;
-    font-weight: 700;
+.proyecto-form h3 {
+  margin: 0 0 1.2rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Grid del formulario */
+
+.proyecto-form form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Labels y campos */
+
+.proyecto-form form div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.proyecto-form form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.proyecto-form form input,
+.proyecto-form form select,
+.proyecto-form form textarea {
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--color-text);
+  font-size: 0.93rem;
+  font-family: inherit;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.proyecto-form form input::placeholder,
+.proyecto-form form textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.proyecto-form form input:focus,
+.proyecto-form form select:focus,
+.proyecto-form form textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.proyecto-form form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Botones del formulario */
+
+.proyecto-form form button[type="submit"],
+.proyecto-form form button[type="button"] {
+  margin-top: 0.8rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Guardar */
+
+.proyecto-form form button[type="submit"] {
+  background: linear-gradient(135deg, var(--color-success), #16a34a);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+}
+
+.proyecto-form form button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 1);
+}
+
+.proyecto-form form button[type="submit"]:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Cancelar */
+
+.proyecto-form form button[type="button"] {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.proyecto-form form button[type="button"]:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (min-width: 768px) {
+  .proyecto-form form {
+    grid-template-columns: 1fr 1fr;
   }
 
-  form {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+  /* Descripción, tecnologías, repo, demo a ancho completo */
+  .proyecto-form form div:nth-child(2),
+  .proyecto-form form div:nth-child(5),
+  .proyecto-form form div:nth-child(6),
+  .proyecto-form form div:nth-child(7) {
+    grid-column: span 2;
+  }
 
-    // Responsive: 2 columnas en pantallas grandes
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-
-      // Elementos que ocupan todo el ancho (Descripción, Repositorio, Demo)
-      div:nth-child(2),
-      // Descripción
-      div:nth-child(5),
-      // Tecnologías
-      div:nth-child(6),
-      // Repo
-      div:nth-child(7) {
-        // Demo
-        grid-column: span 2;
-      }
-    }
-
-    div {
-      display: flex;
-      flex-direction: column;
-
-      label {
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: $text-main;
-      }
-
-      input,
-      select,
-      textarea {
-        padding: 0.75rem;
-        border: 1px solid $border-color;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-family: inherit;
-        background-color: #fcfcfc;
-        transition: border-color 0.2s, box-shadow 0.2s;
-
-        &:focus {
-          outline: none;
-          border-color: $primary-color;
-          box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
-          background-color: white;
-        }
-
-        &::placeholder {
-          color: #cbd5e1;
-        }
-      }
-
-      textarea {
-        resize: vertical;
-        min-height: 100px;
-      }
-    }
-
-    // Botones del formulario
-    button[type="submit"],
-    button[type="button"] {
-      grid-column: span 1;
-      padding: 0.85rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: transform 0.1s;
-      margin-top: 1rem;
-
-      &:active {
-        transform: scale(0.98);
-      }
-    }
-
-    button[type="submit"] {
-      background-color: $success-color;
-      color: white;
-      border: none;
-      box-shadow: 0 4px 6px -1px rgba($success-color, 0.3);
-
-      &:hover {
-        background-color: darken($success-color, 5%);
-      }
-
-      &:disabled {
-        background-color: #9ca3af;
-        cursor: not-allowed;
-      }
-    }
-
-    button[type="button"] {
-      background-color: white;
-      color: $text-muted;
-      border: 1px solid $border-color;
-
-      &:hover {
-        background-color: #f1f5f9;
-        color: $text-main;
-      }
-    }
+  .proyecto-form form button[type="submit"],
+  .proyecto-form form button[type="button"] {
+    grid-column: span 1;
   }
 }
 
-// =========================================
-// 📱 Responsividad
-// =========================================
 @media (max-width: 768px) {
   .programador-container {
-    padding: 1rem;
+    padding: 1.6rem 1rem;
   }
 
-  // Hacer la tabla scrolleable horizontalmente en móviles
   table {
     display: block;
     overflow-x: auto;
-    white-space: nowrap;
+    border-radius: var(--radius-md);
   }
 
-  .proyecto-form form {
-    grid-template-columns: 1fr; // Todo a una columna
+  .proyecto-form {
+    padding: 1.4rem 1.2rem;
+  }
+}
 
-    div:nth-child(n) {
-      grid-column: span 1;
-    }
+/* =========================================
+   ANIMACIONES
+   ========================================= */
+
+@keyframes prog-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes prog-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes prog-table-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes prog-form-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes prog-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }
