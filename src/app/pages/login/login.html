@@ -1,21 +1,54 @@
-<div class="login-container">
-  
-  <div class="login-card">
+<div class="login-page">
 
-    <div class="icon">
-      <i class="fas fa-user-lock"></i>
+  <div class="login-card">
+    <!-- Toggle de tema arriba a la derecha -->
+    <div class="login-card-header">
+      <div class="brand-pill">
+        <span class="brand-icon">👨‍💻</span>
+        <span class="brand-text">DevPortafolios</span>
+      </div>
+
+      <app-theme-toggle></app-theme-toggle>
     </div>
 
-    <h2 class="typing-text">Bienvenido a la plataforma</h2>
+    <!-- Icono central -->
+    <div class="logo-orbit">
+      <div class="orbit-ring"></div>
+      <div class="orbit-core">
+        <span>🚀</span>
+      </div>
+    </div>
+
+    <!-- Texto principal -->
+    <h2 class="typing-text">
+      Plataforma de gestión de programadores
+    </h2>
 
     <p class="descripcion">
-      Inicia sesión de forma segura y rápida para continuar.
+      Inicia sesión de forma segura con tu cuenta de Google y gestiona
+      portafolios, asesorías y proyectos en un solo lugar.
     </p>
-<br>    <app-theme-toggle></app-theme-toggle>
+
+    <!-- Botón Google -->
     <button (click)="loginGoogle()" [disabled]="cargando" class="google-btn">
-      <i class="fab fa-google"></i>
-      {{ cargando ? 'Conectando...' : 'Entrar con Google' }}
+      <span class="google-icon">
+        <span class="g-segment g-blue"></span>
+        <span class="g-segment g-red"></span>
+        <span class="g-segment g-yellow"></span>
+        <span class="g-segment g-green"></span>
+      </span>
+
+      <span class="google-text">
+        {{ cargando ? 'Conectando con Google...' : 'Continuar con Google' }}
+      </span>
+
+      <span class="btn-glow-pulse" aria-hidden="true"></span>
     </button>
- 
+
+    <!-- Texto pequeño de confianza -->
+    <p class="trust-text">
+      Solo utilizamos tu correo para identificarte en el sistema.
+      No compartimos tu información con terceros.
+    </p>
   </div>
 </div>
