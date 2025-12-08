@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 
 import { AuthService, UsuarioApp } from '../../services/auth';
 import { take } from 'rxjs/operators';
-
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
-  imports: [CommonModule]
+  imports: [CommonModule, ThemeToggleComponent]
 })
 export class LoginComponent {
 
