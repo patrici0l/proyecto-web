@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
-import { AuthService, UsuarioApp } from '../../../services/auth';                 
-import { NotificacionComponent } from '../../../components/notificacion/notificacion'; 
+import { AuthService, UsuarioApp } from '../../../services/auth';
+import { NotificacionComponent } from '../../../components/notificacion/notificacion';
 import { Observable } from 'rxjs';
 import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-toggle';
 @Component({

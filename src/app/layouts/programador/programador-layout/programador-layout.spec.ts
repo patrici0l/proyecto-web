@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgramadorLayout } from './programador-layout';
+import { ProgramadorLayoutComponent } from './programador-layout';
 
 describe('ProgramadorLayout', () => {
-  let component: ProgramadorLayout;
-  let fixture: ComponentFixture<ProgramadorLayout>;
+  let component: ProgramadorLayoutComponent;
+  let fixture: ComponentFixture<ProgramadorLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProgramadorLayout]
+      imports: [ProgramadorLayoutComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProgramadorLayout);
+    fixture = TestBed.createComponent(ProgramadorLayoutComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
