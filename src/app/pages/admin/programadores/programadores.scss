@@ -8,9 +8,7 @@
     animation: lista-programadores-fade-in 0.35s ease-out;
 }
 
-/* =========================
-   TÍTULO CON EFECTO ESCRITURA
-   ========================= */
+/* TÍTULO CON EFECTO ESCRITURA */
 
 .typing-title {
     font-size: 1.9rem;
@@ -53,9 +51,7 @@
     }
 }
 
-/* =========================
-   BOTÓN: NUEVO PROGRAMADOR
-   ========================= */
+/* BOTÓN: NUEVO PROGRAMADOR */
 
 .btn-nuevo {
     display: inline-flex;
@@ -97,9 +93,7 @@
     }
 }
 
-/* =========================
-   TABLA
-   ========================= */
+/* TABLA */
 
 table {
     width: 100%;
@@ -196,9 +190,7 @@ td:last-child {
     white-space: nowrap;
 }
 
-/* =========================
-   BOTONES DE ACCIÓN
-   ========================= */
+/* BOTONES DE ACCIÓN */
 
 .btn {
     padding: 0.4rem 0.8rem;
@@ -250,9 +242,7 @@ td:last-child {
     }
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
+/* ANIMACIONEs */
 
 @keyframes lista-programadores-fade-in {
     from {
@@ -276,9 +266,7 @@ td:last-child {
     }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* RESPONSIVE*/
 
 @media (max-width: 768px) {
     :host {

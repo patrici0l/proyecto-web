@@ -12,9 +12,7 @@
     animation: nuevo-programador-fade-in 0.4s ease-out;
 }
 
-/* =========================
-   TÍTULO
-   ========================= */
+/*  TÍTULO */
 
 .title-typing {
     display: inline-flex;
@@ -43,9 +41,7 @@
     }
 }
 
-/* =========================
-   FORM / CARD
-   ========================= */
+/* FORM / CARD */
 
 .form-programador {
     width: 100%;
@@ -67,9 +63,7 @@
     flex-direction: column;
 }
 
-/* =========================
-   LABELS
-   ========================= */
+/* LABELS */
 
 .form-row label {
     font-size: 0.95rem;
@@ -86,9 +80,7 @@
     }
 }
 
-/* =========================
-   CAMPOS DE TEXTO / TEXTAREA
-   ========================= */
+/* CAMPOS DE TEXTO / TEXTAREA */
 
 .form-row input[type="text"],
 .form-row input[type="email"],
@@ -138,9 +130,7 @@
     box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.65);
 }
 
-/* =========================
-   INPUT FILE / FOTO
-   ========================= */
+/* INPUT FILE / FOTO*/
 
 .form-row input[type="file"] {
     padding: 0.75rem;
@@ -219,9 +209,7 @@
     }
 }
 
-/* =========================
-   ACCIONES / BOTÓN GUARDAR
-   ========================= */
+/* ACCIONES / BOTÓN GUARDAR  */
 
 .form-actions {
     margin-top: 1.6rem;
@@ -268,9 +256,7 @@
     }
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
+/* ANIMACIONES */
 
 @keyframes nuevo-programador-fade-in {
     from {
@@ -308,9 +294,7 @@
     }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* RESPONSIVE*/
 
 @media (max-width: 720px) {
     :host {

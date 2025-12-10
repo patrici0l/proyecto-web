@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ProgramadoresService } from '../../../services/programadores';
-import { NotificacionesService } from '../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
+import { NotificacionesService } from '../../../services/notificaciones';
 
 @Component({
     selector: 'app-programador-nuevo',
@@ -105,7 +105,7 @@ export class ProgramadorNuevoComponent {
         try {
             await this.programadoresService.crearProgramador(data, this.archivoFoto);
 
-            // Notificación bonita ✅
+            // Notificación bonita 
             this.noti.exito('Programador agregado correctamente');
 
             // Redirigir al listado
@@ -114,7 +114,7 @@ export class ProgramadorNuevoComponent {
         } catch (e) {
             console.error(e);
 
-            // Notificación de error ✅
+            // Notificación de error 
             this.noti.error('Ocurrió un error al guardar el programador');
 
         } finally {

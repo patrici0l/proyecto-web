@@ -1,7 +1,7 @@
 <div class="login-page">
 
   <div class="login-card">
-    <!-- Toggle de tema arriba a la derecha -->
+
     <div class="login-card-header">
       <div class="brand-pill">
         <span class="brand-icon">👨‍💻</span>
@@ -11,7 +11,6 @@
       <app-theme-toggle></app-theme-toggle>
     </div>
 
-    <!-- Icono central -->
     <div class="logo-orbit">
       <div class="orbit-ring"></div>
       <div class="orbit-core">
@@ -19,7 +18,7 @@
       </div>
     </div>
 
-    <!-- Texto principal -->
+
     <h2 class="typing-text">
       Plataforma de gestión de programadores
     </h2>
@@ -29,7 +28,7 @@
       portafolios, asesorías y proyectos en un solo lugar.
     </p>
 
-    <!-- Botón Google -->
+
     <button (click)="loginGoogle()" [disabled]="cargando" class="google-btn">
       <span class="google-icon">
         <span class="g-segment g-blue"></span>
@@ -45,7 +44,7 @@
       <span class="btn-glow-pulse" aria-hidden="true"></span>
     </button>
 
-    <!-- Texto pequeño de confianza -->
+
     <p class="trust-text">
       Solo utilizamos tu correo para identificarte en el sistema.
       No compartimos tu información con terceros.

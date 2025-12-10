@@ -33,8 +33,7 @@ export class PortafolioComponent implements OnInit {
     this.programadoresService.getProgramador(idProgramador)
       .subscribe(p => this.programador = p);
 
-    // Mantenemos tu método original 'getProyectosDeProgramador'
-    // pero agregamos la lógica para apagar el 'cargando'
+
     this.proyectosService.getProyectosDeProgramador(idProgramador)
       .subscribe(lista => {
         this.proyectosAcademicos = lista.filter(p => p.tipoProyecto === 'academico');

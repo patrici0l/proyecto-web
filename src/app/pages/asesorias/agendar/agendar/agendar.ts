@@ -47,7 +47,7 @@ export class AgendarAsesoriaComponent implements OnInit {
     private asesoriasService: AsesoriasService,
     private programadoresService: ProgramadoresService,
     private authService: AuthService,
-    private noti: NotificacionesService       // ✔ Notificaciones agregadas
+    private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {

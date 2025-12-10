@@ -8,9 +8,7 @@
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* =========================================
-   CONTENEDOR GENERAL
-   ========================================= */
+/*  CONTENEDOR GENERAL */
 
 .programador-container {
   max-width: 1100px;
@@ -46,9 +44,7 @@
   color: var(--color-text);
 }
 
-/* =========================================
-   MENSAJES GENERALES (sin usuario / sin id)
-   ========================================= */
+/*   MENSAJES GENERALES (sin usuario / sin id)*/
 
 .programador-container>div>p {
   font-size: 0.95rem;
@@ -56,9 +52,7 @@
   margin-bottom: 1.2rem;
 }
 
-/* =========================================
-   ALERTA SIN idProgramador
-   ========================================= */
+/*  ALERTA SIN idProgramador */
 
 .alerta {
   background: rgba(15, 23, 42, 0.85);
@@ -84,10 +78,7 @@
   font-size: 0.78rem;
 }
 
-/* =========================================
-   BOTÓN "NUEVO PROYECTO"
-   (el primero dentro del bloque con proyectos)
-   ========================================= */
+/*  BOTÓN "NUEVO PROYECTO" */
 
 .programador-container>div>h2+button {
   margin-top: 0.2rem;
@@ -126,9 +117,7 @@
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85);
 }
 
-/* =========================================
-   ESTADOS: CARGANDO / SIN PROYECTOS
-   ========================================= */
+/*   ESTADOS: CARGANDO / SIN PROYECTOS */
 
 div[ngIf="cargando"],
 p[ngIf="!cargando && proyectos.length === 0"] {
@@ -147,9 +136,7 @@ div[ngIf="cargando"]::before {
   animation: prog-spin 1s linear infinite;
 }
 
-/* =========================================
-   TABLA DE PROYECTOS
-   ========================================= */
+/*  TABLA DE PROYECTOS */
 
 table {
   width: 100%;
@@ -236,9 +223,7 @@ tbody td:last-child {
   white-space: nowrap;
 }
 
-/* =========================================
-   BOTONES DENTRO DE LA TABLA
-   ========================================= */
+/* BOTONES DENTRO DE LA TABLA */
 
 tbody td button {
   padding: 0.4rem 0.9rem;
@@ -280,9 +265,7 @@ tbody td button:active {
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.8);
 }
 
-/* =========================================
-   FORMULARIO NUEVO / EDITAR PROYECTO
-   ========================================= */
+/* FORMULARIO NUEVO / EDITAR PROYECTO*/
 
 .proyecto-form {
   margin-top: 2rem;
@@ -408,9 +391,7 @@ tbody td button:active {
   color: var(--color-text);
 }
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
+/* RESPONSIVE */
 
 @media (min-width: 768px) {
   .proyecto-form form {
@@ -447,9 +428,7 @@ tbody td button:active {
   }
 }
 
-/* =========================================
-   ANIMACIONES
-   ========================================= */
+/* ANIMACIONEs */
 
 @keyframes prog-fade-in {
   from {

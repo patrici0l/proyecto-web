@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, UsuarioApp } from '../../services/auth';
-import { Observable } from 'rxjs'; // 1. Agregamos esta importación para tipar
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-inicio',
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs'; // 1. Agregamos esta importación para tipar
 })
 export class InicioComponent {
 
-  // 2. Solo declaramos la variable aquí (sin asignarle valor todavía)
+
   usuario$: Observable<UsuarioApp | null>;
 
   constructor(
@@ -21,7 +21,7 @@ export class InicioComponent {
     private router: Router
   ) { 
     // 3. Asignamos el valor DENTRO del constructor
-    // Aquí 'this.auth' ya existe y es seguro usarlo
+
     this.usuario$ = this.auth.usuario$;
   }
 

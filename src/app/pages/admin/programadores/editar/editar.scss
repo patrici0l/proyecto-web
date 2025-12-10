@@ -7,9 +7,7 @@
     animation: form-fade-in 0.4s ease-out;
 }
 
-/* =========================
-   TÍTULOS
-   ========================= */
+/* TÍTULOS */
 
 h2 {
     text-align: center;
@@ -60,9 +58,7 @@ hr {
     margin: 1.8rem 0 1.2rem;
 }
 
-/* =========================
-   FORMULARIO / CARD
-   ========================= */
+/* FORMULARIO / CARD */
 
 form {
     max-width: 760px;
@@ -80,9 +76,7 @@ form {
     margin-bottom: 1.45rem;
 }
 
-/* =========================
-   LABELS
-   ========================= */
+/* LABELS */
 
 label {
     font-weight: 600;
@@ -99,9 +93,7 @@ label {
     }
 }
 
-/* =========================
-   CAMPOS DE TEXTO
-   ========================= */
+/* CAMPOS DE TEXTO */
 
 input,
 textarea {
@@ -149,9 +141,7 @@ textarea {
     min-height: 110px;
 }
 
-/* =========================
-   INPUT FILE / FOTO
-   ========================= */
+/* INPUT FILE / FOTO */
 
 .foto-section {
     display: flex;
@@ -227,9 +217,7 @@ input[type="file"] {
     }
 }
 
-/* =========================
-   BOTÓN SUBMIT
-   ========================= */
+/*BOTÓN SUBMIT */
 
 button[type="submit"] {
     width: 100%;
@@ -272,9 +260,7 @@ button[type="submit"] {
     }
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
+/*ANIMACIONES */
 
 @keyframes form-fade-in {
     from {
@@ -298,9 +284,7 @@ button[type="submit"] {
     }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* RESPONSIVE*/
 
 @media (max-width: 720px) {
     form {

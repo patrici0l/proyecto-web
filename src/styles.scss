@@ -1,8 +1,4 @@
-/* styles.scss (global) */
-
-/* =======================
-   PALETA GLOBAL / BASE
-   ======================= */
+/* PALETA GLOBAL / BASe */
 
 :root {
     /* Tipografía / layout */
@@ -35,9 +31,7 @@
     --focus-ring: 0 0 0 3px rgba(29, 185, 84, 0.35);
 }
 
-/* =======================
-   TEMA OSCURO (Spotify vibe)
-   ======================= */
+/*   TEMA OSCURO */
 
 :root.theme-dark {
     --color-bg: #121212;
@@ -62,9 +56,7 @@
     --focus-ring: 0 0 0 3px rgba(29, 185, 84, 0.35);
 }
 
-/* =======================
-   TEMA CLARO
-   ======================= */
+/* TEMA CLARO */
 
 :root.theme-light {
     --color-bg: #f9fafb;
@@ -89,9 +81,7 @@
     --focus-ring: 0 0 0 3px rgba(29, 185, 84, 0.25);
 }
 
-/* =======================
-   BASE GLOBAL
-   ======================= */
+/* BASE GLOBAL */
 
 * {
     box-sizing: border-box;
@@ -117,9 +107,7 @@ body {
     border-radius: 0.5rem;
 }
 
-/* =======================
-   COMPONENTES GLOBALES REUSABLES
-   ======================= */
+/* COMPONENTES GLOBALES REUSABLES*/
 
 /* Botones */
 .btn {
@@ -231,9 +219,7 @@ select {
     }
 }
 
-/* =======================
-   CONFIRM (ELIMINAR) - USA VARIABLES
-   ======================= */
+/* CONFIRM (ELIMINAR) - USA VARIABLES */
 
 .confirm-overlay {
     position: fixed;

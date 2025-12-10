@@ -11,9 +11,7 @@
   animation: ases-recibidas-fade-in 0.35s ease-out;
 }
 
-/* =========================
-   TÍTULO
-   ========================= */
+/*  TÍTULO */
 
 h2 {
   font-size: 1.9rem;
@@ -35,10 +33,7 @@ h2 {
   }
 }
 
-/* =========================
-   ESTADOS CARGANDO / VACÍO
-   (si más adelante les pones clases, las reutilizas)
-   ========================= */
+/* ESTADOS CARGANDO / VACÍO*/
 
 div[ngIf="cargando"],
 div[ngIf="!cargando && asesorias.length === 0"],
@@ -67,9 +62,7 @@ div[ngIf="!cargando && asesorias.length === 0"]::before {
   content: "📭";
 }
 
-/* =========================
-   TABLA
-   ========================= */
+/*  TABLa */
 
 table {
   width: 100%;
@@ -170,9 +163,7 @@ tbody td:last-child {
   white-space: nowrap;
 }
 
-/* =========================
-   BOTONES APROBAR / RECHAZAR
-   ========================= */
+/*  BOTONES APROBAR / RECHAZAR */
 
 button {
   border: none;
@@ -219,9 +210,7 @@ button:disabled {
   transform: none;
 }
 
-/* =========================
-   NOTIFICACIÓN SIMULADA
-   ========================= */
+/*  NOTIFICACIÓN SIMULADA */
 
 .notificacion-simulada {
   position: fixed;
@@ -280,9 +269,7 @@ button:disabled {
   }
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
+/*  ANIMACIONES */
 
 @keyframes ases-recibidas-fade-in {
   from {
@@ -330,9 +317,7 @@ button:disabled {
   }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/*    RESPONSIV */
 
 @media (max-width: 900px) {
   :host {
