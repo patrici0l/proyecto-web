@@ -10,9 +10,7 @@
   animation: mis-asesorias-fade-in 0.35s ease-out;
 }
 
-/* =========================
-   TÍTULO
-   ========================= */
+/*TÍTULO*/
 
 h2 {
   font-size: 2rem;
@@ -34,10 +32,8 @@ h2 {
   }
 }
 
-/* =========================
-   ESTADOS CARGANDO / VACÍO
-   (Opcional: agrega clases si quieres afinar más)
-   ========================= */
+/* ESTADOS CARGANDO / VACÍO
+   (Opcional: agrega clases si quieres afinar más) */
 
 div[ng-reflect-ng-if],
 div[ng-reflect-ng-if='false']+div {
@@ -51,11 +47,6 @@ div[ng-reflect-ng-if='false']+div {
   margin-top: 1.2rem;
   font-size: 0.95rem;
 }
-
-/* Si decides usar clases en el HTML:
-   <div *ngIf="cargando" class="estado-msg cargando"> ... </div>
-   <div *ngIf="..." class="estado-msg vacio"> ... </div>
-*/
 
 .estado-msg {
   text-align: center;
@@ -81,9 +72,7 @@ div[ng-reflect-ng-if='false']+div {
   content: "📭";
 }
 
-/* =========================
-   TABLA PRINCIPAL
-   ========================= */
+/*TABLA PRINCIPAL*/
 
 table {
   width: 100%;
@@ -166,9 +155,7 @@ tbody td {
   vertical-align: top;
 }
 
-/* =========================
-   BADGES DE ESTADO
-   ========================= */
+/* BADGES DE ESTADO */
 
 span.estado-pendiente,
 span.estado-aprobada,
@@ -221,9 +208,7 @@ span.estado-rechazada {
   }
 }
 
-/* =========================
-   COLUMNA DE NOTIFICACIÓN
-   ========================= */
+/* COLUMNA DE NOTIFICACIÓN */
 
 tbody td:last-child {
   min-width: 260px;
@@ -259,9 +244,7 @@ tbody td:last-child small {
   color: var(--color-text-muted);
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
+/*ANIMACIONES */
 
 @keyframes mis-asesorias-fade-in {
   from {
@@ -311,9 +294,7 @@ tbody td:last-child small {
   }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* RESPONSIVE */
 
 @media (max-width: 900px) {
   :host {

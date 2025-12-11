@@ -11,7 +11,9 @@
   animation: inicio-fade-in 0.35s ease-out;
 }
 
-/*  TÍTULOS */
+/* ================================
+   TÍTULOS
+   ================================ */
 
 h1 {
   font-size: 2.1rem;
@@ -27,7 +29,9 @@ h1 {
   margin-bottom: 1.8rem;
 }
 
-/*   BLOQUE PRINCIPAL (LOGIN / INVITADO) */
+/* ================================
+   BLOQUE PRINCIPAL (LOGIN / INVITADO)
+   ================================ */
 
 .inicio-wrapper {
   background: var(--color-bg-elevated);
@@ -106,7 +110,9 @@ h1 {
   }
 }
 
-/*   SECCIÓN AGENDAR ASESORÍA */
+/* ================================
+   SECCIÓN AGENDAR ASESORÍA
+   ================================ */
 
 .inicio-asesorias {
   margin-top: 3rem;
@@ -165,7 +171,9 @@ h1 {
   }
 }
 
-/* ANIMACIONEs */
+/* ================================
+   ANIMACIONES
+   ================================ */
 
 @keyframes inicio-fade-in {
   from {
@@ -189,7 +197,9 @@ h1 {
   }
 }
 
-/*  RESPONSIVE */
+/* ================================
+   RESPONSIVE
+   ================================ */
 
 @media (max-width: 600px) {
   :host {

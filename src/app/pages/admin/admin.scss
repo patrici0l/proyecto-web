@@ -4,7 +4,9 @@
   padding: 1.5rem 1.5rem 3rem;
 }
 
-/*  HEADER / TITULAR */
+/* =========================
+   HEADER / TITULAR
+   ========================= */
 
 .admin-header {
   margin-bottom: 1.5rem;
@@ -68,7 +70,9 @@
   font-size: 0.95rem;
 }
 
-/* CARDS*/
+/* =========================
+   CARDS
+   ========================= */
 
 .admin-cards {
   margin-top: 1.6rem;
@@ -188,7 +192,9 @@
   transform: translateX(1px);
 }
 
-/*ANIMACIONES */
+/* =========================
+   ANIMACIONES
+   ========================= */
 
 @keyframes admin-fade-down {
   from {
@@ -227,7 +233,9 @@
   animation-delay: 0.17s;
 }
 
-/* RESPONSIVE */
+/* =========================
+   RESPONSIVE
+   ========================= */
 
 @media (max-width: 992px) {
   .admin-cards {

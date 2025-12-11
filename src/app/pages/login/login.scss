@@ -1,11 +1,14 @@
+// ===============================
+// 🎧 Login estilo Spotify + Google
+// ===============================
 $spotify-green: #1db954;
 $spotify-green-soft: rgba(29, 185, 84, 0.22);
 $transition-fast: 0.18s ease;
 $transition-med: 0.28s ease;
 
-
+// ===============================
 // Contenedor general
-
+// ===============================
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -21,9 +24,9 @@ $transition-med: 0.28s ease;
     sans-serif;
 }
 
-
+// ===============================
 // Tarjeta principal
-
+// ===============================
 .login-card {
   width: 100%;
   max-width: 420px;
@@ -59,9 +62,9 @@ $transition-med: 0.28s ease;
   }
 }
 
-
+// ===============================
 // Header de la tarjeta (marca + toggle)
-
+// ===============================
 .login-card-header {
   display: flex;
   align-items: center;
@@ -91,9 +94,9 @@ $transition-med: 0.28s ease;
   }
 }
 
-
+// ===============================
 // Logo animado tipo órbita
-
+// ===============================
 .logo-orbit {
   position: relative;
   width: 96px;
@@ -133,9 +136,9 @@ $transition-med: 0.28s ease;
   }
 }
 
-
+// ===============================
 // Tipografía
-
+// ===============================
 .typing-text {
   font-size: 1.3rem;
   font-weight: 700;
@@ -167,8 +170,9 @@ $transition-med: 0.28s ease;
   margin: 0;
 }
 
-// Boton Google
-
+// ===============================
+// Botón Google
+// ===============================
 .google-btn {
   margin-top: 0.4rem;
   width: 100%;
@@ -298,7 +302,7 @@ $transition-med: 0.28s ease;
 }
 
 // Texto de confianza
-
+// ===============================
 .trust-text {
   margin: 0.5rem 0 0;
   font-size: 0.75rem;
@@ -308,7 +312,7 @@ $transition-med: 0.28s ease;
 }
 
 // Responsive
-
+// ===============================
 @media (max-width: 480px) {
   .login-card {
     padding: 2.1rem 1.5rem 1.8rem;

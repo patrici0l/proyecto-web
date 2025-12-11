@@ -11,7 +11,9 @@
   animation: portfolio-fade-in 0.35s ease-out;
 }
 
-/* LOADING STATE */
+/* =========================
+   LOADING STATE
+   ========================= */
 
 .loading-container {
   min-height: 60vh;
@@ -35,7 +37,7 @@
   justify-content: center;
 
   i {
-    display: none; // usamos el spinner CSS, el icono queda por si acaso
+    display: none; // usamos el spinner CSS
   }
 }
 
@@ -51,7 +53,9 @@
   padding: 1.5rem 0;
 }
 
-/*  HEADER DEL PROGRAMADOR */
+/* =========================
+   HEADER DEL PROGRAMADOR
+   ========================= */
 
 .portfolio-header {
   background: var(--color-bg-elevated);
@@ -266,7 +270,9 @@
   }
 }
 
-/* PROYECTOS */
+/* =========================
+   PROYECTOS
+   ========================= */
 
 .projects-container {
   display: flex;
@@ -512,7 +518,9 @@
   transform: translateY(-1px);
 }
 
-/*  ANIMACIONEs */
+/* =========================
+   ANIMACIONES
+   ========================= */
 
 @keyframes portfolio-fade-in {
   from {
@@ -534,7 +542,9 @@
   }
 }
 
-/* RESPONSIVE */
+/* =========================
+   RESPONSIVE
+   ========================= */
 
 @media (max-width: 768px) {
   :host {
