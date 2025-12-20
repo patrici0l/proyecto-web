@@ -1,286 +1,270 @@
+/* =========================================
+   1. SISTEMA DE DISEÑO
+   ========================================= */
+
 :host {
+    /* --- Variables Locales --- */
+    --table-bg: var(--bg-card, #ffffff);
+    --table-header-bg: var(--bg-input, #f8fafc);
+    --table-border: var(--border-subtle, #e2e8f0);
+    --table-hover: var(--bg-hover, #f1f5f9);
+
+    --text-main: var(--text-main, #0f172a);
+    --text-muted: var(--text-muted, #64748b);
+
+    --primary: #15803d;
+    --info: #0ea5e9;
+    /* Sky 500 */
+    --danger: #ef4444;
+    /* Red 500 */
+
     display: block;
-    padding: 1.8rem 1.4rem;
-    color: var(--color-text);
-    background:
-        radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 58%),
-        var(--color-bg);
-    animation: proyectos-fade-in 0.35s ease-out;
+    padding: 2rem 1.5rem;
+    background: var(--bg-page);
+    /* Fondo sutil */
+    background-image:
+        radial-gradient(circle at top right, rgba(21, 128, 61, 0.05), transparent 60%);
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.proyectos-admin {
-    max-width: 1100px;
-    margin: 0 auto;
-}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
 
-/* =========================
-   TÍTULO
-   ========================= */
-
-.proyectos-admin h2 {
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    letter-spacing: 0.01em;
-    color: var(--color-text);
-
-    &::before {
-        content: "📁";
-        font-size: 1.7rem;
+    to {
+        opacity: 1;
     }
 }
 
-/* =========================
-   BOTÓN: NUEVO PROYECTO
-   ========================= */
+.proyectos-admin {
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-.proyectos-admin>button {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+/* =========================================
+   2. HEADER Y BOTÓN PRINCIPAL
+   ========================================= */
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0;
+
+        i {
+            color: var(--primary);
+        }
+    }
+}
+
+/* Botón Nuevo Proyecto */
+.btn-nuevo {
+    background: var(--primary);
     color: #ffffff;
     border: none;
-    padding: 0.55rem 1.1rem;
-    border-radius: var(--radius-md);
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.75rem;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55);
-    transition:
-        background-color var(--transition-fast),
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        filter var(--transition-fast);
-
-    &::before {
-        content: "➕";
-        font-size: 1rem;
-    }
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.25);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
+        background: #166534;
+        /* Darker Green */
         transform: translateY(-2px);
-        filter: brightness(1.03);
-        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.35);
     }
 
     &:active {
         transform: translateY(0);
-        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.6);
     }
 }
 
-/* =========================
-   ESTADO CARGANDO
-   ========================= */
+/* =========================================
+   3. TABLA (Desktop View)
+   ========================================= */
 
-.cargando {
-    font-size: 0.98rem;
-    color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-
-    &::before {
-        content: "⏳";
-        display: inline-block;
-        animation: proyectos-spin 1s linear infinite;
-    }
+.table-container {
+    width: 100%;
+    background: var(--table-bg);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-card, 0 4px 6px -1px rgba(0, 0, 0, 0.05));
+    border: 1px solid var(--table-border);
+    overflow: hidden;
+    /* Para el border-radius */
+    overflow-x: auto;
+    /* Scroll si es muy ancha */
 }
-
-/* =========================
-   ESTADO SIN PROYECTOS
-   ========================= */
-
-.sin-proyectos,
-.proyectos-admin ng-template p {
-    background: var(--color-bg-elevated);
-    padding: 1.4rem 1.3rem;
-    border: 1px dashed rgba(148, 163, 184, 0.7);
-    border-radius: var(--radius-lg);
-    font-size: 0.95rem;
-    text-align: center;
-    color: var(--color-text-muted);
-    max-width: 520px;
-    margin-top: 1.2rem;
-
-    &::before {
-        content: "📄";
-        font-size: 1.6rem;
-        display: block;
-        margin-bottom: 0.4rem;
-    }
-}
-
-/* =========================
-   TABLA
-   ========================= */
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1.4rem;
-    background: var(--color-bg-elevated);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-elevated);
-    animation: proyectos-table-in 0.32s ease-out;
+    min-width: 800px;
+    /* Asegura ancho mínimo en desktop */
 
+    /* CABECERA */
     thead {
-        background: linear-gradient(135deg,
-                rgba(15, 23, 42, 0.96),
-                rgba(15, 23, 42, 0.96));
-        color: var(--color-text);
+        background: var(--table-header-bg);
+        border-bottom: 1px solid var(--table-border);
 
         th {
-            padding: 0.75rem 0.9rem;
             text-align: left;
-            font-size: 0.8rem;
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.11em;
-            color: var(--color-text-muted);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
         }
     }
 
+    /* CUERPO */
     tbody {
         tr {
-            transition:
-                background-color var(--transition-fast),
-                transform var(--transition-fast);
+            border-bottom: 1px solid var(--table-border);
+            transition: background-color 0.15s ease;
 
-            &:nth-child(even) {
-                background-color: rgba(15, 23, 42, 0.4);
+            &:last-child {
+                border-bottom: none;
             }
 
             &:hover {
-                background-color: var(--color-bg-hover);
-                transform: translateY(-1px);
+                background-color: var(--table-hover);
             }
         }
 
         td {
-            padding: 0.7rem 0.9rem;
-            border-bottom: 1px solid rgba(31, 41, 55, 0.6);
-            font-size: 0.9rem;
-            color: var(--color-text);
-
-            &:last-child {
-                display: flex;
-                gap: 0.5rem;
-                align-items: center;
-            }
+            padding: 1rem 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            vertical-align: middle;
         }
     }
 }
 
-/* =========================
-   BOTONES EN ACCIONES
-   ========================= */
+/* Estilos de contenido de celda */
+.proyecto-nombre {
+    font-weight: 600;
+    color: var(--text-main);
+}
 
-td button {
-    border-radius: 999px;
-    border: 1px solid transparent;
-    padding: 0.35rem 0.8rem;
-    font-size: 0.8rem;
-    font-weight: 500;
+.text-muted {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Badge (Chip) para el Tipo */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--bg-input);
+    border: 1px solid var(--table-border);
+    color: var(--text-muted);
+}
+
+/* =========================================
+   4. ACCIONES (Botones Icono)
+   ========================================= */
+
+.text-end {
+    text-align: right;
+}
+
+.actions-cell {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    background-color: transparent;
-    transition:
-        background-color var(--transition-fast),
-        color var(--transition-fast),
-        border-color var(--transition-fast),
-        transform var(--transition-fast);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-left: 0.25rem;
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
 
-    /* El primer botón (Editar) */
-    &:first-child {
-        color: var(--color-info);
-        border-color: rgba(56, 189, 248, 0.45);
-
-        &::before {
-            content: "✏️";
-            font-size: 0.95rem;
-        }
+    &.edit {
+        color: var(--info);
 
         &:hover {
-            background-color: rgba(56, 189, 248, 0.12);
-            transform: translateY(-1px);
+            background: rgba(14, 165, 233, 0.1);
         }
     }
 
-    /* El segundo botón (Eliminar) */
-    &:last-child {
-        color: var(--color-danger);
-        border-color: rgba(239, 68, 68, 0.5);
-
-        &::before {
-            content: "🗑️";
-            font-size: 0.95rem;
-        }
+    &.delete {
+        color: var(--danger);
 
         &:hover {
-            background-color: rgba(239, 68, 68, 0.12);
-            transform: translateY(-1px);
+            background: rgba(239, 68, 68, 0.1);
         }
     }
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
+/* =========================================
+   5. EMPTY STATE
+   ========================================= */
 
-@keyframes proyectos-fade-in {
-    from {
-        opacity: 0;
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--table-bg);
+    border: 1px dashed var(--table-border);
+    border-radius: 1rem;
+    color: var(--text-muted);
+
+    i {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 1rem;
+        opacity: 0.5;
     }
 
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes proyectos-table-in {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(0.995);
+    p {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes proyectos-spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
+    small {
+        font-size: 0.9rem;
     }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* =========================================
+   6. RESPONSIVE (Card View en Móvil)
+   ========================================= */
 
 @media (max-width: 768px) {
-    :host {
-        padding: 1.2rem 0.7rem;
-    }
 
+    /* Ocultar cabecera de tabla */
     table thead {
         display: none;
     }
 
+    /* Tabla como bloque */
     table,
     tbody,
     tr,
@@ -289,29 +273,52 @@ td button {
         width: 100%;
     }
 
-    tbody tr {
-        margin-bottom: 0.8rem;
-        border-radius: var(--radius-md);
-        overflow: hidden;
+    .table-container {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        overflow: visible;
     }
 
-    tbody td {
-        border-bottom: none;
-        padding: 0.55rem 0.9rem;
+    table tbody tr {
+        background: var(--table-bg);
+        margin-bottom: 1rem;
+        border-radius: 1rem;
+        border: 1px solid var(--table-border);
+        padding: 1rem;
+        box-shadow: var(--shadow-card);
+    }
 
-        &:before {
-            content: attr(data-label);
-            display: block;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-text-muted);
-            margin-bottom: 0.15rem;
-        }
+    /* Celdas como filas flex */
+    table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--table-border);
+        text-align: right;
 
         &:last-child {
-            margin-top: 0.3rem;
-            justify-content: flex-start;
+            border-bottom: none;
         }
+
+        /* Label generado via data-label */
+        &::before {
+            content: attr(data-label);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-right: 1rem;
+            text-align: left;
+        }
+    }
+
+    /* Ajustes específicos móvil */
+    .actions-cell {
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        justify-content: flex-end;
+        /* Botones a la derecha */
     }
 }

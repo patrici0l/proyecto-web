@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
 import { NotificacionesService } from '../../../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
 
+
 @Component({
   selector: 'app-proyecto-nuevo',
   standalone: true,

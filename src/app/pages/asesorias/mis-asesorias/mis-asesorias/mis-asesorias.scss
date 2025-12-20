@@ -1,252 +1,113 @@
+/* =========================================
+   1. SISTEMA DE DISEÑO
+   ========================================= */
+
 :host {
+  /* --- Animaciones --- */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- COLORES SEMÁNTICOS --- */
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-hover: #f1f5f9;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+
+  --status-pending-bg: #fef9c3;
+  --status-pending-text: #854d0e;
+
+  --status-success-bg: #dcfce7;
+  --status-success-text: #166534;
+
+  --status-error-bg: #fee2e2;
+  --status-error-text: #991b1b;
+
+  --border-subtle: #e2e8f0;
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+  /* Configuración */
   display: block;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2.2rem 1.4rem;
-  color: var(--color-text);
-  background:
-    radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
-    var(--color-bg);
-  animation: mis-asesorias-fade-in 0.35s ease-out;
+  padding: 2.5rem 1.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-page);
+
+  /* Fondo decorativo */
+  background-image:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.05), transparent 60%);
 }
 
-/*TÍTULO*/
+/* --- MODO OSCURO --- */
+@media (prefers-color-scheme: dark) {
+  :host {
+    --bg-page: #0f172a;
+    --bg-card: #1e293b;
+    --bg-hover: #334155;
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+
+    --status-pending-bg: rgba(234, 179, 8, 0.2);
+    --status-pending-text: #fef08a;
+
+    --status-success-bg: rgba(34, 197, 94, 0.2);
+    --status-success-text: #86efac;
+
+    --status-error-bg: rgba(239, 68, 68, 0.2);
+    --status-error-text: #fca5a5;
+
+    --border-subtle: #334155;
+    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* =========================================
+   2. TÍTULO
+   ========================================= */
 
 h2 {
   font-size: 2rem;
   font-weight: 800;
-  margin-bottom: 1.6rem;
+  margin-bottom: 2rem;
+  color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  color: var(--color-text);
-  text-shadow: 0 2px 10px rgba(15, 23, 42, 0.6);
-  letter-spacing: 0.02em;
-  border-bottom: 3px solid rgba(148, 163, 184, 0.4);
-  padding-bottom: 0.8rem;
+  gap: 0.75rem;
 
   &::before {
-    content: "🛡️";
-    font-size: 2rem;
-    filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.7));
+    content: '';
+    display: block;
+    width: 8px;
+    height: 32px;
+    background: linear-gradient(to bottom, #4f46e5, #06b6d4);
+    border-radius: 4px;
   }
 }
 
-/* ESTADOS CARGANDO / VACÍO
-   (Opcional: agrega clases si quieres afinar más) */
+/* =========================================
+   3. ESTADOS (Cargando / Vacío)
+   ========================================= */
 
-div[ng-reflect-ng-if],
-div[ng-reflect-ng-if='false']+div {
-  /* Fallback muy suave por si Angular refleja atributos */
+/* Contenedor genérico para mensajes */
+div[ng-reflect-ng-if] {
+  /* Nota: Usar clases en el HTML es mejor, pero esto estiliza el div desnudo */
+  background: var(--bg-card);
+  padding: 3rem;
+  border-radius: 1rem;
   text-align: center;
-  padding: 1.4rem 1.2rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-elevated);
-  border: 1px dashed rgba(148, 163, 184, 0.6);
-  color: var(--color-text-muted);
-  margin-top: 1.2rem;
-  font-size: 0.95rem;
+  border: 1px dashed var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-card);
+  margin-top: 1rem;
+  animation: fadeIn 0.4s ease;
 }
 
-.estado-msg {
-  text-align: center;
-  padding: 1.4rem 1.2rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-elevated);
-  border: 1px dashed rgba(148, 163, 184, 0.6);
-  color: var(--color-text-muted);
-  margin-top: 1.2rem;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-}
-
-.estado-msg.cargando::before {
-  content: "⏳";
-  animation: asesorias-spin 1s linear infinite;
-}
-
-.estado-msg.vacio::before {
-  content: "📭";
-}
-
-/*TABLA PRINCIPAL*/
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.8rem;
-  background: var(--color-bg-elevated);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-elevated);
-  animation: mis-asesorias-table-in 0.32s ease-out;
-  min-width: 900px;
-}
-
-thead {
-  background: linear-gradient(135deg,
-      rgba(15, 23, 42, 0.98),
-      rgba(15, 23, 42, 0.98));
-}
-
-thead th {
-  padding: 0.9rem 1rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-align: left;
-  color: var(--color-text-muted);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
-}
-
-/* Iconos por columna (header) */
-
-thead th:nth-child(1)::before {
-  content: "👤 ";
-}
-
-thead th:nth-child(2)::before {
-  content: "📆 ";
-}
-
-thead th:nth-child(3)::before {
-  content: "⏱️ ";
-}
-
-thead th:nth-child(4)::before {
-  content: "💬 ";
-}
-
-thead th:nth-child(5)::before {
-  content: "🏷️ ";
-}
-
-thead th:nth-child(6)::before {
-  content: "✉️ ";
-}
-
-thead th:nth-child(7)::before {
-  content: "🔔 ";
-}
-
-tbody tr {
-  border-bottom: 1px solid rgba(31, 41, 55, 0.7);
-  transition:
-    background-color var(--transition-fast),
-    transform var(--transition-fast);
-}
-
-tbody tr:nth-child(even) {
-  background-color: rgba(15, 23, 42, 0.55);
-}
-
-tbody tr:hover {
-  background-color: var(--color-bg-hover);
-  transform: translateY(-1px);
-}
-
-tbody td {
-  padding: 0.9rem 1rem;
-  font-size: 0.9rem;
-  vertical-align: top;
-}
-
-/* BADGES DE ESTADO */
-
-span.estado-pendiente,
-span.estado-aprobada,
-span.estado-rechazada {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
-}
-
-/* Pendiente */
-
-span.estado-pendiente {
-  background: rgba(250, 204, 21, 0.12);
-  color: #facc15;
-  border: 1px solid rgba(250, 204, 21, 0.45);
-
-  &::before {
-    content: "🕓";
-  }
-}
-
-/* Aprobada */
-
-span.estado-aprobada {
-  background: rgba(34, 197, 94, 0.12);
-  color: var(--color-success);
-  border: 1px solid rgba(34, 197, 94, 0.55);
-
-  &::before {
-    content: "✔️";
-    animation: asesorias-pulse 1.3s infinite;
-  }
-}
-
-/* Rechazada */
-
-span.estado-rechazada {
-  background: rgba(239, 68, 68, 0.12);
-  color: var(--color-danger);
-  border: 1px solid rgba(239, 68, 68, 0.55);
-
-  &::before {
-    content: "❌";
-  }
-}
-
-/* COLUMNA DE NOTIFICACIÓN */
-
-tbody td:last-child {
-  min-width: 260px;
-  background: rgba(15, 23, 42, 0.7);
-  border-left: 3px solid var(--color-info);
-  border-radius: 0.4rem;
-}
-
-.nota-notificacion {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--color-info);
-  margin-bottom: 0.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-
-  &::before {
-    content: "🔔";
-    animation: asesorias-pulse 1.4s infinite;
-  }
-}
-
-tbody td:last-child small {
-  display: block;
-  margin-top: 0.1rem;
-  background: var(--color-bg);
-  border-radius: 0.5rem;
-  padding: 0.6rem 0.7rem;
-  border: 1px dashed rgba(148, 163, 184, 0.7);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
-
-/*ANIMACIONES */
-
-@keyframes mis-asesorias-fade-in {
+@keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -258,52 +119,250 @@ tbody td:last-child small {
   }
 }
 
-@keyframes mis-asesorias-table-in {
+/* =========================================
+   4. TABLA (Escritorio)
+   ========================================= */
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--bg-card);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+  margin-top: 1rem;
+
+  animation: slideUp 0.5s var(--ease-smooth);
+}
+
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.995);
+    transform: translateY(20px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-@keyframes asesorias-spin {
-  0% {
-    transform: rotate(0deg);
+/* CABECERA */
+thead {
+  background: var(--bg-hover);
+}
+
+th {
+  padding: 1.2rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* CUERPO */
+tbody tr {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--bg-hover);
   }
 
-  100% {
-    transform: rotate(360deg);
+  &:last-child td {
+    border-bottom: none;
   }
 }
 
-@keyframes asesorias-pulse {
-  0% {
-    transform: scale(1);
-  }
+td {
+  padding: 1.2rem 1.5rem;
+  vertical-align: top;
+  /* Mejor alineación para contenido multilínea */
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.5;
+}
 
-  50% {
-    transform: scale(1.12);
-  }
+/* =========================================
+   5. COMPONENTES INTERNOS (Chips & Notas)
+   ========================================= */
 
-  100% {
-    transform: scale(1);
+/* CHIPS DE ESTADO */
+span[class*="estado-"] {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.estado-pendiente {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending-text);
+}
+
+.estado-aprobada {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+}
+
+.estado-rechazada {
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+}
+
+/* NOTIFICACIÓN SIMULADA (Estilo "Ticket") */
+td:last-child {
+  min-width: 250px;
+}
+
+.nota-notificacion {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  &::before {
+    content: "🔔";
+    font-size: 0.9rem;
   }
 }
 
-/* RESPONSIVE */
+small {
+  display: block;
+  background: var(--bg-page);
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px dashed var(--border-subtle);
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* =========================================
+   6. RESPONSIVE (Card View - Sin cambiar HTML)
+   ========================================= */
 
 @media (max-width: 900px) {
-  :host {
-    padding: 1.6rem 0.8rem;
+
+  /* Ocultar cabecera de tabla */
+  thead {
+    display: none;
+  }
+
+  /* Elementos como bloque */
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   table {
-    display: block;
-    overflow-x: auto;
-    border-radius: var(--radius-md);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  /* Fila se convierte en Tarjeta */
+  tbody tr {
+    background: var(--bg-card);
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-subtle);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+
+  /* Celdas con etiquetas inyectadas por CSS */
+  td {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+
+    &:last-child {
+      border-bottom: none;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--border-subtle);
+      background: rgba(0, 0, 0, 0.02);
+      /* Sutil fondo para separar la nota */
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    /* Etiquetas automáticas */
+    &::before {
+      content: attr(data-label);
+      /* Fallback ideal, pero usaremos nth-child por seguridad */
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-right: 1rem;
+    }
+
+    /* Mapeo de columnas (Asegúrate que coincida con tu HTML) */
+    &:nth-of-type(1)::before {
+      content: "Programador";
+    }
+
+    &:nth-of-type(2)::before {
+      content: "Fecha";
+    }
+
+    &:nth-of-type(3)::before {
+      content: "Hora";
+    }
+
+    &:nth-of-type(4)::before {
+      content: "Comentario";
+    }
+
+    &:nth-of-type(5)::before {
+      content: "Estado";
+    }
+
+    &:nth-of-type(6)::before {
+      content: "Mensaje Prog.";
+    }
+
+    &:nth-of-type(7)::before {
+      content: "";
+      display: none;
+    }
+
+    /* Ocultar label para notif */
+  }
+
+  /* Ajustes específicos para móvil */
+  .nota-notificacion {
+    margin-bottom: 0.25rem;
+  }
+
+  small {
+    width: 100%;
+    box-sizing: border-box;
   }
 }

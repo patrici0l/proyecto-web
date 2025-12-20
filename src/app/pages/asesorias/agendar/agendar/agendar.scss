@@ -1,377 +1,532 @@
 /* =========================================
-   VARIABLES & TEMA (Light Glass)
+   1. SISTEMA DE DISEÑO (Design Tokens)
    ========================================= */
+
 :host {
-    display: block;
-    /* Paleta de Colores Clara */
-    --bg: #f8fafc;
-    /* Fondo base */
-    --bg2: #eef2ff;
-    /* Fondo secundario */
+    /* --- Animaciones & Física --- */
+    --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-short: 0.2s;
 
-    --card: rgba(255, 255, 255, 0.85);
-    --card2: rgba(255, 255, 255, 0.65);
-    --stroke: rgba(148, 163, 184, 0.2);
+    /* --- MODO CLARO (Default) --- */
+    --bg-page: #f8fafc;
+    --bg-glass: rgba(255, 255, 255, 0.75);
+    --bg-glass-heavy: rgba(255, 255, 255, 0.9);
+    --bg-input: rgba(255, 255, 255, 0.6);
 
-    --text: #0f172a;
-    /* Texto principal */
-    --muted: #64748b;
-    /* Texto secundario */
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-muted: #64748b;
+    /* Slate 500 */
 
     --primary: #4f46e5;
     /* Indigo */
-    --secondary: #06b6d4;
-    /* Cyan */
+    --primary-gradient: linear-gradient(135deg, #4f46e5, #06b6d4);
     --success: #22c55e;
-    /* Green */
     --danger: #ef4444;
-    /* Red */
 
-    --shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
-    --shadow-soft: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
-    --radius: 24px;
+    --border-glass: rgba(255, 255, 255, 0.6);
+    --border-subtle: rgba(148, 163, 184, 0.3);
+
+    --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-inner: inset 0 2px 4px 0 rgba(255, 255, 255, 0.6);
+
+    /* Configuración Base */
+    display: block;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-page);
+}
+
+/* --- MODO OSCURO (Automático) --- */
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg-page: #020617;
+        /* Slate 950 */
+        --bg-glass: rgba(15, 23, 42, 0.65);
+        --bg-glass-heavy: rgba(30, 41, 59, 0.8);
+        --bg-input: rgba(2, 6, 23, 0.4);
+
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --border-subtle: rgba(255, 255, 255, 0.1);
+
+        --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.6);
+        --shadow-inner: none;
+    }
 }
 
 /* =========================================
-   CONTENEDOR PRINCIPAL
+   2. CONTENEDOR PRINCIPAL & FONDO
    ========================================= */
+
 .main-container {
     min-height: 100vh;
-    padding: clamp(1rem, 5vw, 2.5rem);
-    display: grid;
-    place-items: center;
+    padding: 2rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     overflow: hidden;
 
-    /* Fondo degradado complejo */
+    /* Fondo dinámico */
     background:
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(34, 197, 94, 0.1) 0px, transparent 50%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+        radial-gradient(circle at 15% 15%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+        var(--bg-page);
+}
 
-    /* Patrón de puntos sutil */
-    &::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(rgba(15, 23, 42, 0.1) 1px, transparent 1px);
-        background-size: 32px 32px;
-        opacity: 0.4;
-        pointer-events: none;
-    }
+/* Patrón de ruido/puntos sutil para textura */
+.main-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--text-muted) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.07;
+    pointer-events: none;
 }
 
 /* =========================================
-   TARJETA DE VIDRIO (GLASS CARD)
+   3. TARJETA DE VIDRIO (Glass Card)
    ========================================= */
+
 .glass-card {
-    width: min(900px, 100%);
+    width: 100%;
+    max-width: 850px;
     position: relative;
     z-index: 10;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
 
-    border-radius: var(--radius);
-    border: 1px solid var(--stroke);
+    padding: 2.5rem;
+    border-radius: 2rem;
 
-    /* Efecto Vidrio */
-    background: linear-gradient(135deg, var(--card), var(--card2));
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: var(--shadow);
+    /* Efecto Frost */
+    background: var(--bg-glass);
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    border: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-float);
 
-    /* Brillo superior */
-    &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: var(--radius);
-        padding: 1px;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
+    /* Borde interior brillante */
+    box-shadow:
+        var(--shadow-float),
+        var(--shadow-inner);
+
+    animation: slideUp 0.6s var(--ease-smooth);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
 /* =========================================
-   HEADER
+   4. HEADER
    ========================================= */
+
 .header-section {
-    text-align: left;
-    margin-bottom: 2rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
 
     h2 {
-        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-size: 1.8rem;
         font-weight: 800;
-        margin: 0 0 0.5rem;
-        color: var(--text);
-        line-height: 1.1;
-    }
-
-    .sub {
-        color: var(--muted);
-        font-size: 1rem;
-        margin: 0;
+        margin: 0 0 0.5rem 0;
+        letter-spacing: -0.02em;
+        color: var(--text-main);
     }
 
     .highlight {
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        background: var(--primary-gradient);
         -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         background-clip: text;
-        color: transparent;
+    }
+
+    .sub {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        font-weight: 500;
     }
 }
 
 .divider-glow {
     height: 1px;
-    border: 0;
-    margin: 1.5rem 0;
-    background: linear-gradient(90deg, transparent, var(--stroke), transparent);
+    border: none;
+    background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+    margin: 2rem 0;
 }
 
 /* =========================================
-   CONTROLES DE FECHA (HUD)
+   5. HUD (Controles de Fecha)
    ========================================= */
+
 .hud-control {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 1rem;
-    margin-bottom: 2rem;
 }
 
+/* Botones de navegación (Flechas) */
 .nav-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    border: 1px solid var(--stroke);
-    background: rgba(255, 255, 255, 0.8);
-    color: var(--text);
-    display: grid;
-    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-glass-heavy);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--duration-short) var(--ease-smooth);
+
+    .icon {
+        font-size: 1.2rem;
+        margin-top: -2px;
+    }
+
+    /* Ajuste óptico */
 
     &:hover {
         transform: translateY(-2px);
-        background: white;
-        box-shadow: var(--shadow-soft);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: var(--bg-page);
+        color: var(--primary);
     }
 
-    i {
-        font-size: 1.1rem;
+    &:active {
+        transform: scale(0.9);
     }
 }
 
+/* Display Central */
 .hud-display {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid var(--stroke);
-    border-radius: 16px;
-    padding: 0.8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 0.8rem 2rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 1.2rem;
+    min-width: 220px;
 
     .label {
         font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--muted);
-        font-weight: 700;
+        color: var(--text-muted);
+        margin-bottom: 0.2rem;
     }
 
     .date-text {
         font-size: 1.2rem;
         font-weight: 700;
-        color: var(--text);
+        color: var(--text-main);
+        text-transform: capitalize;
+    }
+
+    .year {
+        font-size: 0.85rem;
+        color: var(--text-muted);
     }
 }
 
 /* =========================================
-   GRILLA DE HORARIOS (SLOTS)
+   6. SLOT SELECTOR (Grilla de Horarios)
    ========================================= */
-.slots-section h3 {
-    font-size: 1rem;
-    color: var(--text);
-    margin-bottom: 1rem;
+
+.slots-section {
+    h3 {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
 }
 
 .slots-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 12px;
+    gap: 0.75rem;
 }
 
 .slot-btn {
     position: relative;
-    padding: 12px;
-    border-radius: 16px;
-    border: 1px solid var(--stroke);
-    background: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0.4rem;
+    padding: 0.8rem 0.5rem;
+
+    background: var(--bg-glass-heavy);
+    border: 1px solid var(--border-subtle);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all var(--duration-short) var(--ease-elastic);
 
     .time {
-        font-weight: 700;
-        font-size: 0.95rem;
-        color: var(--text);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-main);
     }
 
     .status-dot {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
         background: var(--success);
-        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+        box-shadow: 0 0 5px var(--success);
     }
 
-    &:hover:not(:disabled) {
-        background: white;
+    /* --- ESTADOS --- */
+
+    /* Hover (Disponible) */
+    &:hover:not(:disabled):not(.seleccionado) {
         transform: translateY(-3px);
-        box-shadow: var(--shadow-soft);
-        border-color: var(--secondary);
+        border-color: var(--primary);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
-    /* Estado Seleccionado */
+    /* Seleccionado (Activo) */
     &.seleccionado {
-        background: var(--text);
-        /* Fondo oscuro para contraste */
-        border-color: var(--text);
+        background: var(--text-main);
+        /* Contraste fuerte */
+        border-color: var(--text-main);
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 
         .time {
-            color: white;
+            color: var(--bg-page);
         }
 
+        /* Texto invertido */
         .status-dot {
-            background: var(--secondary);
-            box-shadow: none;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
         }
     }
 
-    /* Estado Ocupado */
+    /* Ocupado (Deshabilitado) */
     &.ocupado {
-        opacity: 0.6;
-        background: #f1f5f9;
+        opacity: 0.5;
+        background: transparent;
         cursor: not-allowed;
+        border-style: dashed;
 
         .status-dot {
             background: var(--danger);
-            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+            box-shadow: none;
+        }
+
+        .time {
+            text-decoration: line-through;
+            color: var(--text-muted);
         }
     }
+}
 
-    &:disabled {
-        pointer-events: none;
-    }
+/* Mensaje vacío */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg-input);
+    border-radius: 1rem;
+    border: 1px dashed var(--border-subtle);
+    color: var(--text-muted);
 }
 
 /* =========================================
-   FORMULARIO DE RESERVA
+   7. FORMULARIO FINAL
    ========================================= */
+
 .future-form {
     margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px dashed var(--stroke);
-    display: grid;
-    gap: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .input-group {
-    display: grid;
-    gap: 0.5rem;
-
     label {
-        font-size: 0.9rem;
+        display: block;
+        font-size: 0.85rem;
         font-weight: 600;
-        color: var(--muted);
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        margin-left: 0.5rem;
     }
 
     input,
     textarea {
         width: 100%;
-        padding: 12px 16px;
-        border-radius: 14px;
-        border: 1px solid var(--stroke);
-        background: rgba(255, 255, 255, 0.8);
+        box-sizing: border-box;
+        padding: 1rem 1.25rem;
+        border-radius: 1rem;
+        border: 1px solid var(--border-subtle);
+        background: var(--bg-input);
+        color: var(--text-main);
         font-family: inherit;
         font-size: 0.95rem;
-        color: var(--text);
         outline: none;
-        transition: all 0.2s;
+        transition: all 0.2s var(--ease-smooth);
 
         &:focus {
-            background: white;
+            background: var(--bg-glass-heavy);
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            transform: translateY(-1px);
         }
-    }
-
-    textarea {
-        resize: vertical;
-        min-height: 80px;
     }
 }
 
+/* Readout (Resumen) */
 .data-readout {
-    background: #f8fafc;
-    padding: 1rem;
-    border-radius: 14px;
     display: flex;
     justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: var(--bg-glass-heavy);
+    border: 1px solid var(--primary);
+    border-radius: 1rem;
+    color: var(--text-muted);
     font-size: 0.9rem;
-    color: var(--muted);
-    border: 1px solid var(--stroke);
+
+    /* Borde izquierdo decorativo */
+    border-left: 4px solid var(--primary);
 
     span {
         font-weight: 700;
-        color: var(--text);
+        color: var(--text-main);
+        margin-right: 0.3rem;
     }
 }
 
+/* Botón Acción Principal */
 .btn-action {
+    margin-top: 1rem;
     width: 100%;
-    padding: 1rem;
-    margin-top: 0.5rem;
+    padding: 1.1rem;
     border: none;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    font-weight: 800;
-    text-transform: uppercase;
+    border-radius: 1.2rem;
+    background: var(--primary-gradient);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
-    transition: all 0.2s;
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+    transition: all 0.3s var(--ease-elastic);
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5);
+    &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px -5px rgba(79, 70, 229, 0.6);
+        filter: brightness(1.1);
     }
 
-    &:active {
-        transform: scale(0.98);
+    &:active:not(:disabled) {
+        transform: scale(0.97);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: var(--text-muted);
+        box-shadow: none;
     }
 }
 
 /* =========================================
-   RESPONSIVE
+   8. PANTALLA DE CARGA
    ========================================= */
-@media (max-width: 600px) {
+
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-page);
+    z-index: 99;
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid var(--border-subtle);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: var(--text-muted);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        animation: pulse 2s infinite;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* =========================================
+   9. RESPONSIVE
+   ========================================= */
+
+@media (max-width: 640px) {
     .main-container {
         padding: 1rem;
     }
 
     .glass-card {
-        padding: 1.2rem;
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    .hud-control {
+        gap: 0.5rem;
+    }
+
+    .hud-display {
+        min-width: auto;
+        padding: 0.6rem 1rem;
     }
 
     .slots-grid {
@@ -381,5 +536,9 @@
     .data-readout {
         flex-direction: column;
         gap: 0.5rem;
+        text-align: center;
+        border-left: 1px solid var(--primary);
+        /* Reset border */
+        border-top: 4px solid var(--primary);
     }
 }

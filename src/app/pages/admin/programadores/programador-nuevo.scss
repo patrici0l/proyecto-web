@@ -1,312 +1,381 @@
+/* =========================================
+   1. SISTEMA DE DISEÑO (Variables & Temas)
+   ========================================= */
+
 :host {
+    /* --- Física & Animación --- */
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-short: 0.2s;
+    --duration-med: 0.4s;
+
+    /* --- MODO CLARO (Default) --- */
+    --bg-page: #f8fafc;
+    /* Slate 50 */
+    --bg-card: rgba(255, 255, 255, 0.85);
+    /* Glass base */
+    --bg-input: #f1f5f9;
+    /* Slate 100 */
+    --bg-input-focus: #ffffff;
+
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-label: #334155;
+    /* Slate 700 */
+    --text-placeholder: #94a3b8;
+    /* Slate 400 */
+
+    --primary: #15803d;
+    /* Green 700 */
+    --primary-hover: #166534;
+    --primary-glow: rgba(21, 128, 61, 0.25);
+    --primary-contrast: #ffffff;
+
+    --border-subtle: #e2e8f0;
+    /* Slate 200 */
+    --border-focus: #15803d;
+
+    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    --shadow-elevated: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+    /* Layout Base */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     min-height: 100vh;
-    padding: 2.3rem 1.3rem;
-    background:
-        radial-gradient(circle at top, rgba(29, 185, 84, 0.18), transparent 55%),
-        var(--color-bg);
-    color: var(--color-text);
-    animation: nuevo-programador-fade-in 0.4s ease-out;
+    padding: 3rem 1.5rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-page);
+
+    /* Fondo con patrón sutil */
+    background-image:
+        radial-gradient(circle at 10% 10%, rgba(34, 197, 94, 0.08), transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.08), transparent 50%);
 }
 
-/*  TÍTULO */
+/* --- MODO OSCURO (Automático) --- */
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg-page: #0f172a;
+        /* Slate 900 */
+        --bg-card: rgba(30, 41, 59, 0.7);
+        /* Slate 800 Glass */
+        --bg-input: #020617;
+        /* Slate 950 */
+        --bg-input-focus: #0f172a;
+        /* Slate 900 */
+
+        --text-main: #f8fafc;
+        /* Slate 50 */
+        --text-label: #cbd5e1;
+        /* Slate 300 */
+        --text-placeholder: #64748b;
+        /* Slate 500 */
+
+        --primary: #22c55e;
+        /* Green 500 */
+        --primary-hover: #4ade80;
+        --primary-glow: rgba(34, 197, 94, 0.2);
+        --primary-contrast: #020617;
+
+        --border-subtle: #334155;
+        /* Slate 700 */
+        --border-focus: #22c55e;
+
+        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* =========================================
+   2. TÍTULO CON EFECTO TYPING
+   ========================================= */
 
 .title-typing {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-size: 1.9rem;
+    font-size: 2rem;
     font-weight: 800;
-    margin-bottom: 1.8rem;
-    letter-spacing: 0.02em;
-    position: relative;
-    color: var(--color-text);
+    color: var(--text-main);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 
+    /* Icono principal */
     i {
-        color: var(--color-primary);
-        font-size: 1.4rem;
+        color: var(--primary);
+        filter: drop-shadow(0 0 8px var(--primary-glow));
     }
 
-    /* Simulación de cursor a la derecha del título */
+    /* Cursor parpadeante */
     &::after {
         content: "";
-        width: 2px;
-        height: 1.3em;
-        background: var(--color-primary);
-        margin-left: 0.25rem;
-        animation: typing-cursor 1.1s steps(2, start) infinite;
+        display: inline-block;
+        width: 3px;
+        height: 1.2em;
+        background: var(--primary);
+        margin-left: 2px;
+        border-radius: 2px;
+        animation: blink 1s step-end infinite;
     }
 }
 
-/* FORM / CARD */
+@keyframes blink {
 
-.form-programador {
-    width: 100%;
-    max-width: 720px;
-    padding: 2.4rem 2.3rem;
-    border-radius: var(--radius-lg);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-elevated);
-    backdrop-filter: blur(12px);
-    animation: nuevo-programador-slide-up 0.4s ease-out;
-}
-
-/* Filas del formulario */
-
-.form-row {
-    margin-bottom: 1.35rem;
-    display: flex;
-    flex-direction: column;
-}
-
-/* LABELS */
-
-.form-row label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: 0.35rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    i {
-        color: var(--color-primary);
-        font-size: 1rem;
-    }
-}
-
-/* CAMPOS DE TEXTO / TEXTAREA */
-
-.form-row input[type="text"],
-.form-row input[type="email"],
-.form-row textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.9rem 1.05rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-size: 0.95rem;
-    transition:
-        border-color var(--transition-fast),
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--transition-fast);
-
-    &::placeholder {
-        color: var(--color-text-muted);
-    }
-
-    &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        background-color: var(--color-bg-hover);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.55);
-        transform: translateY(-1px);
-    }
-}
-
-.form-row textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-/* Estados Angular (si los usas en este form) */
-.form-row input.ng-invalid.ng-touched,
-.form-row textarea.ng-invalid.ng-touched {
-    border-color: var(--color-danger);
-    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.65);
-}
-
-.form-row input.ng-valid.ng-touched,
-.form-row textarea.ng-valid.ng-touched {
-    border-color: var(--color-success);
-    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.65);
-}
-
-/* INPUT FILE / FOTO*/
-
-.form-row input[type="file"] {
-    padding: 0.75rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background: var(--color-bg);
-    cursor: pointer;
-    color: var(--color-text-muted);
-    transition:
-        border-color var(--transition-fast),
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast);
-
-    &:hover {
-        border-color: var(--color-primary);
-        background-color: var(--color-bg-hover);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.5);
-    }
-
-    &::file-selector-button {
-        margin-right: 0.8rem;
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 999px;
-        background: var(--color-primary);
-        color: #ffffff;
-        font-size: 0.85rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition:
-            background-color var(--transition-fast),
-            transform var(--transition-fast),
-            box-shadow var(--transition-fast);
-
-        &:hover {
-            background: var(--color-primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
-        }
-
-        &:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-    }
-}
-
-/* PREVIEW DE FOTO */
-
-.preview {
-    margin-top: 0.6rem;
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-
-    p {
-        margin: 0 0 0.4rem;
-    }
-
-    img {
-        width: 170px;
-        max-width: 100%;
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--color-border);
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
-        object-fit: cover;
-        transition:
-            transform var(--transition-fast),
-            box-shadow var(--transition-fast),
-            border-color var(--transition-fast);
-
-        &:hover {
-            transform: translateY(-2px) scale(1.02);
-            border-color: var(--color-primary);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-        }
-    }
-}
-
-/* ACCIONES / BOTÓN GUARDAR  */
-
-.form-actions {
-    margin-top: 1.6rem;
-}
-
-.form-actions button[type="submit"] {
-    width: 100%;
-    padding: 0.95rem;
-    border-radius: var(--radius-md);
-    border: none;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.65);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition:
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--transition-fast),
-        filter var(--transition-fast),
-        opacity var(--transition-fast);
-
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        filter: brightness(1.03);
-        box-shadow: 0 22px 45px rgba(0, 0, 0, 0.85);
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
-    }
-
-    &:disabled {
-        background: rgba(148, 163, 184, 0.75);
-        cursor: not-allowed;
-        box-shadow: none;
-        opacity: 0.9;
-    }
-}
-
-/* ANIMACIONES */
-
-@keyframes nuevo-programador-fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes nuevo-programador-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(18px) scale(0.99);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes typing-cursor {
-    0% {
+    0%,
+    100% {
         opacity: 1;
     }
 
     50% {
         opacity: 0;
     }
+}
 
-    100% {
+/* =========================================
+   3. CONTENEDOR DEL FORMULARIO
+   ========================================= */
+
+.form-programador {
+    width: 100%;
+    max-width: 680px;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-elevated);
+
+    /* Animación de entrada */
+    animation: slideUp var(--duration-med) var(--ease-smooth);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
         opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* RESPONSIVE*/
+/* Filas */
+.form-row {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
 
-@media (max-width: 720px) {
+/* Labels */
+label {
+    font-size: 0.925rem;
+    font-weight: 600;
+    color: var(--text-label);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+        color: var(--primary);
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+}
+
+/* =========================================
+   4. INPUTS Y TEXTAREAS
+   ========================================= */
+
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+
+    color: var(--text-main);
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.75rem;
+
+    outline: none;
+    transition: all var(--duration-short) var(--ease-smooth);
+
+    &::placeholder {
+        color: var(--text-placeholder);
+    }
+
+    &:focus {
+        background: var(--bg-input-focus);
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 4px var(--primary-glow);
+        transform: translateY(-2px);
+    }
+
+    /* Validación Angular */
+    &.ng-invalid.ng-touched {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 1px #ef4444;
+    }
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   5. INPUT FILE (Subida de Foto)
+   ========================================= */
+
+input[type="file"] {
+    background: var(--bg-input);
+    border: 1px dashed var(--border-subtle);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 100%;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all var(--duration-short) ease;
+
+    &:hover {
+        border-color: var(--primary);
+        background: var(--bg-input-focus);
+    }
+
+    /* Estilo del botón interno del input file */
+    &::file-selector-button {
+        margin-right: 1rem;
+        border: none;
+        background: var(--primary);
+        color: var(--primary-contrast);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform var(--duration-short);
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
+/* Previsualización de imagen */
+.preview {
+    margin-top: 1rem;
+    text-align: center;
+
+    p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        /* Foto de perfil redonda */
+        border: 4px solid var(--bg-card);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transition: transform var(--duration-short) var(--ease-elastic);
+
+        &:hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+    }
+}
+
+/* =========================================
+   6. MENSAJES DE ESTADO
+   ========================================= */
+
+p[style*="color: green"] {
+    background: rgba(34, 197, 94, 0.1);
+    color: #166534 !important;
+    /* Force override style inline */
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    margin-bottom: 1rem;
+}
+
+p[style*="color: red"] {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b !important;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    margin-bottom: 1rem;
+}
+
+/* =========================================
+   7. BOTÓN DE ACCIÓN
+   ========================================= */
+
+.form-actions {
+    margin-top: 2rem;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: none;
+    background: var(--primary);
+    color: var(--primary-contrast);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--primary-glow);
+    transition: all var(--duration-short) var(--ease-elastic);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px var(--primary-glow);
+        filter: brightness(1.1);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(-1px);
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        background: var(--text-placeholder);
+        cursor: not-allowed;
+        box-shadow: none;
+        opacity: 0.7;
+    }
+}
+
+/* =========================================
+   8. RESPONSIVE
+   ========================================= */
+
+@media (max-width: 640px) {
     :host {
-        padding: 1.8rem 0.9rem;
-        align-items: stretch;
+        padding: 1.5rem 1rem;
     }
 
     .form-programador {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem;
+        border-radius: 1rem;
     }
 
     .title-typing {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
     }
 }

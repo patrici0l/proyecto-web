@@ -1,266 +1,298 @@
+/* =========================================
+   1. SISTEMA DE DISEÑO (Variables & Temas)
+   ========================================= */
+
 :host {
+    /* --- Animaciones & Física (Humanized) --- */
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-short: 0.2s;
+    --duration-med: 0.4s;
+
+    /* --- MODO CLARO (Default) --- */
+    --bg-page: #f8fafc;
+    /* Slate 50 */
+    --bg-card: #ffffff;
+    --bg-input: #f1f5f9;
+    /* Slate 100 */
+    --bg-input-focus: #ffffff;
+
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-label: #334155;
+    /* Slate 700 */
+    --text-placeholder: #94a3b8;
+    /* Slate 400 */
+
+    --primary: #15803d;
+    /* Green 700 */
+    --primary-hover: #166534;
+    --primary-glow: rgba(21, 128, 61, 0.25);
+    --primary-contrast: #ffffff;
+
+    --border-subtle: #e2e8f0;
+    /* Slate 200 */
+    --border-focus: #15803d;
+
+    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    --shadow-elevated: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+    /* Layout Base */
     display: flex;
-    min-height: 100vh;
-    padding: 2.2rem 1rem;
     justify-content: center;
     align-items: flex-start;
-    background:
-        radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
-        var(--color-bg);
-    animation: project-form-fade-in 0.4s ease-out;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-page);
+
+    /* Fondo Orgánico */
+    background-image:
+        radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.08), transparent 60%);
 }
 
-/* =========================
-   TÍTULO
-   ========================= */
+/* --- MODO OSCURO (Automático) --- */
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg-page: #0f172a;
+        /* Slate 900 */
+        --bg-card: #1e293b;
+        /* Slate 800 */
+        --bg-input: #020617;
+        /* Slate 950 */
+        --bg-input-focus: #0f172a;
+        /* Slate 900 */
 
-h2 {
-    color: var(--color-text);
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 1.8rem;
-    text-align: center;
-    letter-spacing: 0.01em;
-    position: relative;
+        --text-main: #f8fafc;
+        /* Slate 50 */
+        --text-label: #cbd5e1;
+        /* Slate 300 */
+        --text-placeholder: #64748b;
+        /* Slate 500 */
 
-    &::after {
-        content: "";
-        width: 80px;
-        height: 3px;
-        background: var(--color-primary);
-        display: block;
-        margin: 10px auto 0;
-        border-radius: 999px;
-        box-shadow: 0 0 14px rgba(29, 185, 84, 0.7);
+        --primary: #22c55e;
+        /* Green 500 (Vibrante) */
+        --primary-hover: #4ade80;
+        --primary-glow: rgba(34, 197, 94, 0.2);
+        --primary-contrast: #020617;
+
+        --border-subtle: #334155;
+        /* Slate 700 */
+        --border-focus: #22c55e;
+
+        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     }
 }
 
-/* =========================
-   FORMULARIO / CARD
-   ========================= */
+/* =========================================
+   2. ESTRUCTURA (Título & Form)
+   ========================================= */
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-main);
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+    position: relative;
+
+    /* Indicador decorativo */
+    &::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: var(--primary);
+        margin: 0.8rem auto 0;
+        border-radius: 99px;
+        box-shadow: 0 2px 10px var(--primary-glow);
+    }
+}
 
 form {
     width: 100%;
     max-width: 620px;
-    padding: 2.3rem 2.1rem;
-    border-radius: var(--radius-lg);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-elevated);
-    backdrop-filter: blur(10px);
-    animation: project-form-slide-up 0.4s ease-out;
+    background: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 1.25rem;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-card);
 
+    /* Animación de entrada "Slide Up" */
+    animation: slideUp var(--duration-med) var(--ease-smooth);
+
+    /* Espaciado entre grupos de inputs */
     >div {
         display: flex;
         flex-direction: column;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.5rem;
     }
 }
 
-/* =========================
-   LABELS
-   ========================= */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   3. CONTROLES DEL FORMULARIO
+   ========================================= */
 
 label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: 0.45rem;
+    color: var(--text-label);
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
-/* =========================
-   CAMPOS DE TEXTO / SELECT / TEXTAREA
-   ========================= */
-
+/* Estilo unificado para todos los inputs */
 input[type="text"],
 input[type="url"],
 select,
 textarea {
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--color-bg);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
+    /* Asegura que el padding no rompa el ancho */
     padding: 0.8rem 1rem;
     font-size: 0.95rem;
-    color: var(--color-text);
-    transition:
-        border-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        background-color var(--transition-fast),
-        transform var(--transition-fast);
+    font-family: inherit;
+    color: var(--text-main);
+
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.75rem;
+
+    outline: none;
+    transition: all var(--duration-short) var(--ease-smooth);
 
     &::placeholder {
-        color: var(--color-text-muted);
+        color: var(--text-placeholder);
     }
 
+    /* Estado Focus (Glow) */
     &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        background-color: var(--color-bg-hover);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.55);
+        background: var(--bg-input-focus);
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 4px var(--primary-glow);
         transform: translateY(-1px);
     }
 
+    /* Estado Disabled */
     &:disabled {
-        background-color: rgba(15, 23, 42, 0.6);
+        opacity: 0.6;
         cursor: not-allowed;
-        opacity: 0.8;
+        background: var(--border-subtle);
     }
-}
 
-/* Estados de validación Angular (si los usas) */
-input.ng-invalid.ng-touched,
-textarea.ng-invalid.ng-touched,
-select.ng-invalid.ng-touched {
-    border-color: var(--color-danger);
-    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.65);
-}
-
-input.ng-valid.ng-touched,
-textarea.ng-valid.ng-touched,
-select.ng-valid.ng-touched {
-    border-color: var(--color-success);
-    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.65);
+    /* Validación Angular */
+    &.ng-invalid.ng-touched {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 1px #ef4444;
+    }
 }
 
 textarea {
-    min-height: 110px;
     resize: vertical;
-    line-height: 1.5;
+    min-height: 120px;
+    line-height: 1.6;
 }
 
-/* SELECT con flecha custom */
-
+/* Custom Select Arrow (SVG Base64) */
 select {
     appearance: none;
     -webkit-appearance: none;
-    -moz-appearance: none;
-
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.8rem center;
-    background-repeat: no-repeat;
-    background-size: 1.05rem 1.05rem;
-    padding-right: 2.4rem;
     cursor: pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
 }
 
-/* =========================
-   BOTONES
-   ========================= */
+/* =========================================
+   4. BOTONES
+   ========================================= */
 
 button {
-    border-radius: var(--radius-md);
+    width: 100%;
+    padding: 0.95rem;
+    border-radius: 0.75rem;
     font-size: 0.95rem;
     font-weight: 600;
-    border: none;
     cursor: pointer;
-    transition:
-        background-color var(--transition-fast),
-        color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--transition-fast),
-        opacity var(--transition-fast);
-}
-
-/* Guardar proyecto = acción primaria */
-
-button[type="submit"] {
+    border: none;
     display: inline-flex;
-    justify-content: center;
     align-items: center;
-    width: 100%;
-    margin-top: 1.4rem;
-    padding: 0.9rem 1.5rem;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-    color: #ffffff;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+    justify-content: center;
+    transition: all var(--duration-short) var(--ease-spring);
 
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.7);
-        filter: brightness(1.03);
+    /* Acción Principal: Guardar */
+    &[type="submit"] {
+        background: var(--primary);
+        color: var(--primary-contrast);
+        box-shadow: 0 4px 12px var(--primary-glow);
+        margin-top: 1.2rem;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--primary-glow);
+            filter: brightness(1.1);
+        }
+
+        &:disabled {
+            background: var(--text-placeholder);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
     }
 
+    /* Acción Secundaria: Cancelar */
+    &[type="button"] {
+        background: transparent;
+        color: var(--text-placeholder);
+        border: 1px solid transparent;
+        /* Reserva espacio para evitar saltos */
+        margin-top: 0.5rem;
+
+        &:hover {
+            color: var(--text-main);
+            background: var(--bg-input);
+            border-color: var(--border-subtle);
+        }
+    }
+
+    /* Efecto click físico */
     &:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.6);
-    }
-
-    &:disabled {
-        background: rgba(148, 163, 184, 0.7);
-        cursor: not-allowed;
-        box-shadow: none;
-        opacity: 0.9;
+        transform: scale(0.97);
     }
 }
 
-/* Cancelar = acción secundaria */
-
-button[type="button"] {
-    margin-top: 0.7rem;
-    width: 100%;
-    padding: 0.8rem 1.5rem;
-    background-color: transparent;
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-        background-color: var(--color-bg-hover);
-        color: var(--color-text);
-        transform: translateY(-1px);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
-    }
-
-    &:active {
-        transform: translateY(0);
-        box-shadow: none;
-    }
-}
-
-/* =========================
-   ANIMACIONES
-   ========================= */
-
-@keyframes project-form-fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes project-form-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(18px) scale(0.99);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* =========================================
+   5. RESPONSIVE
+   ========================================= */
 
 @media (max-width: 640px) {
     :host {
-        padding: 1.4rem 0.75rem;
+        padding: 1.5rem 1rem;
     }
 
     form {
-        padding: 1.9rem 1.4rem;
+        padding: 1.5rem;
+        border-radius: 1rem;
     }
 
     h2 {
         font-size: 1.5rem;
+        margin-bottom: 1.5rem;
     }
 }

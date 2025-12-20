@@ -1,288 +1,422 @@
+/* =========================================
+   1. SISTEMA DE DISEÑO (Variables & Temas)
+   ========================================= */
+
 :host {
+    /* --- Animación & Física --- */
+    --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+    --ease-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* --- COLORES (Adaptables Light/Dark) --- */
+    --bg-page: #f8fafc;
+    --bg-table: #ffffff;
+    --bg-hover: #f1f5f9;
+
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+
+    --primary: #15803d;
+    /* Green */
+    --info: #0ea5e9;
+    /* Blue */
+    --danger: #ef4444;
+    /* Red */
+    --warning: #f59e0b;
+    /* Orange (Proyectos) */
+
+    --border-subtle: #e2e8f0;
+    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+
+    /* Configuración Base */
     display: block;
-    padding: 1.8rem 1.4rem;
-    background:
-        radial-gradient(circle at top, rgba(29, 185, 84, 0.18), transparent 55%),
-        var(--color-bg);
-    color: var(--color-text);
-    animation: lista-programadores-fade-in 0.35s ease-out;
+    padding: 2.5rem 1.5rem;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text-main);
+    background: var(--bg-page);
+    /* Fondo con degradado sutil */
+    background-image:
+        radial-gradient(circle at top center, rgba(21, 128, 61, 0.08), transparent 60%);
+    min-height: 100vh;
 }
 
-/* TÍTULO CON EFECTO ESCRITURA */
+/* --- MODO OSCURO --- */
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg-page: #0f172a;
+        --bg-table: #1e293b;
+        --bg-hover: #334155;
+
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+
+        --primary: #22c55e;
+        --border-subtle: #334155;
+        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* =========================================
+   2. TÍTULO CON EFECTO TYPING
+   ========================================= */
 
 .typing-title {
-    font-size: 1.9rem;
+    font-size: 2rem;
     font-weight: 800;
     text-align: center;
-    color: var(--color-text);
-    margin: 0 auto 1.4rem auto;
+    color: var(--text-main);
+    margin-bottom: 2rem;
+    position: relative;
     width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 
+    /* Cursor parpadeante */
+    border-right: 3px solid var(--primary);
     white-space: nowrap;
     overflow: hidden;
-    border-right: 2px solid var(--color-primary);
+    padding-right: 5px;
 
     animation:
-        typing-title 2.2s steps(28),
-        typing-caret 0.7s infinite;
-
-    letter-spacing: 0.02em;
+        typing 2s steps(30, end),
+        blink-caret .75s step-end infinite;
 }
 
-@keyframes typing-title {
+@keyframes typing {
     from {
-        width: 0;
+        width: 0
     }
 
     to {
-        width: 100%;
+        width: 100%
     }
 }
 
-@keyframes typing-caret {
+@keyframes blink-caret {
 
-    0%,
-    100% {
-        border-color: transparent;
+    from,
+    to {
+        border-color: transparent
     }
 
     50% {
-        border-color: var(--color-primary);
+        border-color: var(--primary)
     }
 }
 
-/* BOTÓN: NUEVO PROGRAMADOR */
+/* =========================================
+   3. BOTÓN NUEVO PROGRAMADOR
+   ========================================= */
 
 .btn-nuevo {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
 
-    background: linear-gradient(135deg,
-            var(--color-primary),
-            var(--color-primary-hover));
+    background: var(--primary);
     color: #ffffff;
-    padding: 0.65rem 1.3rem;
-    border-radius: var(--radius-md);
     border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.25);
+    transition: all 0.2s var(--ease-out);
 
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
-    transition:
-        background-color var(--transition-fast),
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        filter var(--transition-fast);
-
-    .icon {
-        font-size: 1rem;
+    i.icon {
+        font-style: normal;
+        font-size: 1.1rem;
+        line-height: 1;
     }
 
     &:hover {
         transform: translateY(-2px);
-        filter: brightness(1.03);
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
+        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.35);
+        filter: brightness(1.05);
     }
 
     &:active {
         transform: translateY(0);
-        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.65);
     }
 }
 
-/* TABLA */
+/* =========================================
+   4. TABLA
+   ========================================= */
 
 table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.8rem;
-    background: var(--color-bg-elevated);
-    border-radius: var(--radius-lg);
+    border-collapse: separate;
+    /* Necesario para border-radius */
+    border-spacing: 0;
+    background: var(--bg-table);
+    border-radius: 1rem;
     overflow: hidden;
-    box-shadow: var(--shadow-elevated);
-    animation: lista-table-in 0.3s ease-out;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-subtle);
+
+    animation: slideUp 0.5s var(--ease-out);
 }
 
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- HEADER --- */
 thead {
-    background: linear-gradient(135deg,
-            rgba(15, 23, 42, 0.98),
-            rgba(15, 23, 42, 0.98));
-
-    th {
-        padding: 0.75rem 0.9rem;
-        text-align: left;
-        font-weight: 600;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.11em;
-        color: var(--color-text-muted);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.4);
-    }
+    background: var(--bg-hover);
 }
 
-tbody tr {
-    transition:
-        background-color var(--transition-fast),
-        transform var(--transition-fast);
+th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-subtle);
+}
 
-    &:nth-child(even) {
-        background-color: rgba(15, 23, 42, 0.4);
-    }
+/* --- BODY --- */
+tbody tr {
+    transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: var(--color-bg-hover);
-        transform: translateY(-1px);
+        background-color: var(--bg-hover);
+    }
+
+    &:last-child td {
+        border-bottom: none;
     }
 }
 
 td {
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid rgba(31, 41, 55, 0.7);
-    font-size: 0.9rem;
-    color: var(--color-text);
+    padding: 1rem 1.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.95rem;
 
-    &:first-child {
-        width: 80px;
+    /* Foto del programador */
+    img {
+        width: 45px;
+        /* Ignoramos el width="70" del HTML para consistencia */
+        height: 45px;
+        border-radius: 0.75rem;
+        /* Cuadrado redondeado moderno */
+        object-fit: cover;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Link de Github */
+    a {
+        color: var(--text-main);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.5rem;
+        background: var(--bg-hover);
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #24292f;
+            /* Github Black */
+            color: white;
+        }
     }
 }
 
-/* Foto redondeada */
+/* =========================================
+   5. BOTONES DE ACCIÓN (Clases .btn)
+   ========================================= */
 
-td img {
-    border-radius: var(--radius-md);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.7);
-    display: block;
-    object-fit: cover;
+/* Ocultamos visualmente las barras | verticales del HTML */
+td {
+    color: var(--text-main);
+    /* Restaura color normal */
+    /* El pipe | es texto directo, difícil de ocultar sin wrapper. 
+     Lo hacemos sutil con el color del texto. */
 }
 
-/* Enlace Github */
-
-td a {
-    color: var(--color-info);
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    transition:
-        color var(--transition-fast),
-        transform var(--transition-fast);
-
-    &::before {
-        content: "🌐";
-        font-size: 0.9rem;
-    }
-
-    &:hover {
-        color: var(--color-primary-hover);
-        transform: translateX(1px);
-        text-decoration: underline;
-    }
-}
-
-/* Celda de acciones */
-
-td:last-child {
-    white-space: nowrap;
-}
-
-/* BOTONES DE ACCIÓN */
-
+/* Estilo Base Botones */
 .btn {
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.78rem;
     border: 1px solid transparent;
+    background: transparent;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
     cursor: pointer;
-    background-color: transparent;
+    transition: all 0.2s var(--ease-pop);
+    margin: 0 0.2rem;
 
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-
-    transition:
-        background-color var(--transition-fast),
-        color var(--transition-fast),
-        border-color var(--transition-fast),
-        transform var(--transition-fast);
+    &:active {
+        transform: scale(0.95);
+    }
 }
 
+/* Botón Eliminar */
 .btn-danger {
-    color: var(--color-danger);
-    border-color: rgba(239, 68, 68, 0.6);
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.2);
 
     &:hover {
-        background-color: rgba(239, 68, 68, 0.14);
-        transform: translateY(-1px);
+        background: var(--danger);
+        color: white;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
     }
 }
 
+/* Botón Editar */
 .btn-primary {
-    color: var(--color-info);
-    border-color: rgba(56, 189, 248, 0.6);
+    color: var(--info);
+    background: rgba(14, 165, 233, 0.05);
+    border-color: rgba(14, 165, 233, 0.2);
 
     &:hover {
-        background-color: rgba(56, 189, 248, 0.14);
-        transform: translateY(-1px);
+        background: var(--info);
+        color: white;
+        box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
     }
 }
 
+/* Botón Proyectos */
 .btn-info {
-    color: var(--color-success);
-    border-color: rgba(34, 197, 94, 0.65);
+    color: var(--warning);
+    background: rgba(245, 158, 11, 0.05);
+    border-color: rgba(245, 158, 11, 0.2);
 
     &:hover {
-        background-color: rgba(34, 197, 94, 0.14);
-        transform: translateY(-1px);
+        background: var(--warning);
+        color: white;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
     }
 }
 
-/* ANIMACIONEs */
-
-@keyframes lista-programadores-fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes lista-table-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px) scale(0.995);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* RESPONSIVE*/
+/* =========================================
+   6. RESPONSIVE (Card View sin tocar HTML)
+   ========================================= */
 
 @media (max-width: 768px) {
-    :host {
-        padding: 1.4rem 0.75rem;
+
+    /* Ocultar cabecera */
+    thead {
+        display: none;
     }
 
-    .typing-title {
-        font-size: 1.5rem;
-        white-space: normal;
-        border-right: none;
-        animation: none;
+    /* Bloques */
+    table,
+    tbody,
+    tr,
+    td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     table {
-        display: block;
-        overflow-x: auto;
-        border-radius: var(--radius-md);
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* Tarjeta */
+    tbody tr {
+        background: var(--bg-table);
+        margin-bottom: 1rem;
+        border-radius: 1rem;
+        border: 1px solid var(--border-subtle);
+        padding: 1.25rem;
+        box-shadow: var(--shadow-card);
+        position: relative;
+    }
+
+    /* Celdas Flexibles */
+    td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px dashed var(--border-subtle);
+        padding: 0.75rem 0;
+        text-align: right;
+
+        &:last-child {
+            border-bottom: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: stretch;
+            margin-top: 0.5rem;
+        }
+
+        /* Foto más grande y centrada en móvil */
+        img {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* INYECCIÓN DE ETIQUETAS (CSS Magic) */
+        /* Usamos nth-of-type basado en el orden de tus columnas */
+
+        /* Foto (Col 1) */
+        &:nth-of-type(1) {
+            justify-content: center;
+            border-bottom: none;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Nombre (Col 2) */
+        &:nth-of-type(2)::before {
+            content: "Nombre";
+        }
+
+        &:nth-of-type(2) {
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            padding-top: 0;
+        }
+
+        /* Especialidad (Col 3) */
+        &:nth-of-type(3)::before {
+            content: "Especialidad";
+        }
+
+        /* Github (Col 4) */
+        &:nth-of-type(4)::before {
+            content: "Github";
+        }
+
+        /* Acciones (Col 5) - Sin etiqueta */
+
+        /* Estilo de las etiquetas generadas */
+        &::before {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+    }
+
+    /* Ajuste de botones en móvil para que sean full-width */
+    .btn {
+        width: 100%;
+        justify-content: center;
+        margin: 0;
+        padding: 0.6rem;
     }
 }

@@ -1,376 +1,498 @@
 /* =========================================
-   VARIABLES & TEMA (Dark Modern)
+   1. SISTEMA DE DISEÑO (Light Theme)
    ========================================= */
+
 :host {
-  display: block;
-  /* Paleta Oscura (Slate) */
-  --bg: #0f172a;
-  /* Fondo principal */
-  --bg-card: #1e293b;
-  /* Fondo tarjetas/tablas */
-  --bg-hover: #334155;
-  /* Fondo al pasar mouse */
+  /* --- Animaciones & Física --- */
+  --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  --text: #f8fafc;
-  /* Texto blanco */
-  --text-muted: #94a3b8;
-  /* Texto gris */
-  --border: #334155;
-  /* Bordes */
+  /* --- Colores (Light Mode) --- */
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-input: #f1f5f9;
+  --bg-hover: #f1f5f9;
 
-  /* Colores de Acción */
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+
+  /* Acciones */
   --primary: #3b82f6;
-  /* Azul */
-  --primary-hover: #2563eb;
+  /* Blue */
   --success: #22c55e;
-  /* Verde */
+  /* Green */
   --danger: #ef4444;
-  /* Rojo */
-  --info: #0ea5e9;
-  /* Celeste */
+  /* Red */
+  --warning: #f59e0b;
+  /* Amber */
 
-  --radius: 12px;
-  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  --transition: 0.2s ease;
+  --border-subtle: #e2e8f0;
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
+  /* Configuración */
+  display: block;
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
   font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+
+  /* Fondo sutil */
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05), transparent 50%);
 }
 
 /* =========================================
-   CONTENEDOR DASHBOARD
+   2. CONTENEDOR PRINCIPAL
    ========================================= */
+
 .programador-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-
-  /* Animación de entrada */
-  animation: fadeIn 0.4s ease-out;
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    color: var(--text);
-    margin: 2rem 0 1rem;
-  }
-}
-
-/* =========================================
-   ALERTA (ERROR)
-   ========================================= */
-.alerta {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-  padding: 1rem;
-  border-radius: var(--radius);
-  margin-bottom: 2rem;
-
-  code {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-  }
-}
-
-/* =========================================
-   BOTÓN "NUEVO PROYECTO"
-   ========================================= */
-.programador-container>div>h2+button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: var(--transition);
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-
-  &:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-  }
-}
-
-/* =========================================
-   ESTADOS (CARGANDO / VACÍO)
-   ========================================= */
-.loading-state,
-.empty-state {
-  margin-top: 1rem;
-  padding: 3rem;
-  text-align: center;
-  background: var(--bg-card);
-  border: 1px dashed var(--border);
-  border-radius: var(--radius);
-  color: var(--text-muted);
-}
-
-.loading-state::before {
-  content: "⏳";
-  display: block;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  animation: spin 1s infinite linear;
-}
-
-/* =========================================
-   TABLA DE PROYECTOS
-   ========================================= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-
-  thead {
-    background: rgba(0, 0, 0, 0.2);
-
-    th {
-      padding: 1rem;
-      text-align: left;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-  }
-
-  tbody tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: background-color 0.15s;
-
-    &:hover {
-      background-color: var(--bg-hover);
-    }
-
-    td {
-      padding: 1rem;
-      font-size: 0.9rem;
-      vertical-align: middle;
-
-      /* Nombre del proyecto destacado */
-      &:first-child {
-        font-weight: 600;
-        color: white;
-      }
-    }
-  }
-}
-
-/* Botones de acción en tabla */
-tbody button {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  font-size: 0.85rem;
-  margin-right: 5px;
-  transition: var(--transition);
-
-  /* Botón Editar */
-  &:first-of-type {
-    color: var(--info);
-    background: rgba(14, 165, 233, 0.1);
-
-    &:hover {
-      background: rgba(14, 165, 233, 0.2);
-    }
-  }
-
-  /* Botón Eliminar */
-  &:last-of-type {
-    color: var(--danger);
-    background: rgba(239, 68, 68, 0.1);
-
-    &:hover {
-      background: rgba(239, 68, 68, 0.2);
-    }
-  }
-}
-
-/* =========================================
-   FORMULARIO (CREAR / EDITAR)
-   ========================================= */
-.proyecto-form {
-  background: var(--bg-card);
-  padding: 2rem;
-  margin-top: 2rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  animation: slideUp 0.3s ease-out;
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.25rem;
-  }
-
-  form {
-    display: grid;
-    gap: 1.2rem;
-
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-}
-
-/* Estilos de Inputs */
-.proyecto-form form div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  /* Elementos que ocupan 2 columnas en desktop */
-  &:nth-child(2),
-  /* Categoria (depende orden HTML) */
-  &:nth-child(5),
-  /* Descripcion */
-  &:nth-child(6),
-  /* Repo */
-  &:nth-child(7) {
-
-    /* Demo */
-    @media (min-width: 768px) {
-      grid-column: span 2;
-    }
-  }
-
-  label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-
-  input,
-  select,
-  textarea {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border);
-    color: white;
-    padding: 0.75rem;
-    border-radius: 8px;
-    font-family: inherit;
-    outline: none;
-    transition: var(--transition);
-
-    &:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    }
-  }
-
-  textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-}
-
-/* Botones del Formulario */
-button[type="submit"] {
-  margin-top: 1rem;
-  padding: 0.9rem;
-  background: var(--success);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-
-  &:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-button[type="button"] {
-  margin-top: 1rem;
-  padding: 0.9rem;
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-
-  &:hover {
-    color: white;
-    border-color: white;
-  }
-}
-
-/* =========================================
-   ANIMACIONES
-   ========================================= */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  padding: 2rem 1.5rem;
+  animation: fadeIn 0.5s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Título Principal */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-main);
+}
+
+/* =========================================
+   3. ESTADOS Y ALERTAS
+   ========================================= */
+
+/* Alerta de Error / Info */
+.alerta,
+div[ng-reflect-ng-if]:not(.proyecto-form):not([class]) {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #92400e;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  code {
+    background: rgba(0, 0, 0, 0.08);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-family: monospace;
+    color: #1e293b;
+  }
+}
+
+/* Estado de Carga */
+div:has(> p:contains("Cargando")) {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* =========================================
+   4. SECCIÓN "MIS PROYECTOS"
+   ========================================= */
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-main);
+}
+
+/* Botón "Nuevo Proyecto" */
+h2+button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  transition: all 0.2s var(--ease-pop);
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::before {
+    content: "+";
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* =========================================
+   5. TABLA DE PROYECTOS
+   ========================================= */
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--bg-card);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 2rem;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+tbody tr {
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:hover {
+    background-color: var(--bg-hover);
+  }
+
+  &:last-child td {
+    border-bottom: none;
+  }
+}
+
+td {
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+  color: var(--text-main);
+}
+
+/* Acciones en Tabla */
+td:last-child {
+  white-space: nowrap;
+
+  button {
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: all 0.2s ease;
+
+    /* Editar */
+    &:first-child {
+      color: #0284c7;
+      /* Sky 600 */
+      background: rgba(2, 132, 199, 0.1);
+      border: 1px solid rgba(2, 132, 199, 0.2);
+
+      &:hover {
+        background: rgba(2, 132, 199, 0.15);
+      }
+    }
+
+    /* Eliminar */
+    &:last-child {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      margin-right: 0;
+
+      &:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+    }
+  }
+}
+
+/* =========================================
+   6. FORMULARIO (Crear / Editar)
+   ========================================= */
+
+.proyecto-form {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  animation: slideUp 0.4s var(--ease-out);
+  margin-top: 2rem;
+
+  h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-subtle);
   }
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(20px);
     opacity: 0;
+    transform: translateY(20px);
   }
 
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  /* Layout Grid para Desktop */
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+
+    &>div:nth-child(2),
+    /* Descripción */
+    &>div:nth-child(5),
+    /* Tecnologías */
+    &>div:nth-child(6),
+    /* Repo */
+    &>div:nth-child(7)
+
+    /* Demo */
+      {
+      grid-column: span 2;
+    }
+  }
+}
+
+/* Estilo de Inputs */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.5rem;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Botones del Formulario */
+form button[type="submit"] {
+  grid-column: span 1;
+  padding: 0.8rem;
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+
+  &:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  @media (min-width: 768px) {
+    grid-column: 1 / 2;
+    margin-top: 1rem;
+  }
+}
+
+form button[type="button"] {
+  grid-column: span 1;
+  padding: 0.8rem;
+  background: white;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--text-main);
+    background: var(--bg-hover);
+    border-color: #cbd5e1;
+  }
+
+  @media (min-width: 768px) {
+    grid-column: 2 / 3;
+    margin-top: 1rem;
   }
 }
 
 /* =========================================
-   RESPONSIVE
+   7. RESPONSIVE
    ========================================= */
+
 @media (max-width: 768px) {
   .programador-container {
     padding: 1rem;
   }
 
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Tabla con scroll en móvil */
   table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  th,
+  td {
+    padding: 0.75rem;
+  }
+
+  .proyecto-form {
+    padding: 1.5rem;
+  }
+
+  form {
+    gap: 1rem;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 0.65rem 0.85rem;
+  }
+}
+
+/* =========================================
+   8. MEJORAS ADICIONALES PARA TEMA CLARO
+   ========================================= */
+
+/* Estados de proyecto en la tabla */
+td:contains("Activo") {
+  color: var(--success);
+  font-weight: 600;
+}
+
+td:contains("Inactivo") {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+td:contains("Finalizado") {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Mejora de hover en filas */
+tbody tr {
+  border-left: 3px solid transparent;
+
+  &:hover {
+    border-left-color: var(--primary);
+  }
+}
+
+/* Estilos para checkboxes y radios en tema claro */
+input[type="checkbox"],
+input[type="radio"] {
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+/* Separador visual entre secciones */
+.programador-container>*:not(:last-child) {
+  margin-bottom: 2rem;
+}
+
+/* Estilos para enlaces */
+a {
+  color: var(--primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }

@@ -1,213 +1,292 @@
+/* =========================================
+   1. SISTEMA DE DISEÑO (Variables & Temas)
+   ========================================= */
 
+:host {
+    /* --- Animaciones & Física --- */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Efecto rebote sutil */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Fluidez estándar */
+    --duration-short: 0.2s;
+    --duration-med: 0.3s;
 
-$spotify-green: #1db954;
-$spotify-green-soft: rgba(29, 185, 84, 0.18);
-$transition-fast: 0.18s ease;
-$transition-med: 0.28s ease;
+    /* --- MODO CLARO (Default) --- */
+    --bg-page: #f8fafc;
+    /* Slate 50 */
+    --bg-glass: rgba(255, 255, 255, 0.85);
+    --bg-surface: #ffffff;
+    --bg-hover: #f1f5f9;
+    /* Slate 100 */
 
-// ===============================
-// Shell general
-// ===============================
-.layout {
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-muted: #64748b;
+    /* Slate 500 */
+
+    --primary: #15803d;
+    /* Green 700 (Legible en claro) */
+    --primary-bg: rgba(21, 128, 61, 0.1);
+    --primary-contrast: #ffffff;
+
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.08);
+
+    --border-glass: rgba(226, 232, 240, 0.8);
+    --shadow-header: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+
+    /* Configuración Base */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-    color: var(--color-text);
-
-    background:
-        radial-gradient(circle at top, $spotify-green-soft, transparent 60%),
-        var(--color-bg);
+    background-color: var(--bg-page);
+    /* Patrón de fondo sutil */
+    background-image:
+        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.06), transparent 40%),
+        radial-gradient(circle at 20% 100%, rgba(99, 102, 241, 0.06), transparent 40%);
 }
 
-// ===============================
-// HEADER SUPERIOR
-// ===============================
+/* --- MODO OSCURO (Automático) --- */
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg-page: #020617;
+        /* Slate 950 */
+        --bg-glass: rgba(15, 23, 42, 0.8);
+        /* Slate 900 Glass */
+        --bg-surface: #1e293b;
+        --bg-hover: rgba(255, 255, 255, 0.08);
+
+        --text-main: #f8fafc;
+        /* Slate 50 */
+        --text-muted: #94a3b8;
+        /* Slate 400 */
+
+        --primary: #1db954;
+        /* Spotify Green */
+        --primary-bg: rgba(29, 185, 84, 0.15);
+        --primary-contrast: #000000;
+
+        --danger: #f87171;
+        --danger-bg: rgba(248, 113, 113, 0.15);
+
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --shadow-header: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* =========================================
+   2. LAYOUT GENERAL
+   ========================================= */
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    color: var(--text-main);
+}
+
+/* =========================================
+   3. HEADER (Navegación)
+   ========================================= */
+
 header {
     position: sticky;
     top: 0;
-    z-index: 30;
+    z-index: 50;
+    padding: 0.75rem 1.5rem;
 
-    padding: 0.8rem 1.6rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.1rem;
+    gap: 1.5rem;
 
-    background: rgba(3, 7, 18, 0.96);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    /* Glassmorphism */
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-header);
 
-    border-bottom: 1px solid rgba(15, 23, 42, 0.9);
-    box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.95),
-        0 1px 0 rgba(148, 163, 184, 0.15);
+    transition: padding var(--duration-med) var(--ease-smooth);
 
-    transition:
-        background-color $transition-med,
-        border-color $transition-med,
-        box-shadow $transition-med;
-
-    // Título
     h2 {
         margin: 0;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        color: #e5e7eb;
-        letter-spacing: 0.04em;
+        gap: 0.6rem;
+        color: var(--text-main);
+        letter-spacing: -0.01em;
+        white-space: nowrap;
 
         i {
-            font-size: 1.4rem;
-            color: $spotify-green;
-            filter: drop-shadow(0 0 8px rgba(29, 185, 84, 0.7));
+            font-size: 1.25rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary-bg));
+        }
+    }
+}
+
+/* Menú de Navegación */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    a,
+    button {
+        appearance: none;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        text-decoration: none;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1rem;
+        border-radius: 2rem;
+        /* Forma de píldora */
+
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all var(--duration-short) var(--ease-smooth);
+
+        /* Icono */
+        i {
+            font-size: 1.1em;
+            transition: transform var(--duration-short) var(--ease-spring);
+        }
+
+        /* Estado Hover Genérico */
+        &:hover {
+            color: var(--text-main);
+            background: var(--bg-hover);
+
+            i {
+                transform: scale(1.15);
+            }
+        }
+
+        /* Estado Activo (Link Seleccionado) */
+        &.activo {
+            background: var(--primary);
+            color: var(--primary-contrast);
+            font-weight: 600;
+            box-shadow: 0 4px 12px var(--primary-bg);
+
+            i {
+                color: var(--primary-contrast);
+            }
+        }
+
+        /* Estado Active (Click) */
+        &:active {
+            transform: scale(0.96);
         }
     }
 
-    // Navegación
+    /* Botón Salir Específico */
+    button {
+        margin-left: 0.5rem;
+        color: var(--danger);
+        padding: 0.55rem 0.8rem;
+
+        &:hover {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+    }
+}
+
+/* =========================================
+   4. CONTENIDO PRINCIPAL
+   ========================================= */
+
+main {
+    flex: 1;
+    width: 100%;
+    max-width: 1140px;
+    /* Ancho cómodo para lectura */
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+
+    /* Animación de entrada suave */
+    animation: fadeIn 0.5s var(--ease-smooth);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   5. RESPONSIVE (Mobile First)
+   ========================================= */
+
+@media (max-width: 900px) {
+    header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    /* --- Scroll Horizontal para Móvil --- 
+     Esto mejora mucho la UX en lugar de ocupar 
+     múltiples líneas de pantalla */
     nav {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
+        width: 100%;
         overflow-x: auto;
+        padding-bottom: 4px;
+        /* Espacio para scrollbar invisible */
+        -webkit-overflow-scrolling: touch;
+
+        /* Ocultar barra de scroll visual pero permitir deslizamiento */
         scrollbar-width: none;
 
         &::-webkit-scrollbar {
             display: none;
         }
 
+        /* Espaciado final para que el último elemento no quede pegado al borde */
+        &::after {
+            content: '';
+            min-width: 1rem;
+            height: 1px;
+        }
+
         a,
         button {
-            border-radius: 999px;
-            padding: 0.4rem 1rem;
-            border: 1px solid transparent;
-            font-size: 0.9rem;
-            color: #e5e7eb;
-            background: transparent;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
+            flex-shrink: 0;
+            /* Evitar que se aplasten */
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
 
-            transition:
-                background-color $transition-fast,
-                border-color $transition-fast,
-                color $transition-fast,
-                transform $transition-fast,
-                box-shadow $transition-fast;
-
-            i {
-                font-size: 1rem;
-            }
-
-            &:hover {
-                background: rgba(15, 23, 42, 0.95);
-                border-color: rgba(148, 163, 184, 0.7);
-                color: #f9fafb;
-                transform: translateY(-1px);
-                box-shadow: 0 12px 26px rgba(0, 0, 0, 0.9);
-            }
-
-            &:active {
-                transform: translateY(0);
-                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
+            &.activo {
+                border-color: transparent;
+                background: var(--primary);
             }
         }
 
-        // Link activo
-        a.activo {
-            background: rgba(15, 23, 42, 0.98);
-            border-color: $spotify-green;
-            color: #e5fbe9;
-            font-weight: 600;
-            box-shadow: 0 16px 38px rgba(0, 0, 0, 1);
-
-            i {
-                color: $spotify-green;
-            }
-        }
-
-        // Botón Salir
         button {
-            border-color: rgba(239, 68, 68, 0.7);
-            color: #fecaca;
-
-            &:hover {
-                background: rgba(127, 29, 29, 0.9);
-                border-color: rgba(248, 113, 113, 0.95);
-                color: #fee2e2;
-            }
-        }
-    }
-}
-
-// ===============================
-// CONTENIDO
-// ===============================
-main {
-    flex: 1;
-    padding: 1.6rem 1.9rem;
-    color: var(--color-text);
-
-    background:
-        radial-gradient(circle at top, rgba(15, 23, 42, 0.7), transparent 55%),
-        var(--color-bg);
-
-    overflow-x: hidden;
-}
-
-// Los componentes internos se encargan de su propia tarjeta / fondo
-main>* {
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-// ===============================
-// RESPONSIVE
-// ===============================
-@media (max-width: 900px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0.75rem 1.1rem;
-
-        nav {
-            flex-wrap: wrap;
-
-            a,
-            button {
-                margin-top: 0.1rem;
-            }
+            margin-left: auto;
+            /* Empujar "Salir" al final si hay espacio */
+            border-color: transparent;
         }
     }
 
     main {
-        padding: 1.2rem 1rem 1.6rem;
-    }
-}
-
-@media (max-width: 640px) {
-    header nav {
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-
-        a,
-        button {
-            flex: 1 1 48%;
-            justify-content: center;
-        }
-
-        button {
-            flex-basis: 100%;
-        }
-    }
-
-    main>* {
-        max-width: 100%;
+        padding: 1.5rem 1rem;
     }
 }

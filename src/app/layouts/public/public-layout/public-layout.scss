@@ -1,244 +1,305 @@
-// ===============================
-// 🌐 Layout Público estilo Spotify
-// ===============================
+/* =========================================
+   1. SISTEMA DE DISEÑO (Variables & Temas)
+   ========================================= */
 
-$spotify-green: #1db954;
-$spotify-green-soft: rgba(29, 185, 84, 0.18);
-$transition-fast: 0.18s ease;
-$transition-med: 0.28s ease;
-
-// ===============================
-// Shell general
-// ===============================
 :host {
-    display: block;
+    /* --- Animaciones & Física --- */
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-base: 0.25s;
+
+    /* --- MODO CLARO (Default) --- */
+    --bg-page: #f0fdf4;
+    /* Mint/Slate muy suave */
+    --bg-glass: rgba(255, 255, 255, 0.8);
+    --bg-surface: #ffffff;
+
+    --text-main: #0f172a;
+    /* Slate 900 */
+    --text-muted: #64748b;
+    /* Slate 500 */
+
+    --primary: #15803d;
+    /* Green 700 */
+    --primary-bg: rgba(21, 128, 61, 0.1);
+    --primary-contrast: #ffffff;
+
+    --border-glass: rgba(255, 255, 255, 0.6);
+    --shadow-header: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+
+    /* Configuración Global */
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-    color: var(--color-text);
-    background:
-        radial-gradient(circle at top, $spotify-green-soft, transparent 60%),
-        var(--color-bg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-page);
+
+    /* Fondo orgánico sutil */
+    background-image:
+        radial-gradient(circle at 15% 15%, rgba(34, 197, 94, 0.08), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(14, 165, 233, 0.08), transparent 45%);
 }
 
-// ===============================
-// HEADER PÚBLICO
-// ===============================
+/* --- MODO OSCURO (Automático) --- */
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg-page: #020617;
+        /* Slate 950 */
+        --bg-glass: rgba(15, 23, 42, 0.8);
+        --bg-surface: #1e293b;
+
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+
+        --primary: #1db954;
+        /* Spotify Green */
+        --primary-bg: rgba(29, 185, 84, 0.15);
+        --primary-contrast: #000000;
+
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --shadow-header: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* =========================================
+   2. HEADER (Navegación)
+   ========================================= */
+
 .public-header {
     position: sticky;
     top: 0;
-    z-index: 30;
+    z-index: 100;
 
-    padding: 0.8rem 1.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.2rem;
+    padding: 0.8rem 1.8rem;
+    gap: 1rem;
 
-    background: rgba(3, 7, 18, 0.96);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.9);
-    box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.95),
-        0 1px 0 rgba(148, 163, 184, 0.18);
+    /* Glassmorphism */
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-header);
 
-    transition:
-        background-color $transition-med,
-        border-color $transition-med,
-        box-shadow $transition-med;
+    transition: padding var(--duration-base) var(--ease-smooth);
 
-    /* Marca */
+    /* Título / Logo */
     h1 {
         margin: 0;
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         font-weight: 800;
+        letter-spacing: -0.01em;
+        color: var(--text-main);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        color: #e5e7eb;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        gap: 0.6rem;
+        white-space: nowrap;
 
         i {
-            font-size: 1.4rem;
-            color: $spotify-green;
-            filter: drop-shadow(0 0 10px rgba(29, 185, 84, 0.7));
+            font-size: 1.25rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 8px var(--primary-bg));
+            transition: transform var(--duration-base) var(--ease-elastic);
+        }
+
+        &:hover i {
+            transform: rotate(15deg) scale(1.1);
         }
     }
 
-    /* Navegación */
+    /* Menú de Navegación */
     nav {
         display: flex;
         align-items: center;
-        gap: 0.4rem;
-        flex-wrap: nowrap;
+        gap: 0.5rem;
+
+        /* Estilos base para Links y Botones */
+        a,
+        button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+
+            transition: all var(--duration-base) var(--ease-smooth);
+
+            i {
+                font-size: 1.05rem;
+            }
+
+            /* Hover */
+            &:hover {
+                color: var(--text-main);
+                background: var(--bg-surface);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                transform: translateY(-1px);
+            }
+
+            /* Activo (Router Link) */
+            &.activo {
+                background: var(--primary);
+                color: var(--primary-contrast);
+                box-shadow: 0 4px 15px var(--primary-bg);
+                font-weight: 600;
+            }
+
+            /* Click */
+            &:active {
+                transform: scale(0.96);
+            }
+        }
+
+        /* Botón Salir específico */
+        button {
+            color: #ef4444;
+            /* Rojo suave */
+
+            &:hover {
+                background: rgba(239, 68, 68, 0.08);
+                border-color: rgba(239, 68, 68, 0.2);
+            }
+        }
+
+        /* Info Usuario (No clickeable) */
+        .user-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+
+            margin: 0 0.5rem;
+            white-space: nowrap;
+
+            i {
+                color: var(--primary);
+            }
+        }
+    }
+}
+
+/* =========================================
+   3. CONTENIDO (Main)
+   ========================================= */
+
+.public-content {
+    flex: 1;
+    /* Ocupa el espacio restante */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+
+    animation: fadeIn 0.6s var(--ease-smooth);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   4. FOOTER
+   ========================================= */
+
+.public-footer {
+    margin-top: auto;
+    /* Empuja al final si hay poco contenido */
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-glass);
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+}
+
+/* =========================================
+   5. RESPONSIVE (Mobile App Feel)
+   ========================================= */
+
+@media (max-width: 900px) {
+    .public-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    /* --- Scroll Horizontal para Navegación --- */
+    .public-header nav {
+        width: 100%;
         overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+
+        /* Ocultar scrollbar */
         scrollbar-width: none;
 
         &::-webkit-scrollbar {
             display: none;
         }
 
-        a,
-        button {
-            border-radius: 999px;
-            padding: 0.38rem 0.95rem;
-            border: 1px solid transparent;
-            font-size: 0.9rem;
-            color: #e5e7eb;
-            background: transparent;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            cursor: pointer;
-
-            transition:
-                background-color $transition-fast,
-                border-color $transition-fast,
-                color $transition-fast,
-                transform $transition-fast,
-                box-shadow $transition-fast;
-
-            i {
-                font-size: 1rem;
-            }
-
-            &:hover {
-                background: rgba(15, 23, 42, 0.96);
-                border-color: rgba(148, 163, 184, 0.7);
-                color: #f9fafb;
-                transform: translateY(-1px);
-                box-shadow: 0 12px 26px rgba(0, 0, 0, 0.9);
-            }
-
-            &:active {
-                transform: translateY(0);
-                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
-            }
+        /* Espacio al final para deslizar */
+        &::after {
+            content: '';
+            min-width: 1rem;
+            height: 1px;
         }
-
-        /* Enlace activo */
-        a.activo {
-            background: rgba(15, 23, 42, 0.98);
-            border-color: $spotify-green;
-            color: #e5fbe9;
-            font-weight: 600;
-            box-shadow: 0 16px 38px rgba(0, 0, 0, 1);
-
-            i {
-                color: $spotify-green;
-            }
-        }
-
-        /* Pill de usuario */
-        .user-pill {
-            border-radius: 999px;
-            padding: 0.35rem 0.95rem;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-
-            background: radial-gradient(circle at top left, #020617, #020617);
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            color: #e5e7eb;
-            max-width: 260px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-
-            i {
-                font-size: 1.1rem;
-                color: #e5e7eb;
-            }
-        }
-
-        /* Botón salir */
-        button {
-            border-color: rgba(239, 68, 68, 0.7);
-            color: #fecaca;
-
-            &:hover {
-                background: rgba(127, 29, 29, 0.9);
-                border-color: rgba(248, 113, 113, 0.95);
-                color: #fee2e2;
-            }
-        }
-    }
-}
-
-// ===============================
-// CONTENIDO
-// ===============================
-.public-content {
-    min-height: calc(100vh - 60px - 46px);
-    padding: 1.8rem 1.9rem 2.6rem;
-
-    background:
-        radial-gradient(circle at top, rgba(15, 23, 42, 0.65), transparent 55%),
-        var(--color-bg);
-    color: var(--color-text);
-}
-
-.public-content>* {
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-// ===============================
-// FOOTER
-// ===============================
-.public-footer {
-    border-top: 1px solid rgba(148, 163, 184, 0.5);
-    padding: 0.8rem 1.9rem;
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    background: rgba(15, 23, 42, 0.97);
-    text-align: center;
-}
-
-// ===============================
-// RESPONSIVE
-// ===============================
-@media (max-width: 900px) {
-    .public-header {
-        padding: 0.75rem 1.2rem;
-    }
-
-    .public-content {
-        padding: 1.4rem 1.2rem 2.2rem;
-    }
-}
-
-@media (max-width: 640px) {
-    .public-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .public-header nav {
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        row-gap: 0.3rem;
 
         a,
         button,
         .user-pill {
-            margin-top: 0.1rem;
+            flex-shrink: 0;
+            /* Evita que se aplasten */
+            white-space: nowrap;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+
+            /* En móvil el activo resalta más el borde */
+            &.activo {
+                border-color: transparent;
+                background: var(--primary);
+            }
         }
 
-        /* Que los enlaces se comporten como chips en 2 columnas */
-        a,
-        button {
-            flex: 1 1 48%;
-            justify-content: center;
+        /* Ajuste visual para la píldora de usuario en móvil */
+        .user-pill {
+            order: -1;
+            /* Poner usuario primero o último según preferencia */
+            margin: 0;
+            background: transparent;
+            border: 1px dashed var(--text-muted);
         }
     }
 
-    .public-content>* {
-        max-width: 100%;
+    .public-content {
+        padding: 1.5rem 1rem;
     }
 }

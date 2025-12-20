@@ -1,247 +1,285 @@
-// ===============================
-// 🎧 Login estilo Spotify + Google
-// ===============================
-$spotify-green: #1db954;
-$spotify-green-soft: rgba(29, 185, 84, 0.22);
-$transition-fast: 0.18s ease;
-$transition-med: 0.28s ease;
+/* =========================================
+   1. SISTEMA DE DISEÑO (Variables & Temas)
+   ========================================= */
 
-// ===============================
-// Contenedor general
-// ===============================
-.login-page {
-  min-height: 100vh;
+:host {
+  /* --- Animaciones & Física --- */
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-med: 0.4s;
+
+  /* --- MODO CLARO (Default) --- */
+  --bg-page: #f0fdf4;
+  /* Mint/Slate muy claro */
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --bg-input: #ffffff;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+
+  --primary: #1db954;
+  /* Spotify Green */
+  --primary-glow: rgba(29, 185, 84, 0.25);
+
+  --border-glass: rgba(255, 255, 255, 0.6);
+  --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+
+  /* Configuración Base */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1.25rem;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-page);
 
-  background:
-    radial-gradient(circle at top, $spotify-green-soft, transparent 55%),
-    var(--color-bg, #020617);
-  color: var(--color-text, #e5e7eb);
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  /* Fondo dinámico */
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(29, 185, 84, 0.15), transparent 60%),
+    radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.05), transparent 50%);
 }
 
-// ===============================
-// Tarjeta principal
-// ===============================
-.login-card {
-  width: 100%;
-  max-width: 420px;
-  padding: 2.4rem 2.1rem 2.1rem;
+/* --- MODO OSCURO (Automático) --- */
+@media (prefers-color-scheme: dark) {
+  :host {
+    --bg-page: #020617;
+    /* Deep Space Black */
+    --bg-card: rgba(15, 23, 42, 0.65);
+    /* Glass Dark */
+    --bg-input: #1e293b;
 
-  background: rgba(15, 23, 42, 0.9);
-  border-radius: 1.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(15, 23, 42, 1);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
 
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
+    --primary: #1db954;
+    --primary-glow: rgba(29, 185, 84, 0.2);
 
-  display: flex;
-  flex-direction: column;
-  gap: 1.3rem;
-
-  animation: cardIn 0.75s $transition-med forwards;
-  transform-origin: center;
-
-  @keyframes cardIn {
-    from {
-      opacity: 0;
-      transform: translateY(25px) scale(0.96);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --shadow-float: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   }
 }
 
-// ===============================
-// Header de la tarjeta (marca + toggle)
-// ===============================
+/* =========================================
+   2. CONTENEDOR DE PÁGINA
+   ========================================= */
+
+.login-page {
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================================
+   3. TARJETA (Glassmorphism)
+   ========================================= */
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem;
+
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--border-glass);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-float);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  /* Animación de Entrada */
+  animation: zoomIn 0.6s var(--ease-elastic);
+  transform-origin: center center;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* =========================================
+   4. HEADER (Marca & Toggle)
+   ========================================= */
+
 .login-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .brand-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  background: radial-gradient(circle at top left, #020617, #020617);
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  color: #e5e7eb;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-glass);
+  border-radius: 2rem;
+
   font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
   .brand-icon {
-    font-size: 1.1rem;
-  }
-
-  .brand-text {
-    white-space: nowrap;
+    font-size: 1rem;
   }
 }
 
-// ===============================
-// Logo animado tipo órbita
-// ===============================
+/* =========================================
+   5. LOGO ANIMADO (ÓRBITA)
+   ========================================= */
+
 .logo-orbit {
   position: relative;
-  width: 96px;
-  height: 96px;
-  margin: 0.2rem auto 0.4rem auto;
+  width: 100px;
+  height: 100px;
+  margin: 0.5rem auto 1rem;
 }
 
+/* Anillo exterior */
 .orbit-ring {
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  border: 2px dashed rgba(148, 163, 184, 0.6);
-  animation: spin 12s linear infinite;
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+  border-radius: 50%;
+  border: 2px dashed var(--text-muted);
+  opacity: 0.3;
+  animation: spin 15s linear infinite;
 }
 
+/* Núcleo (Rocket) */
 .orbit-core {
   position: absolute;
-  inset: 12px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 20%, #f9fafb, #0f172a);
+  inset: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--bg-page), var(--bg-card));
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 0 20px var(--primary-glow);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow:
-    0 0 0 3px rgba(15, 23, 42, 1),
-    0 18px 30px rgba(0, 0, 0, 0.9);
+  font-size: 2.5rem;
 
-  span {
-    font-size: 2rem;
-    filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.9));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-// ===============================
-// Tipografía
-// ===============================
-.typing-text {
-  font-size: 1.3rem;
-  font-weight: 700;
-  text-align: center;
-  color: #f9fafb;
-  margin: 0;
-  line-height: 1.4;
+@keyframes float {
 
-  /* micro fade/slide */
-  animation: titleIn 0.7s $transition-med;
-
-  @keyframes titleIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  0%,
+  100% {
+    transform: translateY(0);
   }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* =========================================
+   6. TIPOGRAFÍA
+   ========================================= */
+
+.typing-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--text-main);
+  margin: 0;
+
+  background: linear-gradient(to bottom right, var(--text-main), var(--text-muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .descripcion {
-  font-size: 0.96rem;
   text-align: center;
-  color: #9ca3af;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-muted);
   margin: 0;
 }
 
-// ===============================
-// Botón Google
-// ===============================
+/* =========================================
+   7. BOTÓN GOOGLE
+   ========================================= */
+
 .google-btn {
-  margin-top: 0.4rem;
+  position: relative;
   width: 100%;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem;
+  margin-top: 0.5rem;
 
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  background: linear-gradient(135deg, #111827, #020617);
-  color: #f9fafb;
-  font-size: 0.98rem;
-  font-weight: 600;
-  cursor: pointer;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  position: relative;
-  overflow: hidden;
-
-  box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(15, 23, 42, 1);
-
-  transition:
-    transform $transition-fast,
-    box-shadow $transition-fast,
-    border-color $transition-fast,
-    background-position 0.35s ease;
-
-  background-size: 200% 200%;
-  background-position: 0% 50%;
-}
-
-.google-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  border-color: $spotify-green;
-  box-shadow:
-    0 22px 60px rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(34, 197, 94, 0.3);
-  background-position: 100% 50%;
-}
-
-.google-btn:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(34, 197, 94, 0.15);
-}
-
-.google-btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  border-color: rgba(148, 163, 184, 0.4);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
-}
-
-// Mini-logo Google hecho en CSS
-.google-icon {
-  width: 22px;
-  height: 22px;
-  position: relative;
-  border-radius: 999px;
-  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.75rem;
+
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-glass);
+  border-radius: 1rem;
+
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
   overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.7);
+  transition: all 0.2s var(--ease-smooth);
+
+  /* Estado Normal */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  /* Hover */
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+  }
+
+  /* Active */
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  /* Disabled */
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* Icono CSS de Google mejorado */
+.google-icon {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
   .g-segment {
     position: absolute;
@@ -272,57 +310,63 @@ $transition-med: 0.28s ease;
     left: 0;
     background: #34a853;
   }
+
+  /* Máscara blanca central para hacer la "G" */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background: #fff;
+    border-radius: 50%;
+  }
 }
 
 .google-text {
-  white-space: nowrap;
+  z-index: 1;
 }
 
-// Halo animado del botón
+/* Brillo sutil */
 .btn-glow-pulse {
-  pointer-events: none;
   position: absolute;
-  inset: -40%;
-  background: radial-gradient(circle at center, rgba($spotify-green, 0.25), transparent 55%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, var(--primary-glow), transparent 70%);
   opacity: 0;
-  animation: glowPulse 3s ease-in-out infinite;
-  mix-blend-mode: screen;
-
-  @keyframes glowPulse {
-
-    0%,
-    100% {
-      opacity: 0;
-    }
-
-    40% {
-      opacity: 1;
-    }
-  }
+  transition: opacity 0.3s;
 }
 
-// Texto de confianza
-// ===============================
+.google-btn:hover .btn-glow-pulse {
+  opacity: 1;
+}
+
+/* =========================================
+   8. FOOTER (Trust Text)
+   ========================================= */
+
 .trust-text {
-  margin: 0.5rem 0 0;
   font-size: 0.75rem;
+  color: var(--text-muted);
   text-align: center;
-  color: #6b7280;
-  line-height: 1.4;
+  margin-top: 0.5rem;
+  opacity: 0.8;
 }
 
-// Responsive
-// ===============================
+/* =========================================
+   9. RESPONSIVE
+   ========================================= */
+
 @media (max-width: 480px) {
   .login-card {
-    padding: 2.1rem 1.5rem 1.8rem;
+    padding: 2rem 1.5rem;
   }
 
   .typing-text {
-    font-size: 1.15rem;
-  }
-
-  .google-btn {
-    font-size: 0.95rem;
+    font-size: 1.35rem;
   }
 }
