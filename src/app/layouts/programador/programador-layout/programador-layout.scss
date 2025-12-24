@@ -1,123 +1,119 @@
-/* =========================================
-   1. SISTEMA DE DISEÑO (Variables & Temas)
-   ========================================= */
+/* programador-layout.component.scss
+   - Tokens claros en :host (scoped)
+   - Dark mode por html.theme-dark (tu toggle usa esa clase)
+   - Header sticky + nav scroll en móvil
+   - Preparado para mostrar usuario (bloque .user-card opcional)
+*/
 
 :host {
-    /* --- Animaciones & Física --- */
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-    /* Efecto rebote sutil */
+    /* Motion */
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-    /* Fluidez estándar */
-    --duration-short: 0.2s;
-    --duration-med: 0.3s;
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 160ms;
+    --dur-med: 260ms;
 
-    /* --- MODO CLARO (Default) --- */
+    /* Radius */
+    --r-sm: 0.75rem;
+    --r-md: 1rem;
+    --r-pill: 999px;
+
+    /* Light tokens */
     --bg-page: #f8fafc;
-    /* Slate 50 */
-    --bg-glass: rgba(255, 255, 255, 0.85);
+    --bg-card: rgba(255, 255, 255, 0.78);
     --bg-surface: #ffffff;
-    --bg-hover: #f1f5f9;
-    /* Slate 100 */
+    --bg-hover: rgba(148, 163, 184, 0.14);
+
+    --border-glass: rgba(226, 232, 240, 0.78);
+    --border-subtle: rgba(15, 23, 42, 0.12);
 
     --text-main: #0f172a;
-    /* Slate 900 */
-    --text-muted: #64748b;
-    /* Slate 500 */
+    --text-muted: rgba(15, 23, 42, 0.62);
 
     --primary: #15803d;
-    /* Green 700 (Legible en claro) */
-    --primary-bg: rgba(21, 128, 61, 0.1);
+    --primary-bg: rgba(21, 128, 61, 0.14);
     --primary-contrast: #ffffff;
 
     --danger: #ef4444;
-    --danger-bg: rgba(239, 68, 68, 0.08);
+    --danger-bg: rgba(239, 68, 68, 0.12);
 
-    --border-glass: rgba(226, 232, 240, 0.8);
-    --shadow-header: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    --shadow-header: 0 12px 26px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.10);
+    --shadow-float: 0 18px 40px rgba(0, 0, 0, 0.12);
 
-    /* Configuración Base */
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    display: block;
+    min-height: 100vh;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: var(--text-main);
+
+    background-color: var(--bg-page);
+    background-image:
+        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.06), transparent 42%),
+        radial-gradient(circle at 20% 100%, rgba(99, 102, 241, 0.06), transparent 42%);
+}
+
+/* Dark tokens (manual: html.theme-dark) */
+html.theme-dark :host {
+    --bg-page: #020617;
+    --bg-card: rgba(15, 23, 42, 0.72);
+    --bg-surface: #0b1220;
+    --bg-hover: rgba(255, 255, 255, 0.10);
+
+    --border-glass: rgba(255, 255, 255, 0.10);
+    --border-subtle: rgba(255, 255, 255, 0.14);
+
+    --text-main: rgba(255, 255, 255, 0.92);
+    --text-muted: rgba(255, 255, 255, 0.68);
+
+    --primary: #22c55e;
+    --primary-bg: rgba(34, 197, 94, 0.20);
+    --primary-contrast: #020617;
+
+    --danger: #f87171;
+    --danger-bg: rgba(248, 113, 113, 0.16);
+
+    --shadow-header: 0 16px 34px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 10px 22px rgba(0, 0, 0, 0.45);
+    --shadow-float: 0 22px 46px rgba(0, 0, 0, 0.55);
+}
+
+/* Layout */
+.layout {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-page);
-    /* Patrón de fondo sutil */
-    background-image:
-        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.06), transparent 40%),
-        radial-gradient(circle at 20% 100%, rgba(99, 102, 241, 0.06), transparent 40%);
-}
-
-/* --- MODO OSCURO (Automático) --- */
-@media (prefers-color-scheme: dark) {
-    :host {
-        --bg-page: #020617;
-        /* Slate 950 */
-        --bg-glass: rgba(15, 23, 42, 0.8);
-        /* Slate 900 Glass */
-        --bg-surface: #1e293b;
-        --bg-hover: rgba(255, 255, 255, 0.08);
-
-        --text-main: #f8fafc;
-        /* Slate 50 */
-        --text-muted: #94a3b8;
-        /* Slate 400 */
-
-        --primary: #1db954;
-        /* Spotify Green */
-        --primary-bg: rgba(29, 185, 84, 0.15);
-        --primary-contrast: #000000;
-
-        --danger: #f87171;
-        --danger-bg: rgba(248, 113, 113, 0.15);
-
-        --border-glass: rgba(255, 255, 255, 0.08);
-        --shadow-header: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-    }
-}
-
-/* =========================================
-   2. LAYOUT GENERAL
-   ========================================= */
-
-.layout {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
     color: var(--text-main);
 }
 
-/* =========================================
-   3. HEADER (Navegación)
-   ========================================= */
-
+/* Header */
 header {
     position: sticky;
     top: 0;
     z-index: 50;
-    padding: 0.75rem 1.5rem;
+
+    padding: 0.8rem 1.5rem;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 1.25rem;
 
-    /* Glassmorphism */
-    background: var(--bg-glass);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background: var(--bg-card);
     border-bottom: 1px solid var(--border-glass);
     box-shadow: var(--shadow-header);
 
-    transition: padding var(--duration-med) var(--ease-smooth);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+
+    transition: padding var(--dur-med) var(--ease-smooth);
 
     h2 {
         margin: 0;
-        font-size: 1.1rem;
-        font-weight: 700;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.6rem;
-        color: var(--text-main);
+
+        font-size: 1.1rem;
+        font-weight: 800;
         letter-spacing: -0.01em;
         white-space: nowrap;
 
@@ -125,20 +121,22 @@ header {
             font-size: 1.25rem;
             color: var(--primary);
             filter: drop-shadow(0 0 10px var(--primary-bg));
+            transform: translateY(1px);
         }
     }
 }
 
-/* Menú de Navegación */
+/* Nav */
 nav {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
 
     a,
     button {
         appearance: none;
-        border: none;
+        border: 1px solid transparent;
         background: transparent;
         cursor: pointer;
         text-decoration: none;
@@ -146,79 +144,93 @@ nav {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.55rem 1rem;
-        border-radius: 2rem;
-        /* Forma de píldora */
+
+        padding: 0.55rem 0.95rem;
+        border-radius: var(--r-pill);
 
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 650;
         color: var(--text-muted);
-        transition: all var(--duration-short) var(--ease-smooth);
 
-        /* Icono */
+        transition: transform var(--dur-fast) var(--ease-smooth),
+            background-color var(--dur-fast) var(--ease-smooth),
+            border-color var(--dur-fast) var(--ease-smooth),
+            color var(--dur-fast) var(--ease-smooth);
+
         i {
-            font-size: 1.1em;
-            transition: transform var(--duration-short) var(--ease-spring);
+            font-size: 1.08em;
+            opacity: 0.85;
+            transition: transform var(--dur-fast) var(--ease-spring), opacity var(--dur-fast) var(--ease-smooth);
         }
 
-        /* Estado Hover Genérico */
         &:hover {
             color: var(--text-main);
             background: var(--bg-hover);
+            transform: translateY(-1px);
 
             i {
-                transform: scale(1.15);
+                opacity: 1;
+                transform: scale(1.12);
             }
         }
 
-        /* Estado Activo (Link Seleccionado) */
         &.activo {
-            background: var(--primary);
-            color: var(--primary-contrast);
-            font-weight: 600;
-            box-shadow: 0 4px 12px var(--primary-bg);
+            background: color-mix(in srgb, var(--primary), transparent 86%);
+            border-color: color-mix(in srgb, var(--primary), transparent 70%);
+            color: var(--primary);
+            font-weight: 750;
 
             i {
-                color: var(--primary-contrast);
+                opacity: 1;
+                color: var(--primary);
             }
         }
 
-        /* Estado Active (Click) */
         &:active {
-            transform: scale(0.96);
+            transform: translateY(0) scale(0.98);
+        }
+
+        &:focus-visible {
+            outline: 2px solid color-mix(in srgb, var(--primary), transparent 35%);
+            outline-offset: 2px;
         }
     }
 
-    /* Botón Salir Específico */
+    /* Botón Salir */
     button {
-        margin-left: 0.5rem;
         color: var(--danger);
-        padding: 0.55rem 0.8rem;
 
         &:hover {
             background: var(--danger-bg);
+            border-color: color-mix(in srgb, var(--danger), transparent 55%);
             color: var(--danger);
         }
+
+        &:focus-visible {
+            outline-color: color-mix(in srgb, var(--danger), transparent 35%);
+        }
+    }
+
+    /* Espaciado para el toggle dentro del nav (componente hijo) */
+    app-theme-toggle {
+        display: inline-flex;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
     }
 }
 
-/* =========================================
-   4. CONTENIDO PRINCIPAL
-   ========================================= */
-
+/* Contenido */
 main {
     flex: 1;
     width: 100%;
     max-width: 1140px;
-    /* Ancho cómodo para lectura */
     margin: 0 auto;
     padding: 2rem 1.5rem;
 
-    /* Animación de entrada suave */
-    animation: fadeIn 0.5s var(--ease-smooth);
+    animation: content-in 520ms var(--ease-smooth) both;
 }
 
-@keyframes fadeIn {
+@keyframes content-in {
     from {
         opacity: 0;
         transform: translateY(10px);
@@ -230,38 +242,103 @@ main {
     }
 }
 
-/* =========================================
-   5. RESPONSIVE (Mobile First)
-   ========================================= */
+/* Usuario (para cuando lo agregues al HTML)
+   Recomendación de HTML (mínimo):
+   <div class="user-card">
+     <div class="avatar">D</div>
+     <div class="user-text">
+       <div class="name">Darwin</div>
+       <div class="role">Programador</div>
+     </div>
+   </div>
+*/
+.user-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
 
+    padding: 0.35rem 0.55rem 0.35rem 0.35rem;
+    border-radius: var(--r-pill);
+
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+
+    transition: transform var(--dur-fast) var(--ease-smooth),
+        border-color var(--dur-fast) var(--ease-smooth),
+        box-shadow var(--dur-fast) var(--ease-smooth);
+
+    &:hover {
+        transform: translateY(-1px);
+        border-color: color-mix(in srgb, var(--primary), transparent 50%);
+        box-shadow: var(--shadow-float);
+    }
+}
+
+.avatar {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 999px;
+
+    display: grid;
+    place-items: center;
+
+    font-weight: 850;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+
+    color: var(--primary-contrast);
+    background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary), #10b981 35%));
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--primary), transparent 78%);
+}
+
+.user-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    min-width: 0;
+
+    .name {
+        font-size: 0.86rem;
+        font-weight: 850;
+        color: var(--text-main);
+        max-width: 12rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .role {
+        font-size: 0.70rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+}
+
+/* Responsive */
 @media (max-width: 900px) {
     header {
         flex-direction: column;
         align-items: stretch;
         padding: 1rem;
-        gap: 1rem;
+        gap: 0.9rem;
     }
 
-    /* --- Scroll Horizontal para Móvil --- 
-     Esto mejora mucho la UX en lugar de ocupar 
-     múltiples líneas de pantalla */
     nav {
         width: 100%;
         overflow-x: auto;
-        padding-bottom: 4px;
-        /* Espacio para scrollbar invisible */
+        padding-bottom: 0.35rem;
         -webkit-overflow-scrolling: touch;
 
-        /* Ocultar barra de scroll visual pero permitir deslizamiento */
         scrollbar-width: none;
 
         &::-webkit-scrollbar {
             display: none;
         }
 
-        /* Espaciado final para que el último elemento no quede pegado al borde */
         &::after {
-            content: '';
+            content: "";
             min-width: 1rem;
             height: 1px;
         }
@@ -269,24 +346,31 @@ main {
         a,
         button {
             flex-shrink: 0;
-            /* Evitar que se aplasten */
             background: var(--bg-surface);
-            border: 1px solid var(--border-glass);
-
-            &.activo {
-                border-color: transparent;
-                background: var(--primary);
-            }
+            border-color: var(--border-glass);
         }
 
         button {
             margin-left: auto;
-            /* Empujar "Salir" al final si hay espacio */
             border-color: transparent;
         }
     }
 
     main {
         padding: 1.5rem 1rem;
+    }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    main {
+        animation: none;
+    }
+
+    header,
+    nav a,
+    nav button,
+    .user-card {
+        transition: none;
     }
 }

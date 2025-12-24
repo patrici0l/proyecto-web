@@ -1,0 +1,11 @@
+<button class="theme-toggle-btn" (click)="toggleTheme()"
+    [attr.aria-label]="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+    [title]="isDark ? 'Modo Claro' : 'Modo Oscuro'">
+
+    <div class="icon-container">
+        <i class="bi bi-sun-fill" *ngIf="!isDark"></i>
+
+        <i class="bi bi-moon-stars-fill" *ngIf="isDark"></i>
+    </div>
+
+</button>

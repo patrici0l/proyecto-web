@@ -1,62 +1,74 @@
 /* =========================================
-   1. SISTEMA DE DISEÑO (Light Theme)
+   Panel Programador (mejorado sin cambiar lógica)
    ========================================= */
 
 :host {
-  /* --- Animaciones & Física --- */
   --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
   --ease-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  /* --- Colores (Light Mode) --- */
+  /* Light */
   --bg-page: #f8fafc;
   --bg-card: #ffffff;
   --bg-input: #f1f5f9;
   --bg-hover: #f1f5f9;
 
-  --text-main: #1e293b;
+  --text-main: #0f172a;
   --text-muted: #64748b;
 
-  /* Acciones */
   --primary: #3b82f6;
-  /* Blue */
-  --success: #22c55e;
-  /* Green */
+  --primary-bg: rgba(59, 130, 246, 0.12);
+
+  --success: #16a34a;
+  --success-bg: rgba(22, 163, 74, 0.12);
+
   --danger: #ef4444;
-  /* Red */
+  --danger-bg: rgba(239, 68, 68, 0.12);
+
   --warning: #f59e0b;
-  /* Amber */
+  --warning-bg: rgba(245, 158, 11, 0.12);
 
   --border-subtle: #e2e8f0;
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
-  /* Configuración */
+  --shadow-card: 0 10px 20px -14px rgba(0, 0, 0, 0.18);
+  --shadow-float: 0 25px 45px -18px rgba(0, 0, 0, 0.18);
+
   display: block;
   min-height: 100vh;
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--bg-page);
+  background: var(--bg-page);
   color: var(--text-main);
-
-  /* Fondo sutil */
-  background-image:
-    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05), transparent 50%);
+  background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.06), transparent 55%);
 }
 
-/* =========================================
-   2. CONTENEDOR PRINCIPAL
-   ========================================= */
+/* Dark */
+@media (prefers-color-scheme: dark) {
+  :host {
+    --bg-page: #0f172a;
+    --bg-card: #1e293b;
+    --bg-input: rgba(2, 6, 23, 0.35);
+    --bg-hover: #334155;
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+
+    --border-subtle: #334155;
+
+    --shadow-card: 0 14px 28px -20px rgba(0, 0, 0, 0.65);
+    --shadow-float: 0 30px 70px -28px rgba(0, 0, 0, 0.7);
+  }
+}
 
 .programador-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
-  animation: fadeIn 0.5s ease-out;
+  padding: 2.2rem 1.5rem;
+  animation: fadeIn 0.45s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
 
   to {
@@ -65,215 +77,343 @@
   }
 }
 
-/* Título Principal */
+/* Header */
+.page-head {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 1.75rem;
+}
+
 h1 {
   font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-main);
+  font-weight: 900;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.02em;
 }
 
-/* =========================================
-   3. ESTADOS Y ALERTAS
-   ========================================= */
-
-/* Alerta de Error / Info */
-.alerta,
-div[ng-reflect-ng-if]:not(.proyecto-form):not([class]) {
-  background: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #92400e;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-
-  code {
-    background: rgba(0, 0, 0, 0.08);
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.3rem;
-    font-family: monospace;
-    color: #1e293b;
-  }
-}
-
-/* Estado de Carga */
-div:has(> p:contains("Cargando")) {
-  text-align: center;
-  padding: 2rem;
+.page-sub {
+  margin: 0;
   color: var(--text-muted);
-  font-style: italic;
+  font-weight: 600;
 }
 
-/* =========================================
-   4. SECCIÓN "MIS PROYECTOS"
-   ========================================= */
+/* Section header */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0 1.25rem;
+}
 
 h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--text-main);
+  font-size: 1.35rem;
+  margin: 0;
+  font-weight: 900;
 }
 
-/* Botón "Nuevo Proyecto" */
-h2+button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: 0.5rem;
+.muted {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
   font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-  transition: all 0.2s var(--ease-pop);
-  margin-bottom: 1.5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  font-size: 0.95rem;
+}
 
-  &::before {
-    content: "+";
-    font-size: 1.2rem;
-    line-height: 1;
+/* =========================================
+   States (loading / empty / info)
+   ========================================= */
+.state {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.1rem;
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    flex: 0 0 auto;
   }
 
-  &:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0 0 0.15rem;
+    font-size: 1rem;
+    font-weight: 900;
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--text-muted);
+    font-weight: 600;
+    line-height: 1.45;
+
+    code {
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.4rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--text-main);
+    }
+  }
+
+  &--loading {
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &--empty {
+    background: color-mix(in srgb, var(--bg-card), transparent 0%);
+  }
+
+  &--warn {
+    border-color: rgba(245, 158, 11, 0.35);
+    background: color-mix(in srgb, var(--warning-bg), var(--bg-card) 80%);
+  }
+
+  &--info {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: color-mix(in srgb, var(--primary-bg), var(--bg-card) 80%);
+  }
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.35);
+  border-top-color: var(--primary);
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   Buttons
+   ========================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 0.95rem;
+  padding: 0.75rem 1rem;
+  font-weight: 900;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+
+  i {
+    font-size: 1rem;
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: grayscale(1);
+  }
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 12px 22px -16px rgba(59, 130, 246, 0.75);
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+}
+
+.btn--ghost {
+  background: var(--bg-input);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+
+  &:hover {
+    background: var(--bg-hover);
+    transform: translateY(-1px);
+  }
+}
+
+.btn--danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.25);
+
+  &:hover:not(:disabled) {
+    background: var(--danger);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px -16px rgba(239, 68, 68, 0.7);
+  }
+}
+
+.btn--success {
+  background: var(--success);
+  color: #fff;
+  box-shadow: 0 12px 22px -16px rgba(22, 163, 74, 0.7);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+}
+
+.btn--soft {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+
+  &:hover {
+    background: var(--bg-hover);
+    color: var(--text-main);
   }
 }
 
 /* =========================================
-   5. TABLA DE PROYECTOS
+   Table
    ========================================= */
+.table-wrap {
+  margin-top: 1rem;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
 
-table {
+.table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   background: var(--bg-card);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
   border: 1px solid var(--border-subtle);
-  margin-bottom: 2rem;
 }
 
 thead {
-  background: #f8fafc;
+  background: var(--bg-hover);
 }
 
 th {
-  padding: 1rem 1.5rem;
+  padding: 1.05rem 1.2rem;
   text-align: left;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-tbody tr {
-  transition: background-color 0.15s ease;
-  border-bottom: 1px solid var(--border-subtle);
+.th-actions {
+  text-align: right;
+}
+
+.row {
+  transition: background 0.18s ease, border-left-color 0.18s ease;
+  border-left: 3px solid transparent;
 
   &:hover {
-    background-color: var(--bg-hover);
-  }
-
-  &:last-child td {
-    border-bottom: none;
+    background: var(--bg-hover);
+    border-left-color: var(--primary);
   }
 }
 
-td {
-  padding: 1rem 1.5rem;
-  font-size: 0.9rem;
+.cell {
+  padding: 1.05rem 1.2rem;
   border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.92rem;
   vertical-align: middle;
-  color: var(--text-main);
+
+  &--name {
+    font-weight: 900;
+  }
+
+  &--tech {
+    color: var(--text-muted);
+    max-width: 360px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &--actions {
+    text-align: right;
+    white-space: nowrap;
+
+    .btn {
+      padding: 0.55rem 0.85rem;
+      border-radius: 0.8rem;
+    }
+
+    .btn+.btn {
+      margin-left: 0.55rem;
+    }
+  }
 }
 
-/* Acciones en Tabla */
-td:last-child {
-  white-space: nowrap;
+/* Pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--text-main);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
 
-  button {
-    background: transparent;
-    border: 1px solid transparent;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.4rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-right: 0.5rem;
-    transition: all 0.2s ease;
-
-    /* Editar */
-    &:first-child {
-      color: #0284c7;
-      /* Sky 600 */
-      background: rgba(2, 132, 199, 0.1);
-      border: 1px solid rgba(2, 132, 199, 0.2);
-
-      &:hover {
-        background: rgba(2, 132, 199, 0.15);
-      }
-    }
-
-    /* Eliminar */
-    &:last-child {
-      color: var(--danger);
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      margin-right: 0;
-
-      &:hover {
-        background: rgba(239, 68, 68, 0.15);
-      }
-    }
+  &--type {
+    background: color-mix(in srgb, var(--primary-bg), var(--bg-card) 70%);
+    border-color: rgba(59, 130, 246, 0.25);
   }
 }
 
 /* =========================================
-   6. FORMULARIO (Crear / Editar)
+   Form
    ========================================= */
-
 .proyecto-form {
+  margin-top: 1.75rem;
   background: var(--bg-card);
-  padding: 2rem;
-  border-radius: 0.75rem;
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-card);
-  animation: slideUp 0.4s var(--ease-out);
-  margin-top: 2rem;
-
-  h3 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-    color: var(--text-main);
-    padding-bottom: 0.5rem;
-    border-bottom: 1px dashed var(--border-subtle);
-  }
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-float);
+  padding: 1.6rem;
+  animation: slideUp 0.35s var(--ease-out);
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
 
   to {
@@ -282,217 +422,127 @@ td:last-child {
   }
 }
 
-form {
+.form-head {
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--border-subtle);
+
+  h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 950;
+  }
+}
+
+.form-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
 
-  /* Layout Grid para Desktop */
-  @media (min-width: 768px) {
+  @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
-
-    &>div:nth-child(2),
-    /* Descripción */
-    &>div:nth-child(5),
-    /* Tecnologías */
-    &>div:nth-child(6),
-    /* Repo */
-    &>div:nth-child(7)
-
-    /* Demo */
-      {
-      grid-column: span 2;
-    }
   }
 }
 
-/* Estilo de Inputs */
-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0.75rem 1rem;
-  background: var(--bg-input);
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.5rem;
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 0.95rem;
-  outline: none;
-  transition: all 0.2s;
-
-  &:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    background: white;
-  }
-
-  &::placeholder {
-    color: #94a3b8;
-  }
-}
-
-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-/* Botones del Formulario */
-form button[type="submit"] {
-  grid-column: span 1;
-  padding: 0.8rem;
-  background: var(--success);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
-
-  &:hover {
-    background: #16a34a;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  @media (min-width: 768px) {
-    grid-column: 1 / 2;
-    margin-top: 1rem;
-  }
-}
-
-form button[type="button"] {
-  grid-column: span 1;
-  padding: 0.8rem;
-  background: white;
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    color: var(--text-main);
-    background: var(--bg-hover);
-    border-color: #cbd5e1;
-  }
-
-  @media (min-width: 768px) {
-    grid-column: 2 / 3;
-    margin-top: 1rem;
-  }
-}
-
-/* =========================================
-   7. RESPONSIVE
-   ========================================= */
-
-@media (max-width: 768px) {
-  .programador-container {
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 1.75rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-  }
-
-  /* Tabla con scroll en móvil */
-  table {
+.field {
+  label {
     display: block;
-    overflow-x: auto;
-    white-space: nowrap;
     font-size: 0.85rem;
-  }
-
-  th,
-  td {
-    padding: 0.75rem;
-  }
-
-  .proyecto-form {
-    padding: 1.5rem;
-  }
-
-  form {
-    gap: 1rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    margin-bottom: 0.45rem;
   }
 
   input,
   select,
   textarea {
-    padding: 0.65rem 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    border-radius: 0.95rem;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-family: inherit;
+    outline: none;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+
+    &:focus {
+      border-color: rgba(59, 130, 246, 0.6);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+      background: color-mix(in srgb, var(--bg-input), #fff 25%);
+      transform: translateY(-1px);
+    }
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+}
+
+.field--full {
+  @media (min-width: 900px) {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-actions {
+  display: grid;
+  gap: 0.75rem;
+
+  @media (min-width: 900px) {
+    grid-column: 1 / -1;
+    grid-template-columns: 220px 160px;
+    justify-content: end;
+    align-items: center;
   }
 }
 
 /* =========================================
-   8. MEJORAS ADICIONALES PARA TEMA CLARO
+   Responsive
    ========================================= */
+@media (max-width: 900px) {
+  .programador-container {
+    padding: 1.5rem 1rem;
+  }
 
-/* Estados de proyecto en la tabla */
-td:contains("Activo") {
-  color: var(--success);
-  font-weight: 600;
-}
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-td:contains("Inactivo") {
-  color: var(--warning);
-  font-weight: 600;
-}
+  .btn--primary {
+    width: 100%;
+  }
 
-td:contains("Finalizado") {
-  color: var(--text-muted);
-  font-weight: 600;
-}
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
-/* Mejora de hover en filas */
-tbody tr {
-  border-left: 3px solid transparent;
-
-  &:hover {
-    border-left-color: var(--primary);
+  .table {
+    min-width: 860px;
   }
 }
 
-/* Estilos para checkboxes y radios en tema claro */
-input[type="checkbox"],
-input[type="radio"] {
-  width: auto;
-  margin-right: 0.5rem;
-}
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
 
-/* Separador visual entre secciones */
-.programador-container>*:not(:last-child) {
-  margin-bottom: 2rem;
-}
+  .programador-container,
+  .proyecto-form {
+    animation: none;
+  }
 
-/* Estilos para enlaces */
-a {
-  color: var(--primary);
-  text-decoration: none;
+  .spinner {
+    animation: none;
+  }
 
-  &:hover {
-    text-decoration: underline;
+  .btn,
+  .row {
+    transition: none;
   }
 }

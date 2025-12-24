@@ -1,71 +1,82 @@
-/* =========================================
-   1. SISTEMA DE DISEÑO (Variables & Temas)
-   ========================================= */
+/* public-layout.component.scss
+   - Tokens en :host
+   - Dark mode por html.theme-dark (tu toggle usa esa clase)
+   - Nav fluida + user-pill consistente
+   - Motion discreto + reduce-motion
+*/
 
 :host {
-    /* --- Animaciones & Física --- */
-    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Motion */
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-    --duration-base: 0.25s;
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --dur-fast: 160ms;
+    --dur-med: 260ms;
 
-    /* --- MODO CLARO (Default) --- */
+    /* Radius */
+    --r-sm: 0.75rem;
+    --r-md: 1rem;
+    --r-pill: 999px;
+
+    /* Light tokens */
     --bg-page: #f0fdf4;
-    /* Mint/Slate muy suave */
-    --bg-glass: rgba(255, 255, 255, 0.8);
+    --bg-card: rgba(255, 255, 255, 0.80);
     --bg-surface: #ffffff;
+    --bg-hover: rgba(148, 163, 184, 0.14);
 
     --text-main: #0f172a;
-    /* Slate 900 */
-    --text-muted: #64748b;
-    /* Slate 500 */
+    --text-muted: rgba(15, 23, 42, 0.62);
 
     --primary: #15803d;
-    /* Green 700 */
-    --primary-bg: rgba(21, 128, 61, 0.1);
+    --primary-bg: rgba(21, 128, 61, 0.14);
     --primary-contrast: #ffffff;
 
-    --border-glass: rgba(255, 255, 255, 0.6);
-    --shadow-header: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.12);
 
-    /* Configuración Global */
+    --border-glass: rgba(255, 255, 255, 0.55);
+    --border-subtle: rgba(15, 23, 42, 0.12);
+
+    --shadow-header: 0 12px 26px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.10);
+
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: var(--text-main);
-    background-color: var(--bg-page);
 
-    /* Fondo orgánico sutil */
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: var(--text-main);
+
+    background-color: var(--bg-page);
     background-image:
         radial-gradient(circle at 15% 15%, rgba(34, 197, 94, 0.08), transparent 45%),
         radial-gradient(circle at 85% 85%, rgba(14, 165, 233, 0.08), transparent 45%);
 }
 
-/* --- MODO OSCURO (Automático) --- */
-@media (prefers-color-scheme: dark) {
-    :host {
-        --bg-page: #020617;
-        /* Slate 950 */
-        --bg-glass: rgba(15, 23, 42, 0.8);
-        --bg-surface: #1e293b;
+/* Dark tokens (manual por html.theme-dark) */
+html.theme-dark :host {
+    --bg-page: #020617;
+    --bg-card: rgba(15, 23, 42, 0.76);
+    --bg-surface: #0b1220;
+    --bg-hover: rgba(255, 255, 255, 0.10);
 
-        --text-main: #f1f5f9;
-        --text-muted: #94a3b8;
+    --text-main: rgba(255, 255, 255, 0.92);
+    --text-muted: rgba(255, 255, 255, 0.68);
 
-        --primary: #1db954;
-        /* Spotify Green */
-        --primary-bg: rgba(29, 185, 84, 0.15);
-        --primary-contrast: #000000;
+    --primary: #22c55e;
+    --primary-bg: rgba(34, 197, 94, 0.20);
+    --primary-contrast: #020617;
 
-        --border-glass: rgba(255, 255, 255, 0.08);
-        --shadow-header: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
-    }
+    --danger: #f87171;
+    --danger-bg: rgba(248, 113, 113, 0.16);
+
+    --border-glass: rgba(255, 255, 255, 0.10);
+    --border-subtle: rgba(255, 255, 255, 0.14);
+
+    --shadow-header: 0 16px 34px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 10px 22px rgba(0, 0, 0, 0.45);
 }
 
-/* =========================================
-   2. HEADER (Navegación)
-   ========================================= */
-
+/* Header */
 .public-header {
     position: sticky;
     top: 0;
@@ -74,145 +85,180 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.8rem 1.8rem;
     gap: 1rem;
 
-    /* Glassmorphism */
-    background: var(--bg-glass);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    padding: 0.85rem 1.8rem;
+
+    background: var(--bg-card);
     border-bottom: 1px solid var(--border-glass);
     box-shadow: var(--shadow-header);
 
-    transition: padding var(--duration-base) var(--ease-smooth);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
 
-    /* Título / Logo */
+    transition: padding var(--dur-med) var(--ease-smooth);
+
     h1 {
         margin: 0;
-        font-size: 1.15rem;
-        font-weight: 800;
-        letter-spacing: -0.01em;
-        color: var(--text-main);
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.6rem;
+
+        font-size: 1.15rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
         white-space: nowrap;
+        color: var(--text-main);
 
         i {
             font-size: 1.25rem;
             color: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary-bg));
-            transition: transform var(--duration-base) var(--ease-elastic);
-        }
-
-        &:hover i {
-            transform: rotate(15deg) scale(1.1);
+            filter: drop-shadow(0 0 10px var(--primary-bg));
+            transition: transform var(--dur-med) var(--ease-elastic);
+            transform: translateY(1px);
         }
     }
 
-    /* Menú de Navegación */
-    nav {
-        display: flex;
+    &:hover h1 i {
+        transform: translateY(1px) rotate(10deg) scale(1.06);
+    }
+}
+
+/* Nav */
+.public-header nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+
+    a,
+    button {
+        appearance: none;
+        border: 1px solid transparent;
+        background: transparent;
+        cursor: pointer;
+        text-decoration: none;
+
+        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
 
-        /* Estilos base para Links y Botones */
-        a,
-        button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
+        padding: 0.52rem 0.95rem;
+        border-radius: var(--r-pill);
 
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            color: var(--text-muted);
-            background: transparent;
-            border: 1px solid transparent;
-            cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 650;
+        color: var(--text-muted);
 
-            transition: all var(--duration-base) var(--ease-smooth);
+        transition: transform var(--dur-fast) var(--ease-smooth),
+            background-color var(--dur-fast) var(--ease-smooth),
+            border-color var(--dur-fast) var(--ease-smooth),
+            color var(--dur-fast) var(--ease-smooth),
+            box-shadow var(--dur-fast) var(--ease-smooth);
 
-            i {
-                font-size: 1.05rem;
-            }
-
-            /* Hover */
-            &:hover {
-                color: var(--text-main);
-                background: var(--bg-surface);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-                transform: translateY(-1px);
-            }
-
-            /* Activo (Router Link) */
-            &.activo {
-                background: var(--primary);
-                color: var(--primary-contrast);
-                box-shadow: 0 4px 15px var(--primary-bg);
-                font-weight: 600;
-            }
-
-            /* Click */
-            &:active {
-                transform: scale(0.96);
-            }
+        i {
+            font-size: 1.05rem;
+            opacity: 0.88;
+            transition: transform var(--dur-fast) var(--ease-elastic), opacity var(--dur-fast) var(--ease-smooth);
         }
 
-        /* Botón Salir específico */
-        button {
-            color: #ef4444;
-            /* Rojo suave */
-
-            &:hover {
-                background: rgba(239, 68, 68, 0.08);
-                border-color: rgba(239, 68, 68, 0.2);
-            }
-        }
-
-        /* Info Usuario (No clickeable) */
-        .user-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0.9rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-
-            background: var(--bg-surface);
-            border: 1px solid var(--border-glass);
+        &:hover {
             color: var(--text-main);
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
-
-            margin: 0 0.5rem;
-            white-space: nowrap;
+            background: var(--bg-hover);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
 
             i {
+                opacity: 1;
+                transform: scale(1.10);
+            }
+        }
+
+        &.activo {
+            background: color-mix(in srgb, var(--primary), transparent 86%);
+            border-color: color-mix(in srgb, var(--primary), transparent 70%);
+            color: var(--primary);
+            font-weight: 800;
+            box-shadow: 0 10px 18px color-mix(in srgb, var(--primary), transparent 86%);
+
+            i {
+                opacity: 1;
                 color: var(--primary);
             }
+        }
+
+        &:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        &:focus-visible {
+            outline: 2px solid color-mix(in srgb, var(--primary), transparent 35%);
+            outline-offset: 2px;
+        }
+    }
+
+    /* Toggle (componente hijo) */
+    app-theme-toggle {
+        display: inline-flex;
+        margin: 0 0.25rem;
+    }
+
+    /* Usuario */
+    .user-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        padding: 0.42rem 0.85rem;
+        border-radius: var(--r-pill);
+
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+
+        color: var(--text-main);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        box-shadow: var(--shadow-sm);
+
+        white-space: nowrap;
+
+        i {
+            color: var(--primary);
+            transform: translateY(1px);
+        }
+    }
+
+    /* Salir */
+    button {
+        color: var(--danger);
+
+        &:hover {
+            background: var(--danger-bg);
+            border-color: color-mix(in srgb, var(--danger), transparent 55%);
+            color: var(--danger);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        &:focus-visible {
+            outline-color: color-mix(in srgb, var(--danger), transparent 35%);
         }
     }
 }
 
-/* =========================================
-   3. CONTENIDO (Main)
-   ========================================= */
-
+/* Main */
 .public-content {
     flex: 1;
-    /* Ocupa el espacio restante */
     width: 100%;
     max-width: 1200px;
+
     margin: 0 auto;
     padding: 2rem 1.5rem;
 
-    animation: fadeIn 0.6s var(--ease-smooth);
+    animation: content-in 520ms var(--ease-smooth) both;
 }
 
-@keyframes fadeIn {
+@keyframes content-in {
     from {
         opacity: 0;
         transform: translateY(10px);
@@ -224,51 +270,46 @@
     }
 }
 
-/* =========================================
-   4. FOOTER
-   ========================================= */
-
+/* Footer */
 .public-footer {
     margin-top: auto;
-    /* Empuja al final si hay poco contenido */
     padding: 1.5rem;
     text-align: center;
-    font-size: 0.8rem;
+
+    font-size: 0.82rem;
+    font-weight: 600;
     color: var(--text-muted);
+
+    background: var(--bg-card);
     border-top: 1px solid var(--border-glass);
-    background: var(--bg-glass);
-    backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
 }
 
-/* =========================================
-   5. RESPONSIVE (Mobile App Feel)
-   ========================================= */
-
+/* Responsive */
 @media (max-width: 900px) {
     .public-header {
         flex-direction: column;
         align-items: stretch;
         padding: 1rem;
-        gap: 1rem;
+        gap: 0.9rem;
     }
 
-    /* --- Scroll Horizontal para Navegación --- */
     .public-header nav {
         width: 100%;
         overflow-x: auto;
-        padding-bottom: 4px;
+        padding-bottom: 0.35rem;
         -webkit-overflow-scrolling: touch;
 
-        /* Ocultar scrollbar */
         scrollbar-width: none;
 
         &::-webkit-scrollbar {
             display: none;
         }
 
-        /* Espacio al final para deslizar */
         &::after {
-            content: '';
+            content: "";
             min-width: 1rem;
             height: 1px;
         }
@@ -277,29 +318,38 @@
         button,
         .user-pill {
             flex-shrink: 0;
-            /* Evita que se aplasten */
             white-space: nowrap;
             background: var(--bg-surface);
-            border: 1px solid var(--border-glass);
+            border: 1px solid var(--border-subtle);
+            box-shadow: none;
 
-            /* En móvil el activo resalta más el borde */
             &.activo {
-                border-color: transparent;
-                background: var(--primary);
+                background: color-mix(in srgb, var(--primary), transparent 86%);
+                border-color: color-mix(in srgb, var(--primary), transparent 70%);
             }
         }
 
-        /* Ajuste visual para la píldora de usuario en móvil */
         .user-pill {
-            order: -1;
-            /* Poner usuario primero o último según preferencia */
-            margin: 0;
-            background: transparent;
-            border: 1px dashed var(--text-muted);
+            margin-right: 0.25rem;
         }
     }
 
     .public-content {
         padding: 1.5rem 1rem;
+    }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    .public-content {
+        animation: none;
+    }
+
+    .public-header,
+    .public-header nav a,
+    .public-header nav button,
+    .public-header nav .user-pill,
+    .public-header h1 i {
+        transition: none;
     }
 }

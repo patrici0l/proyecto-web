@@ -1,290 +1,339 @@
-/* =========================================
-   1. SISTEMA DE DISEÑO (Variables & Tema)
-   ========================================= */
+/* inicio.component.scss
+   - Tokens en :host
+   - Dark mode por html.theme-dark
+   - CTA claro, jerarquía limpia, motion discreto + reduce-motion
+*/
 
 :host {
-  /* --- Animaciones & Física --- */
-  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Motion */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-base: 0.3s;
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 160ms;
+  --dur-med: 260ms;
 
-  /* --- MODO CLARO (Default) --- */
+  /* Radius */
+  --r-md: 1rem;
+  --r-lg: 1.5rem;
+  --r-xl: 2rem;
+
+  /* Light tokens */
   --bg-page: #f8fafc;
-  --bg-glass: rgba(255, 255, 255, 0.65);
-  --bg-glass-hover: rgba(255, 255, 255, 0.85);
+  --bg-glass: rgba(255, 255, 255, 0.68);
+  --bg-glass-hover: rgba(255, 255, 255, 0.88);
+  --bg-surface: #ffffff;
+  --bg-soft: rgba(148, 163, 184, 0.14);
 
   --text-main: #0f172a;
-  /* Slate 900 */
-  --text-muted: #64748b;
-  /* Slate 500 */
+  --text-muted: rgba(15, 23, 42, 0.62);
 
   --primary: #15803d;
-  /* Green 700 */
-  --primary-gradient: linear-gradient(135deg, #15803d, #10b981);
-  --primary-glow: rgba(21, 128, 61, 0.3);
+  --primary-2: #10b981;
+  --primary-gradient: linear-gradient(135deg, var(--primary), var(--primary-2));
+  --primary-glow: rgba(21, 128, 61, 0.28);
 
-  --border-glass: rgba(255, 255, 255, 0.6);
-  --border-subtle: rgba(148, 163, 184, 0.3);
+  --border-glass: rgba(255, 255, 255, 0.60);
+  --border-subtle: rgba(15, 23, 42, 0.12);
 
-  --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-float: 0 22px 44px -14px rgba(0, 0, 0, 0.14);
+  --shadow-soft: 0 12px 26px rgba(0, 0, 0, 0.08);
 
-  /* Configuración Base */
   display: block;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: var(--text-main);
-  background-color: var(--bg-page);
   min-height: 100vh;
+
   padding: 3rem 1.5rem;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--text-main);
 
-  /* Fondo dinámico coherente con el sistema */
+  background: var(--bg-page);
   background-image:
-    radial-gradient(circle at 80% 0%, rgba(21, 128, 61, 0.1), transparent 50%),
-    radial-gradient(circle at 20% 100%, rgba(99, 102, 241, 0.1), transparent 50%);
+    radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--primary), transparent 88%) 0%, transparent 52%),
+    radial-gradient(circle at 20% 100%, rgba(99, 102, 241, 0.10) 0%, transparent 52%);
 }
 
-/* --- MODO OSCURO (Automático) --- */
-@media (prefers-color-scheme: dark) {
-  :host {
-    --bg-page: #0f172a;
-    /* Slate 900 */
-    --bg-glass: rgba(30, 41, 59, 0.6);
-    --bg-glass-hover: rgba(51, 65, 85, 0.7);
+/* Dark tokens */
+html.theme-dark :host {
+  --bg-page: #020617;
+  --bg-glass: rgba(15, 23, 42, 0.66);
+  --bg-glass-hover: rgba(30, 41, 59, 0.80);
+  --bg-surface: #0b1220;
+  --bg-soft: rgba(255, 255, 255, 0.10);
 
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+  --text-main: rgba(255, 255, 255, 0.92);
+  --text-muted: rgba(255, 255, 255, 0.68);
 
-    --primary: #22c55e;
-    --primary-gradient: linear-gradient(135deg, #22c55e, #14b8a6);
-    --primary-glow: rgba(34, 197, 94, 0.25);
+  --primary: #22c55e;
+  --primary-2: #14b8a6;
+  --primary-gradient: linear-gradient(135deg, var(--primary), var(--primary-2));
+  --primary-glow: rgba(34, 197, 94, 0.22);
 
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-glass: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.14);
 
-    --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
-  }
+  --shadow-float: 0 24px 52px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 16px 34px rgba(0, 0, 0, 0.45);
 }
 
-/* =========================================
-   2. CONTENEDOR PRINCIPAL (Wrapper)
-   ========================================= */
-
+/* Wrapper (logueado) */
 .inicio-wrapper {
   max-width: 900px;
   margin: 0 auto;
-  padding: 3rem;
 
-  /* Efecto Vidrio (Glassmorphism) */
+  padding: 2.75rem 2.75rem;
+  border-radius: var(--r-xl);
+
   background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 2rem;
   border: 1px solid var(--border-glass);
+
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+
   box-shadow: var(--shadow-float);
 
-  text-align: left;
-  animation: slideUp 0.6s var(--ease-smooth);
+  animation: card-in 520ms var(--ease-smooth) both;
 }
 
-/* Títulos */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Headings (tanto wrapper como invitado) */
 h1 {
-  font-size: clamp(2rem, 5vw, 2.8rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
   margin: 0 0 0.5rem 0;
+  font-size: clamp(2rem, 4.8vw, 2.85rem);
+  font-weight: 950;
+  letter-spacing: -0.02em;
+
   color: var(--text-main);
 
-  /* Decoración sutil */
-  background: linear-gradient(to right, var(--text-main), var(--text-muted));
+  /* gradiente de texto suave */
+  background: linear-gradient(90deg, var(--text-main), color-mix(in srgb, var(--text-muted), transparent 0%));
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Fallback */
+  -webkit-text-fill-color: transparent;
 }
 
 .subtitulo {
-  font-size: 1.15rem;
+  margin: 0 0 1.85rem 0;
+  max-width: 640px;
+
+  font-size: 1.12rem;
+  line-height: 1.55;
+  font-weight: 650;
+
   color: var(--text-muted);
-  font-weight: 500;
-  margin-bottom: 2.5rem;
-  max-width: 600px;
-  line-height: 1.5;
 }
 
-/* =========================================
-   3. ACCIONES (Botones)
-   ========================================= */
+/* Invitado (ng-template) */
+:host>ng-template+* {
+  /* no-op: placeholder para evitar estilos frágiles */
+}
 
+/* Acciones */
 .acciones {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
   align-items: center;
+  gap: 0.9rem;
 
   a,
   button {
+    appearance: none;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.85rem 1.75rem;
-    border-radius: 1rem;
+
+    padding: 0.85rem 1.35rem;
+    border-radius: var(--r-md);
+
     font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all var(--duration-base) var(--ease-elastic);
-    border: 1px solid transparent;
+    font-weight: 800;
+    color: var(--text-main);
+
+    transition: transform var(--dur-fast) var(--ease-elastic),
+      background-color var(--dur-fast) var(--ease-smooth),
+      border-color var(--dur-fast) var(--ease-smooth),
+      box-shadow var(--dur-fast) var(--ease-smooth),
+      color var(--dur-fast) var(--ease-smooth),
+      filter var(--dur-fast) var(--ease-smooth);
+
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--primary), transparent 30%);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.98);
+    }
   }
 
-  /* --- Botón Primario (Panel / Login) --- */
-  button,
-  a[routerLink="/login"] {
+  /* Primario: botón "Ir a mi panel" (y en invitado, los anchors se ven bien como secundarios) */
+  button {
     background: var(--primary-gradient);
-    color: #ffffff;
-    box-shadow: 0 8px 20px var(--primary-glow);
+    color: #fff;
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--primary), transparent 70%);
 
     &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px var(--primary-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px color-mix(in srgb, var(--primary), transparent 60%);
+      filter: brightness(1.04);
+    }
+  }
+
+  /* Secundarios */
+  a {
+    background: color-mix(in srgb, var(--bg-soft), transparent 35%);
+    border-color: var(--border-subtle);
+    color: var(--text-main);
+
+    &:hover {
+      transform: translateY(-2px);
+      background: var(--bg-glass-hover);
+      box-shadow: var(--shadow-soft);
+      border-color: color-mix(in srgb, var(--primary), transparent 70%);
+    }
+  }
+}
+
+/* Sección CTA */
+.inicio-asesorias {
+  max-width: 900px;
+  margin: 1.8rem auto 0;
+
+  padding: 2.35rem 2.25rem;
+  border-radius: var(--r-xl);
+
+  background: var(--bg-glass);
+  border: 1px dashed color-mix(in srgb, var(--border-subtle), transparent 0%);
+
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+
+  box-shadow: var(--shadow-soft);
+
+  text-align: center;
+
+  animation: cta-in 620ms var(--ease-smooth) both;
+  animation-delay: 90ms;
+
+  h2 {
+    margin: 0 0 0.65rem 0;
+    font-size: 1.5rem;
+    font-weight: 950;
+    letter-spacing: -0.01em;
+    color: var(--text-main);
+  }
+
+  p {
+    margin: 0 auto 1.6rem auto;
+    max-width: 560px;
+
+    color: var(--text-muted);
+    font-weight: 650;
+    line-height: 1.55;
+  }
+
+  .btn-agendar-inicio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1rem 1.6rem;
+    border-radius: 1.05rem;
+
+    text-decoration: none;
+    font-weight: 950;
+    letter-spacing: 0.02em;
+
+    color: #fff;
+    background: var(--primary-gradient);
+    border: 1px solid color-mix(in srgb, var(--primary), transparent 35%);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--primary), transparent 70%);
+
+    transition: transform var(--dur-fast) var(--ease-elastic),
+      box-shadow var(--dur-fast) var(--ease-smooth),
+      filter var(--dur-fast) var(--ease-smooth);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px color-mix(in srgb, var(--primary), transparent 58%);
       filter: brightness(1.05);
     }
 
     &:active {
-      transform: translateY(-1px);
+      transform: translateY(0) scale(0.985);
     }
-  }
 
-  /* --- Enlaces Secundarios --- */
-  a:not([routerLink="/login"]) {
-    background: rgba(255, 255, 255, 0.05);
-    /* Muy sutil */
-    color: var(--text-muted);
-    border-color: var(--border-subtle);
-
-    &:hover {
-      background: var(--bg-glass-hover);
-      color: var(--text-main);
-      border-color: var(--text-muted);
-      transform: translateY(-2px);
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--primary-2), transparent 25%);
+      outline-offset: 2px;
     }
   }
 }
 
-/* =========================================
-   4. SECCIÓN SECUNDARIA (Asesorías)
-   ========================================= */
-
-.inicio-asesorias {
-  max-width: 900px;
-  margin: 2rem auto 0;
-  /* Separación de la tarjeta principal */
-  padding: 2.5rem;
-
-  background: var(--bg-glass);
-  border-radius: 2rem;
-  border: 1px dashed var(--border-subtle);
-  /* Borde punteado para diferenciar */
-  text-align: center;
-
-  animation: fadeIn 0.8s var(--ease-smooth) forwards;
-  animation-delay: 0.2s;
-  /* Aparece después */
-  opacity: 0;
-  /* Inicio invisible */
-
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 0.75rem;
-  }
-
-  p {
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Botón de Agendar */
-  .btn-agendar-inicio {
-    display: inline-flex;
-    padding: 1rem 2rem;
-    background: var(--bg-page);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    border-radius: 1rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 10px 20px var(--primary-glow);
-      transform: scale(1.02);
-    }
-  }
-}
-
-/* =========================================
-   5. ANIMACIONES
-   ========================================= */
-
-@keyframes slideUp {
+@keyframes cta-in {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.98);
+    transform: translateY(12px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-/* =========================================
-   6. RESPONSIVE
-   ========================================= */
-
+/* Responsive */
 @media (max-width: 640px) {
   :host {
     padding: 1.5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 
   .inicio-wrapper,
   .inicio-asesorias {
-    padding: 2rem 1.5rem;
-    border-radius: 1.5rem;
+    padding: 2rem 1.25rem;
+    border-radius: var(--r-lg);
     text-align: center;
   }
 
-  h1 {
-    font-size: 2rem;
+  .subtitulo {
+    margin-bottom: 1.5rem;
   }
 
-  /* En móvil los botones se apilan para mejor touch target */
   .acciones {
     flex-direction: column;
-    width: 100%;
+    align-items: stretch;
 
     a,
     button {
       width: 100%;
     }
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+
+  .inicio-wrapper,
+  .inicio-asesorias {
+    animation: none;
+  }
+
+  .acciones a,
+  .acciones button,
+  .inicio-asesorias .btn-agendar-inicio {
+    transition: none;
   }
 }

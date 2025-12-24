@@ -1,7 +1,7 @@
-<div class="notificacion-contenedor" *ngIf="visible">
-    <div class="notificacion" [ngClass]="tipo">
-
-        <div class="icono">
+<div class="toast-layer" *ngIf="visible" (click)="cerrar()" role="presentation">
+    <div class="toast" [ngClass]="tipo" (click)="$event.stopPropagation()" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="toast__icon" aria-hidden="true">
             <ng-container [ngSwitch]="tipo">
                 <i *ngSwitchCase="'exito'" class="bi bi-check-circle-fill"></i>
                 <i *ngSwitchCase="'error'" class="bi bi-x-circle-fill"></i>
@@ -9,11 +9,20 @@
             </ng-container>
         </div>
 
-        <div class="mensaje">{{ mensaje }}</div>
+        <div class="toast__body">
+            <div class="toast__title">
+                <ng-container [ngSwitch]="tipo">
+                    <span *ngSwitchCase="'exito'">Listo</span>
+                    <span *ngSwitchCase="'error'">Atención</span>
+                    <span *ngSwitchDefault>Información</span>
+                </ng-container>
+            </div>
 
-        <button class="cerrar" (click)="cerrar()">
-            <i class="bi bi-x-lg"></i>
+            <div class="toast__message">{{ mensaje }}</div>
+        </div>
+
+        <button type="button" class="toast__close" (click)="cerrar()" aria-label="Cerrar notificación">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
         </button>
-
     </div>
 </div>

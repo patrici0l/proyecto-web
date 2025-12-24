@@ -1,19 +1,31 @@
-/* =========================================
-   1. SISTEMA DE DISEÑO
-   ========================================= */
+/* mis-asesorias.component.scss
+   - Tokens en :host
+   - Dark mode por html.theme-dark
+   - Tabla desktop + card view mobile sin tocar HTML
+*/
 
 :host {
-  /* --- Animaciones --- */
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Motion */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur-med: 260ms;
 
-  /* --- COLORES SEMÁNTICOS --- */
+  /* Radius */
+  --r-sm: 0.75rem;
+  --r-md: 1rem;
+  --r-lg: 1.25rem;
+  --r-pill: 999px;
+
+  /* Light tokens */
   --bg-page: #f8fafc;
   --bg-card: #ffffff;
-  --bg-hover: #f1f5f9;
+  --bg-hover: rgba(148, 163, 184, 0.14);
 
   --text-main: #0f172a;
-  --text-muted: #64748b;
+  --text-muted: rgba(15, 23, 42, 0.62);
+
+  --border-subtle: rgba(15, 23, 42, 0.12);
+  --shadow-card: 0 12px 26px rgba(0, 0, 0, 0.08);
 
   --status-pending-bg: #fef9c3;
   --status-pending-text: #854d0e;
@@ -24,90 +36,106 @@
   --status-error-bg: #fee2e2;
   --status-error-text: #991b1b;
 
-  --border-subtle: #e2e8f0;
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
-  /* Configuración */
   display: block;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
-  font-family: 'Inter', system-ui, sans-serif;
+
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color: var(--text-main);
-  background-color: var(--bg-page);
-
-  /* Fondo decorativo */
-  background-image:
-    radial-gradient(circle at top left, rgba(59, 130, 246, 0.05), transparent 60%);
 }
 
-/* --- MODO OSCURO --- */
-@media (prefers-color-scheme: dark) {
-  :host {
-    --bg-page: #0f172a;
-    --bg-card: #1e293b;
-    --bg-hover: #334155;
+/* Dark tokens */
+html.theme-dark :host {
+  --bg-page: #020617;
+  --bg-card: #0b1220;
+  --bg-hover: rgba(255, 255, 255, 0.08);
 
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+  --text-main: rgba(255, 255, 255, 0.92);
+  --text-muted: rgba(255, 255, 255, 0.68);
 
-    --status-pending-bg: rgba(234, 179, 8, 0.2);
-    --status-pending-text: #fef08a;
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --shadow-card: 0 16px 34px rgba(0, 0, 0, 0.45);
 
-    --status-success-bg: rgba(34, 197, 94, 0.2);
-    --status-success-text: #86efac;
+  --status-pending-bg: rgba(234, 179, 8, 0.20);
+  --status-pending-text: #fde68a;
 
-    --status-error-bg: rgba(239, 68, 68, 0.2);
-    --status-error-text: #fca5a5;
+  --status-success-bg: rgba(34, 197, 94, 0.20);
+  --status-success-text: #86efac;
 
-    --border-subtle: #334155;
-    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  }
+  --status-error-bg: rgba(239, 68, 68, 0.20);
+  --status-error-text: #fca5a5;
 }
 
-/* =========================================
-   2. TÍTULO
-   ========================================= */
-
+/* Title */
 h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
+  margin: 0 0 1.25rem 0;
+  font-size: 1.85rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
   color: var(--text-main);
-  display: flex;
+
+  display: inline-flex;
   align-items: center;
   gap: 0.75rem;
 
   &::before {
-    content: '';
-    display: block;
+    content: "";
     width: 8px;
-    height: 32px;
-    background: linear-gradient(to bottom, #4f46e5, #06b6d4);
-    border-radius: 4px;
+    height: 30px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #4f46e5, #06b6d4);
   }
 }
 
-/* =========================================
-   3. ESTADOS (Cargando / Vacío)
-   ========================================= */
-
-/* Contenedor genérico para mensajes */
+/* Loading / empty blocks (sin clases en HTML) */
 div[ng-reflect-ng-if] {
-  /* Nota: Usar clases en el HTML es mejor, pero esto estiliza el div desnudo */
   background: var(--bg-card);
-  padding: 3rem;
-  border-radius: 1rem;
-  text-align: center;
   border: 1px dashed var(--border-subtle);
-  color: var(--text-muted);
-  font-size: 1.1rem;
+  border-radius: var(--r-lg);
   box-shadow: var(--shadow-card);
+
+  padding: 2.25rem 1.75rem;
   margin-top: 1rem;
-  animation: fadeIn 0.4s ease;
+
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 650;
+
+  animation: fade-in 220ms var(--ease-smooth) both;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Table */
+table {
+  width: 100%;
+  margin-top: 1rem;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+
+  box-shadow: var(--shadow-card);
+
+  animation: slide-up 260ms var(--ease-smooth) both;
+}
+
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -119,58 +147,28 @@ div[ng-reflect-ng-if] {
   }
 }
 
-/* =========================================
-   4. TABLA (Escritorio)
-   ========================================= */
-
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--bg-card);
-  border-radius: 1.25rem;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--border-subtle);
-  margin-top: 1rem;
-
-  animation: slideUp 0.5s var(--ease-smooth);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* CABECERA */
 thead {
-  background: var(--bg-hover);
+  background: color-mix(in srgb, var(--bg-hover), var(--bg-card) 70%);
 }
 
 th {
-  padding: 1.2rem 1.5rem;
+  padding: 1rem 1.15rem;
   text-align: left;
-  font-size: 0.75rem;
-  font-weight: 700;
+
+  font-size: 0.72rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* CUERPO */
 tbody tr {
-  transition: background-color 0.2s ease;
+  transition: background-color var(--dur-fast) var(--ease-smooth);
 
   &:hover {
-    background-color: var(--bg-hover);
+    background: var(--bg-hover);
   }
 
   &:last-child td {
@@ -179,90 +177,101 @@ tbody tr {
 }
 
 td {
-  padding: 1.2rem 1.5rem;
-  vertical-align: top;
-  /* Mejor alineación para contenido multilínea */
+  padding: 1rem 1.15rem;
   border-bottom: 1px solid var(--border-subtle);
+
+  vertical-align: top;
   font-size: 0.95rem;
+  line-height: 1.55;
   color: var(--text-main);
-  line-height: 1.5;
 }
 
-/* =========================================
-   5. COMPONENTES INTERNOS (Chips & Notas)
-   ========================================= */
-
-/* CHIPS DE ESTADO */
+/* Estado chips */
 span[class*="estado-"] {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
+
   padding: 0.35rem 0.85rem;
-  border-radius: 2rem;
-  font-size: 0.8rem;
-  font-weight: 700;
+  border-radius: var(--r-pill);
+
+  font-size: 0.78rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+
+  border: 1px solid transparent;
+
+  &::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.9;
+  }
 }
 
 .estado-pendiente {
-  background-color: var(--status-pending-bg);
+  background: var(--status-pending-bg);
   color: var(--status-pending-text);
+  border-color: color-mix(in srgb, var(--status-pending-text), transparent 75%);
 }
 
 .estado-aprobada {
-  background-color: var(--status-success-bg);
+  background: var(--status-success-bg);
   color: var(--status-success-text);
+  border-color: color-mix(in srgb, var(--status-success-text), transparent 75%);
 }
 
 .estado-rechazada {
-  background-color: var(--status-error-bg);
+  background: var(--status-error-bg);
   color: var(--status-error-text);
+  border-color: color-mix(in srgb, var(--status-error-text), transparent 75%);
 }
 
-/* NOTIFICACIÓN SIMULADA (Estilo "Ticket") */
+/* Notificación simulada */
 td:last-child {
-  min-width: 250px;
+  min-width: 260px;
 }
 
 .nota-notificacion {
-  font-size: 0.8rem;
-  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.82rem;
+  font-weight: 800;
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
-  display: flex;
+
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
 
   &::before {
     content: "🔔";
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 }
 
 small {
   display: block;
-  background: var(--bg-page);
-  padding: 0.75rem;
-  border-radius: 0.75rem;
+
+  background: color-mix(in srgb, var(--bg-page), var(--bg-card) 70%);
   border: 1px dashed var(--border-subtle);
-  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  border-radius: var(--r-md);
+
+  padding: 0.75rem 0.85rem;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 0.8rem;
-  color: var(--text-muted);
   line-height: 1.6;
+  color: var(--text-muted);
 }
 
-/* =========================================
-   6. RESPONSIVE (Card View - Sin cambiar HTML)
-   ========================================= */
-
+/* Responsive: cards */
 @media (max-width: 900px) {
-
-  /* Ocultar cabecera de tabla */
   thead {
     display: none;
   }
 
-  /* Elementos como bloque */
   table,
   tbody,
   tr,
@@ -276,54 +285,61 @@ small {
     background: transparent;
     border: none;
     box-shadow: none;
+    overflow: visible;
   }
 
-  /* Fila se convierte en Tarjeta */
   tbody tr {
     background: var(--bg-card);
-    margin-bottom: 1.5rem;
-    border-radius: 1rem;
     border: 1px solid var(--border-subtle);
-    padding: 1.5rem;
+    border-radius: var(--r-lg);
     box-shadow: var(--shadow-card);
-    position: relative;
+
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+
+    transition: transform var(--dur-fast) var(--ease-smooth);
+
+    &:hover {
+      transform: translateY(-1px);
+    }
   }
 
-  /* Celdas con etiquetas inyectadas por CSS */
   td {
-    padding: 0.5rem 0;
+    padding: 0.55rem 0;
     border-bottom: 1px solid var(--border-subtle);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     text-align: right;
+    gap: 0.9rem;
 
     &:last-child {
       border-bottom: none;
-      flex-direction: column;
-      align-items: flex-start;
+
+      display: block;
       text-align: left;
-      margin-top: 1rem;
-      padding-top: 1rem;
+
+      margin-top: 0.9rem;
+      padding: 0.9rem;
       border-top: 1px dashed var(--border-subtle);
-      background: rgba(0, 0, 0, 0.02);
-      /* Sutil fondo para separar la nota */
-      border-radius: 0.5rem;
-      padding: 1rem;
+      border-radius: var(--r-md);
+
+      background: color-mix(in srgb, var(--bg-hover), transparent 55%);
     }
 
-    /* Etiquetas automáticas */
     &::before {
-      content: attr(data-label);
-      /* Fallback ideal, pero usaremos nth-child por seguridad */
-      font-weight: 700;
+      font-weight: 900;
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.74rem;
       text-transform: uppercase;
-      margin-right: 1rem;
+      letter-spacing: 0.06em;
+      text-align: left;
+      margin-right: auto;
+      white-space: nowrap;
     }
 
-    /* Mapeo de columnas (Asegúrate que coincida con tu HTML) */
     &:nth-of-type(1)::before {
       content: "Programador";
     }
@@ -345,24 +361,31 @@ small {
     }
 
     &:nth-of-type(6)::before {
-      content: "Mensaje Prog.";
+      content: "Mensaje";
     }
 
     &:nth-of-type(7)::before {
       content: "";
       display: none;
     }
-
-    /* Ocultar label para notif */
-  }
-
-  /* Ajustes específicos para móvil */
-  .nota-notificacion {
-    margin-bottom: 0.25rem;
   }
 
   small {
     width: 100%;
     box-sizing: border-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  table,
+  div[ng-reflect-ng-if] {
+    animation: none;
+  }
+
+  tbody tr,
+  tbody tr:hover {
+    transition: none;
+    transform: none;
   }
 }

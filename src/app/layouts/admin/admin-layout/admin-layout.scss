@@ -1,206 +1,209 @@
-/* =========================================
-   1. SISTEMA DE DISEÑO (Variables & Temas)
-   ========================================= */
+/* admin-layout.component.scss
+   - Tokens claros en :host (scoped al layout)
+   - Overrides por html.theme-dark (tu toggle usa esa clase)
+   - Motion discreto + reduce-motion
+*/
 
 :host {
-  /* --- Dinámicas de Movimiento (Humanized) --- */
-  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Motion */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-fast: 0.2s;
-  --duration-med: 0.35s;
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --dur-fast: 160ms;
+  --dur-med: 260ms;
 
-  /* --- MODO CLARO (Default) --- */
+  /* Radius / spacing */
+  --r-sm: 0.75rem;
+  --r-md: 1rem;
+  --r-pill: 999px;
+
+  /* Light tokens */
   --bg-app: #f3f4f6;
-  /* Gray 100 */
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --bg-glass-hover: rgba(255, 255, 255, 0.9);
+  --bg-card: rgba(255, 255, 255, 0.78);
   --bg-surface: #ffffff;
+  --bg-hover: rgba(148, 163, 184, 0.14);
 
-  --border-glass: rgba(255, 255, 255, 0.6);
-  --border-subtle: #e5e7eb;
-  /* Gray 200 */
+  --border-glass: rgba(255, 255, 255, 0.55);
+  --border-subtle: rgba(15, 23, 42, 0.12);
 
-  --text-main: #111827;
-  /* Gray 900 */
-  --text-muted: #6b7280;
-  /* Gray 500 */
+  --text-main: #0f172a;
+  --text-muted: rgba(15, 23, 42, 0.62);
 
   --primary: #15803d;
-  /* Green 700 (Más oscuro para contraste en blanco) */
-  --primary-glow: rgba(21, 128, 61, 0.15);
   --primary-contrast: #ffffff;
+  --primary-glow: rgba(21, 128, 61, 0.18);
 
   --danger: #ef4444;
-  --danger-bg: rgba(239, 68, 68, 0.1);
+  --danger-bg: rgba(239, 68, 68, 0.12);
 
-  --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.05);
-  --shadow-float: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.10);
+  --shadow-glass: 0 10px 24px rgba(0, 0, 0, 0.06);
+  --shadow-float: 0 18px 40px rgba(0, 0, 0, 0.12);
 
-  /* Configuración base */
   display: block;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--text-main);
-  background-color: var(--bg-app);
-  /* Degradado sutil de fondo para dar profundidad al glassmorphism */
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 40%);
   min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--text-main);
+
+  background-color: var(--bg-app);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.06) 0%, transparent 42%),
+    radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 42%);
 }
 
-/* --- MODO OSCURO (Automático) --- */
-@media (prefers-color-scheme: dark) {
-  :host {
-    --bg-app: #020617;
-    /* Slate 950 */
-    --bg-glass: rgba(15, 23, 42, 0.75);
-    /* Slate 900 con transparencia */
-    --bg-glass-hover: rgba(30, 41, 59, 0.8);
-    --bg-surface: #1e293b;
+/* Dark tokens (activación manual por tu toggle) */
+html.theme-dark :host {
+  --bg-app: #020617;
+  --bg-card: rgba(15, 23, 42, 0.72);
+  --bg-surface: #0b1220;
+  --bg-hover: rgba(255, 255, 255, 0.10);
 
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --border-subtle: #334155;
-    /* Slate 700 */
+  --border-glass: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.14);
 
-    --text-main: #f9fafb;
-    /* Gray 50 */
-    --text-muted: #94a3b8;
-    /* Slate 400 */
+  --text-main: rgba(255, 255, 255, 0.92);
+  --text-muted: rgba(255, 255, 255, 0.68);
 
-    --primary: #22c55e;
-    /* Green 500 (Vibrante para fondo oscuro) */
-    --primary-glow: rgba(34, 197, 94, 0.2);
-    --primary-contrast: #020617;
+  --primary: #22c55e;
+  --primary-contrast: #020617;
+  --primary-glow: rgba(34, 197, 94, 0.22);
 
-    --danger: #f87171;
-    --danger-bg: rgba(248, 113, 113, 0.15);
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.16);
 
-    --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.5);
-    --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-  }
+  --shadow-sm: 0 10px 22px rgba(0, 0, 0, 0.45);
+  --shadow-glass: 0 14px 30px rgba(0, 0, 0, 0.40);
+  --shadow-float: 0 22px 46px rgba(0, 0, 0, 0.55);
 }
 
-/* =========================================
-   2. ESTRUCTURA PRINCIPAL (SHELL)
-   ========================================= */
-
+/* Shell */
 .admin-shell {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  transition: opacity var(--duration-med);
 
   &.loading {
-    opacity: 0.6;
+    opacity: 0.65;
     pointer-events: none;
-    filter: grayscale(0.8);
+    filter: grayscale(0.85);
   }
 }
 
-/* =========================================
-   3. TOPBAR (Glassmorphism)
-   ========================================= */
-
+/* Topbar */
 .admin-topbar {
   position: sticky;
   top: 0;
   z-index: 100;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem;
   gap: 1rem;
 
-  /* Efecto Cristal */
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  padding: 0.75rem 1.5rem;
+
+  background: var(--bg-card);
   border-bottom: 1px solid var(--border-glass);
   box-shadow: var(--shadow-glass);
 
-  transition: padding var(--duration-med) var(--ease-smooth);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+
+  transition: padding var(--dur-med) var(--ease-smooth);
 }
 
-/* --- SECCIÓN IZQUIERDA (Logo + Nav) --- */
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  min-width: 0;
 }
 
-/* Brand / Logo */
-.brand {
+.topbar-right {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+/* Brand */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   color: var(--text-main);
+  font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 
   i {
     font-size: 1.25rem;
     color: var(--primary);
-    filter: drop-shadow(0 0 8px var(--primary-glow));
-    transition: transform var(--duration-med) var(--ease-elastic);
+    filter: drop-shadow(0 0 10px var(--primary-glow));
+    transition: transform var(--dur-med) var(--ease-elastic);
   }
 
-  /* Animación sutil al hover del logo */
   &:hover i {
-    transform: rotate(-15deg) scale(1.1);
+    transform: rotate(-12deg) scale(1.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--primary), transparent 35%);
+    outline-offset: 4px;
+    border-radius: var(--r-sm);
   }
 }
 
-/* Navegación Principal */
+/* Nav */
 .admin-nav {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 
   a {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 99px;
-    font-size: 0.875rem;
-    font-weight: 500;
+
+    padding: 0.5rem 0.95rem;
+    border-radius: var(--r-pill);
+
     text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
     color: var(--text-muted);
-    background: transparent;
+
     border: 1px solid transparent;
-    transition: all var(--duration-fast) var(--ease-smooth);
-    position: relative;
-    overflow: hidden;
+    background: transparent;
+
+    transition: transform var(--dur-fast) var(--ease-smooth),
+      background-color var(--dur-fast) var(--ease-smooth),
+      border-color var(--dur-fast) var(--ease-smooth),
+      color var(--dur-fast) var(--ease-smooth);
 
     i {
-      font-size: 1.1em;
-      opacity: 0.7;
-      transition: transform var(--duration-fast);
+      font-size: 1.05em;
+      opacity: 0.8;
+      transition: transform var(--dur-fast) var(--ease-smooth), opacity var(--dur-fast) var(--ease-smooth);
     }
 
-    /* Estado Hover */
     &:hover {
       color: var(--text-main);
-      background: var(--bg-glass-hover);
+      background: var(--bg-hover);
       transform: translateY(-1px);
 
       i {
         opacity: 1;
-        transform: scale(1.1);
+        transform: scale(1.06);
       }
     }
 
-    /* Estado Activo */
     &.activo {
-      background: var(--primary-glow);
       color: var(--primary);
-      border-color: rgba(var(--primary), 0.2);
-      /* Fallback sutil */
-      border-color: color-mix(in srgb, var(--primary), transparent 80%);
-      font-weight: 600;
+      background: color-mix(in srgb, var(--primary), transparent 88%);
+      border-color: color-mix(in srgb, var(--primary), transparent 72%);
 
       i {
         opacity: 1;
@@ -208,138 +211,142 @@
       }
     }
 
-    /* Efecto clic */
     &:active {
-      transform: scale(0.96);
+      transform: translateY(0) scale(0.98);
+    }
+
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--primary), transparent 35%);
+      outline-offset: 2px;
     }
   }
 }
 
-/* --- SECCIÓN DERECHA (Usuario) --- */
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
+/* User card */
 .user-card {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
   padding: 0.35rem 0.5rem 0.35rem 0.35rem;
-  /* Padding asimétrico para el avatar */
+  border-radius: var(--r-pill);
+
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 99px;
-  box-shadow: var(--shadow-glass);
-  transition: all var(--duration-fast) var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
+
+  transition: border-color var(--dur-fast) var(--ease-smooth), box-shadow var(--dur-fast) var(--ease-smooth),
+    transform var(--dur-fast) var(--ease-smooth);
 
   &:hover {
+    border-color: color-mix(in srgb, var(--primary), transparent 50%);
     box-shadow: var(--shadow-float);
-    border-color: var(--primary);
+    transform: translateY(-1px);
   }
 }
 
-/* Avatar */
 .avatar {
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), #10b981);
-  color: var(--primary-contrast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  font-weight: 800;
   font-size: 0.9rem;
   text-transform: uppercase;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: var(--primary-contrast);
+
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary), #10b981 35%));
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--primary), transparent 78%);
 }
 
-/* Info Texto */
 .user-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
-  margin-right: 0.5rem;
+  line-height: 1.15;
+  min-width: 0;
+  margin-right: 0.35rem;
 
   .name {
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.86rem;
+    font-weight: 800;
     color: var(--text-main);
-    max-width: 120px;
+    max-width: 12rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .role {
-    font-size: 0.7rem;
+    font-size: 0.70rem;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
   }
 }
 
-/* Botón Logout */
 .logout-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 999px;
+
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+
+  display: grid;
+  place-items: center;
+
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-elastic);
+  transition: transform var(--dur-fast) var(--ease-elastic),
+    background-color var(--dur-fast) var(--ease-smooth),
+    color var(--dur-fast) var(--ease-smooth);
 
   &:hover {
     background: var(--danger-bg);
     color: var(--danger);
-    transform: rotate(10deg);
+    transform: rotate(8deg);
   }
 
   &:active {
-    transform: scale(0.8);
+    transform: scale(0.90);
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--danger), transparent 35%);
+    outline-offset: 2px;
   }
 }
 
-/* =========================================
-   4. CONTENIDO PRINCIPAL
-   ========================================= */
-
+/* Main */
 .admin-content {
   flex: 1;
   width: 100%;
   max-width: 1200px;
+
   margin: 0 auto;
   padding: 2rem 1.5rem;
 
-  /* Animación de entrada suave */
-  animation: fadeSlideUp 0.6s var(--ease-smooth) forwards;
+  animation: content-in 520ms var(--ease-smooth) both;
 }
 
 .loading-state {
   height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   color: var(--text-muted);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.05em;
-  animation: pulse 2s infinite ease-in-out;
+  animation: pulse 1.9s ease-in-out infinite;
 }
 
-/* =========================================
-   5. KEYFRAMES
-   ========================================= */
-
-@keyframes fadeSlideUp {
+/* Keyframes */
+@keyframes content-in {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(12px);
   }
 
   to {
@@ -352,7 +359,7 @@
 
   0%,
   100% {
-    opacity: 0.6;
+    opacity: 0.55;
   }
 
   50% {
@@ -360,10 +367,7 @@
   }
 }
 
-/* =========================================
-   6. RESPONSIVE (Mobile First Approach)
-   ========================================= */
-
+/* Responsive */
 @media (max-width: 1024px) {
   .topbar-left {
     gap: 1rem;
@@ -371,12 +375,10 @@
 
   .admin-nav a span {
     display: none;
-    /* Ocultar texto en tablets, solo iconos */
   }
 
   .admin-nav a.activo span {
     display: inline;
-    /* Mostrar texto solo en activo */
   }
 }
 
@@ -393,15 +395,12 @@
     width: 100%;
   }
 
-  /* --- Scroll Horizontal para Menú (Estilo App) --- */
   .admin-nav {
     width: 100%;
     overflow-x: auto;
-    padding-bottom: 5px;
-    /* Espacio para scrollbar invisible */
+    padding-bottom: 0.35rem;
     -webkit-overflow-scrolling: touch;
 
-    /* Ocultar Scrollbar */
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -410,18 +409,16 @@
 
     a {
       flex-shrink: 0;
-      /* Evitar que se encojan */
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
 
       span {
         display: inline;
-        /* Volver a mostrar texto en móvil para claridad */
       }
 
       &.activo {
-        border-color: var(--primary);
-        background: var(--primary-glow);
+        border-color: color-mix(in srgb, var(--primary), transparent 45%);
+        background: color-mix(in srgb, var(--primary), transparent 88%);
       }
     }
   }
@@ -434,5 +431,24 @@
 
   .admin-content {
     padding: 1.5rem 1rem;
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .admin-content {
+    animation: none;
+  }
+
+  .loading-state {
+    animation: none;
+  }
+
+  .admin-topbar,
+  .brand i,
+  .admin-nav a,
+  .user-card,
+  .logout-btn {
+    transition: none;
   }
 }

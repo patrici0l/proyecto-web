@@ -1,5 +1,7 @@
 /* =========================================
-   1. SISTEMA DE DISEÑO
+   Asesorías Recibidas (HTML + SCSS mejorado)
+   - Misma lógica Angular
+   - Mejor estructura, estados y chips
    ========================================= */
 
 :host {
@@ -15,20 +17,20 @@
   --text-muted: #64748b;
 
   --primary: #15803d;
-  /* Green 700 */
+
   --success: #16a34a;
-  /* Green 600 */
-  --success-bg: rgba(22, 163, 74, 0.1);
+  --success-bg: rgba(22, 163, 74, 0.12);
 
   --danger: #dc2626;
-  /* Red 600 */
-  --danger-bg: rgba(220, 38, 38, 0.1);
+  --danger-bg: rgba(220, 38, 38, 0.12);
+
+  --pending: #ca8a04;
+  --pending-bg: rgba(202, 138, 4, 0.14);
 
   --border-subtle: #e2e8f0;
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  --shadow-toast: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 10px 20px -14px rgba(0, 0, 0, 0.18);
+  --shadow-toast: 0 22px 30px -14px rgba(0, 0, 0, 0.22);
 
-  /* Configuración */
   display: block;
   max-width: 1200px;
   margin: 0 auto;
@@ -37,10 +39,9 @@
   color: var(--text-main);
   background-color: var(--bg-page);
 
-  /* Fondo sutil */
   background-image:
-    radial-gradient(circle at 100% 0%, rgba(21, 128, 61, 0.08), transparent 50%),
-    radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.05), transparent 50%);
+    radial-gradient(circle at 100% 0%, rgba(21, 128, 61, 0.08), transparent 52%),
+    radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.05), transparent 52%);
 }
 
 /* --- MODO OSCURO --- */
@@ -54,58 +55,83 @@
     --text-muted: #94a3b8;
 
     --primary: #22c55e;
+
     --border-subtle: #334155;
-    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    --shadow-toast: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    --shadow-card: 0 14px 28px -20px rgba(0, 0, 0, 0.65);
+    --shadow-toast: 0 28px 60px -22px rgba(0, 0, 0, 0.75);
   }
 }
 
 /* =========================================
-   2. TÍTULO
+   TÍTULO
    ========================================= */
 
 h2 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
-  color: var(--text-main);
+  font-size: 1.85rem;
+  font-weight: 900;
+  margin: 0 0 1.75rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
 
-  /* Icono decorativo CSS */
   &::before {
     content: '';
-    display: block;
-    width: 6px;
-    height: 28px;
-    background: var(--primary);
-    border-radius: 4px;
+    width: 7px;
+    height: 30px;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, var(--primary), rgba(6, 182, 212, 0.7));
   }
 }
 
 /* =========================================
-   3. ESTADOS (Loading / Empty)
+   ESTADOS (Loading / Empty)
    ========================================= */
 
-/* Seleccionamos los divs directos que no son la tabla ni el toast */
-div[ng-reflect-ng-if],
-div:not(.notificacion-simulada):not([class]) {
+.state {
   background: var(--bg-card);
-  padding: 2.5rem;
-  border-radius: 1rem;
-  text-align: center;
   border: 1px dashed var(--border-subtle);
-  color: var(--text-muted);
-  font-size: 1rem;
+  border-radius: 1.1rem;
+  box-shadow: var(--shadow-card);
+  padding: 2.25rem 1.5rem;
+  text-align: center;
   margin-top: 1rem;
-  animation: fadeIn 0.4s ease;
+  animation: fadeIn 0.35s ease;
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+    font-size: 1.6rem;
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.35);
+  border-top-color: var(--primary);
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(6px);
   }
 
   to {
@@ -115,27 +141,29 @@ div:not(.notificacion-simulada):not([class]) {
 }
 
 /* =========================================
-   4. TABLA DE ASESORÍAS
+   TABLA
    ========================================= */
 
-table {
+.table-wrap {
+  margin-top: 1rem;
+}
+
+.table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   background: var(--bg-card);
-  border-radius: 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.25rem;
   overflow: hidden;
   box-shadow: var(--shadow-card);
-  border: 1px solid var(--border-subtle);
-  margin-top: 1rem;
-
-  animation: slideUp 0.5s var(--ease-out);
+  animation: slideUp 0.45s var(--ease-out);
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(18px);
   }
 
   to {
@@ -144,151 +172,177 @@ table {
   }
 }
 
-/* HEADER */
 thead {
   background: var(--bg-hover);
 }
 
 th {
-  padding: 1rem 1.5rem;
+  padding: 1.05rem 1.25rem;
   text-align: left;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* BODY */
-tbody tr {
-  transition: background-color 0.2s ease;
+.row {
+  transition: background-color 0.18s ease;
 
   &:hover {
-    background-color: var(--bg-hover);
+    background: var(--bg-hover);
   }
 
-  &:last-child td {
+  &:last-child .cell {
     border-bottom: none;
   }
 }
 
-td {
-  padding: 1.2rem 1.5rem;
-  vertical-align: middle;
+.cell {
+  padding: 1.15rem 1.25rem;
   border-bottom: 1px solid var(--border-subtle);
-  font-size: 0.9rem;
-  color: var(--text-main);
-}
+  vertical-align: middle;
+  font-size: 0.92rem;
 
-/* Estilos específicos de columnas */
-td:nth-child(1) {
-  /* Solicitante */
-  font-weight: 600;
-}
+  &--name {
+    font-weight: 800;
+  }
 
-td:nth-child(4) {
-  /* Comentario */
-  color: var(--text-muted);
-  max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  &--comment {
+    color: var(--text-muted);
+    max-width: 320px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-td:nth-child(5) {
-  /* Estado */
-  text-transform: capitalize;
-  font-weight: 500;
+  &--actions {
+    white-space: nowrap;
+    width: 1%;
+  }
 }
 
 /* =========================================
-   5. BOTONES DE ACCIÓN (Aprobar/Rechazar)
+   ESTADO (CHIP)
    ========================================= */
 
-/* Contenedor de botones (última columna) */
-td:last-child {
-  white-space: nowrap;
-  width: 1%;
-  /* Ajustar al contenido */
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+
+  &--pending {
+    background: var(--pending-bg);
+    color: var(--pending);
+    border-color: rgba(202, 138, 4, 0.25);
+  }
+
+  &--ok {
+    background: var(--success-bg);
+    color: var(--success);
+    border-color: rgba(22, 163, 74, 0.25);
+  }
+
+  &--bad {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border-color: rgba(220, 38, 38, 0.25);
+  }
 }
 
-button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
-  margin-right: 0.5rem;
+/* =========================================
+   BOTONES
+   ========================================= */
 
-  &:last-child {
-    margin-right: 0;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  padding: 0.55rem 0.95rem;
+  border-radius: 0.85rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+  i {
+    font-size: 1rem;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
     filter: grayscale(1);
   }
 }
 
-/* Botón APROBAR (Primer botón) */
-td button:first-child {
-  background-color: var(--success-bg);
+.btn--ok {
+  background: var(--success-bg);
   color: var(--success);
 
   &:hover:not(:disabled) {
-    background-color: var(--success);
-    color: white;
-    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
+    background: var(--success);
+    color: #fff;
+    box-shadow: 0 10px 18px -12px rgba(22, 163, 74, 0.55);
     transform: translateY(-1px);
   }
 }
 
-/* Botón RECHAZAR (Segundo botón) */
-td button:last-child {
-  background-color: var(--danger-bg);
+.btn--bad {
+  margin-left: 0.5rem;
+  background: var(--danger-bg);
   color: var(--danger);
 
   &:hover:not(:disabled) {
-    background-color: var(--danger);
-    color: white;
-    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+    background: var(--danger);
+    color: #fff;
+    box-shadow: 0 10px 18px -12px rgba(220, 38, 38, 0.55);
     transform: translateY(-1px);
   }
 }
 
 /* =========================================
-   6. NOTIFICACIÓN SIMULADA (Toast)
+   TOAST (Notificación simulada)
    ========================================= */
 
-.notificacion-simulada {
+.toast {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 350px;
-  max-width: 90vw;
-  background: var(--bg-card);
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: 380px;
+  max-width: calc(100vw - 2.5rem);
 
-  /* Efecto Glass */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  padding: 1.5rem;
-  border-radius: 1rem;
+  background: color-mix(in srgb, var(--bg-card), transparent 0%);
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-toast);
-  z-index: 100;
+  border-radius: 1.2rem;
+  padding: 1.15rem;
 
-  animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-toast);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+
+  z-index: 100;
+  animation: toastIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@keyframes slideInToast {
+@keyframes toastIn {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.9);
+    transform: translateY(18px) scale(0.95);
   }
 
   to {
@@ -297,71 +351,119 @@ td button:last-child {
   }
 }
 
-.notificacion-simulada h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0 0 0.75rem 0;
-  color: var(--text-main);
+.toast__head {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
 
-  &::before {
-    content: "🔔";
-    font-size: 1.2em;
+.toast__title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 950;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast__close {
+  width: 34px;
+  height: 34px;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: var(--text-main);
+    color: var(--bg-card);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 }
 
-.notificacion-simulada pre {
+.toast__body {
   background: var(--bg-page);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.8rem;
+  border: 1px dashed var(--border-subtle);
+  border-radius: 0.9rem;
+  padding: 0.95rem;
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   overflow-x: auto;
-  border: 1px dashed var(--border-subtle);
-  margin-bottom: 1rem;
-  font-family: monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.55;
 }
 
-.notificacion-simulada button {
+.toast__btn {
   width: 100%;
-  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.95rem;
+  border: none;
   background: var(--text-main);
   color: var(--bg-card);
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
 
   &:hover {
     background: var(--primary);
-    color: white;
+  }
+
+  &:active {
+    transform: scale(0.99);
   }
 }
 
 /* =========================================
-   7. RESPONSIVE
+   RESPONSIVE
    ========================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   :host {
     padding: 1.5rem 1rem;
   }
 
-  /* Tabla con scroll horizontal en móvil */
-  table {
-    display: block;
+  .table-wrap {
     overflow-x: auto;
-    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 1.25rem;
   }
 
-  th,
-  td {
-    padding: 1rem;
+  .table {
+    min-width: 820px;
+    /* evita que se aplaste */
   }
 
-  .notificacion-simulada {
-    bottom: 1rem;
-    right: 1rem;
+  .toast {
     left: 1rem;
+    right: 1rem;
     width: auto;
+    max-width: none;
   }
-  
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+
+  .table,
+  .toast,
+  .state {
+    animation: none;
+  }
+
+  .spinner {
+    animation: none;
+  }
+
+  .btn,
+  .row {
+    transition: none;
+  }
 }

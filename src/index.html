@@ -2,21 +2,36 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>ProyectoWeb</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <script>
-    // Eliminar SVGs fantasma al cargar
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.querySelectorAll('[data-gpts-theme], svg[width="0"]').forEach(el => el.remove());
-      }, 100);
+    /**
+     * Limpieza "segura" de nodos inyectados por extensiones / overlays.
+     * Evita eliminar SVGs reales del app o librerías (FontAwesome, charts, etc.)
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      // Si existe un contenedor de tema / overlay específico, lo removemos
+      document.querySelectorAll('[data-gpts-theme]').forEach(el => el.remove());
+
+      // Elimina SVGs "fantasma" SOLO si están vacíos y realmente no aportan nada
+      document.querySelectorAll('svg[width="0"], svg[height="0"]').forEach(svg => {
+        const hasChildren = svg.children && svg.children.length > 0;
+        const hasViewBox = svg.getAttribute('viewBox');
+        const hasPath = svg.querySelector('path, circle, rect, g, line, polyline, polygon');
+        const isHidden = svg.getAttribute('aria-hidden') === 'true' || svg.style.display === 'none';
+
+        // Solo borramos si NO tiene contenido gráfico
+        if (!hasChildren && !hasPath && !hasViewBox && isHidden) {
+          svg.remove();
+        }
+      });
     });
   </script>
 </head>

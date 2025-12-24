@@ -1,33 +1,46 @@
-// src/app/components/theme-toggle/theme-toggle.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeService } from '../../services/theme';
 
 @Component({
-    selector: 'app-theme-toggle',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
-    <button class="btn btn-ghost theme-toggle" (click)="toggle()">
-      <ng-container *ngIf="theme === 'dark'; else lightTpl">
-        🌙 <span>Oscuro</span>
-      </ng-container>
-      <ng-template #lightTpl>
-        ☀️ <span>Claro</span>
-      </ng-template>
-    </button>
-  `,
-    styleUrls: ['./theme-toggle.scss']
+  selector: 'app-theme-toggle',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './theme-toggle.html',
+  styleUrls: ['./theme-toggle.scss']
 })
-export class ThemeToggleComponent {
+export class ThemeToggleComponent implements OnInit {
 
-    theme: 'light' | 'dark' = 'dark';
+  isDark: boolean = false;
 
-    constructor(private themeService: ThemeService) {
-        this.themeService.theme$.subscribe(t => this.theme = t);
+  ngOnInit(): void {
+    const savedTheme = localStorage.getItem('theme');
+    // Si guardó 'dark', activamos. Si no (null o 'light'), dejamos claro.
+    if (savedTheme === 'dark') {
+      this.enableDarkMode();
     }
+  }
 
-    toggle() {
-        this.themeService.toggleTheme();
+  toggleTheme(): void {
+    if (this.isDark) {
+      this.enableLightMode();
+    } else {
+      this.enableDarkMode();
     }
+  }
+
+  private enableDarkMode(): void {
+    this.isDark = true;
+    // CAMBIO IMPORTANTE: Usamos documentElement (<html> tag)
+    document.documentElement.classList.add('theme-dark');
+    localStorage.setItem('theme', 'dark');
+    console.log('Modo Oscuro ON');
+  }
+
+  private enableLightMode(): void {
+    this.isDark = false;
+    // CAMBIO IMPORTANTE: Usamos documentElement (<html> tag)
+    document.documentElement.classList.remove('theme-dark');
+    localStorage.setItem('theme', 'light');
+    console.log('Modo Claro ON');
+  }
 }

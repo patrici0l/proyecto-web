@@ -2,82 +2,127 @@
 
 <div class="programador-container">
 
-    <h1>Panel de Programador</h1>
+    <header class="page-head">
+        <h1>Panel de Programador</h1>
+        <p class="page-sub">
+            Gestiona tus proyectos académicos y laborales desde un solo lugar.
+        </p>
+    </header>
 
     <!-- Caso: no hay usuario -->
-    <div *ngIf="!usuario">
-        <p>Debes iniciar sesión como programador para gestionar tus proyectos.</p>
-    </div>
+    <section *ngIf="!usuario" class="state state--warn" aria-live="polite">
+        <div class="state__icon" aria-hidden="true">🔒</div>
+        <div class="state__body">
+            <h3 class="state__title">Acceso requerido</h3>
+            <p class="state__text">Debes iniciar sesión como programador para gestionar tus proyectos.</p>
+        </div>
+    </section>
 
     <!-- Caso: usuario sin idProgramador -->
-    <div *ngIf="usuario && !usuario.idProgramador" class="alerta">
-        <p>
-            Tu usuario tiene rol <strong>{{ usuario.rol }}</strong>, pero no tiene un
-            <code>idProgramador</code> asociado en la colección <strong>usuarios</strong>.
-            Pide al administrador que te vincule con tu ficha de programador.
-        </p>
-    </div>
+    <section *ngIf="usuario && !usuario.idProgramador" class="state state--info">
+        <div class="state__icon" aria-hidden="true">⚠️</div>
+        <div class="state__body">
+            <h3 class="state__title">Falta vinculación</h3>
+            <p class="state__text">
+                Tu usuario tiene rol <strong>{{ usuario.rol }}</strong>, pero no tiene un
+                <code>idProgramador</code> asociado en la colección <strong>usuarios</strong>.
+                Pide al administrador que te vincule con tu ficha de programador.
+            </p>
+        </div>
+    </section>
 
     <!-- Caso: usuario programador con idProgramador -->
-    <div *ngIf="usuario && usuario.idProgramador">
+    <section *ngIf="usuario && usuario.idProgramador" class="content">
 
-        <h2>Mis proyectos</h2>
+        <div class="section-head">
+            <div>
+                <h2>Mis proyectos</h2>
+                <p class="muted">Crea, edita y organiza tus proyectos para tu portafolio.</p>
+            </div>
 
-        <button type="button" (click)="nuevoProyecto()">
-            Nuevo proyecto
-        </button>
-
-        <div *ngIf="cargando">
-            Cargando proyectos...
+            <button type="button" class="btn btn--primary" (click)="nuevoProyecto()">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                Nuevo proyecto
+            </button>
         </div>
 
-        <table *ngIf="!cargando && proyectos.length > 0">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Tipo</th>
-                    <th>Rol</th>
-                    <th>Tecnologías</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let p of proyectos">
-                    <td>{{ p.nombre }}</td>
-                    <td>{{ p.tipoProyecto }}</td>
-                    <td>{{ p.tipoParticipacion }}</td>
-                    <td>{{ p.tecnologias }}</td>
-                    <td>
-                        <button type="button" (click)="editarProyecto(p)">Editar</button>
-                        <button type="button" (click)="eliminarProyecto(p)">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Cargando -->
+        <div *ngIf="cargando" class="state state--loading" aria-live="polite">
+            <span class="spinner" aria-hidden="true"></span>
+            <p class="state__text">Cargando proyectos...</p>
+        </div>
 
-        <p *ngIf="!cargando && proyectos.length === 0">
-            Aún no tienes proyectos registrados.
-        </p>
+        <!-- Tabla -->
+        <div *ngIf="!cargando && proyectos.length > 0" class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Rol</th>
+                        <th>Tecnologías</th>
+                        <th class="th-actions">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let p of proyectos" class="row">
+                        <td class="cell cell--name">{{ p.nombre }}</td>
+                        <td class="cell">
+                            <span class="pill pill--type">{{ p.tipoProyecto }}</span>
+                        </td>
+                        <td class="cell">
+                            <span class="pill">{{ p.tipoParticipacion }}</span>
+                        </td>
+                        <td class="cell cell--tech" [title]="p.tecnologias">{{ p.tecnologias }}</td>
+
+                        <td class="cell cell--actions">
+                            <button type="button" class="btn btn--ghost" (click)="editarProyecto(p)">
+                                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                                Editar
+                            </button>
+
+                            <button type="button" class="btn btn--danger" (click)="eliminarProyecto(p)">
+                                <i class="bi bi-trash3" aria-hidden="true"></i>
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Vacío -->
+        <div *ngIf="!cargando && proyectos.length === 0" class="state state--empty">
+            <div class="state__icon" aria-hidden="true">📁</div>
+            <div class="state__body">
+                <h3 class="state__title">Sin proyectos</h3>
+                <p class="state__text">Aún no tienes proyectos registrados.</p>
+            </div>
+        </div>
 
         <!-- Formulario para crear/editar proyectos -->
-        <div class="proyecto-form" *ngIf="modo === 'nuevo' || modo === 'editar'">
+        <section class="proyecto-form" *ngIf="modo === 'nuevo' || modo === 'editar'">
+            <header class="form-head">
+                <h3>{{ modo === 'nuevo' ? 'Nuevo proyecto' : 'Editar proyecto' }}</h3>
+                <p class="muted">Completa los campos. Tecnologías separadas por comas.</p>
+            </header>
 
-            <h3 *ngIf="modo === 'nuevo'">Nuevo proyecto</h3>
-            <h3 *ngIf="modo === 'editar'">Editar proyecto</h3>
+            <form class="form-grid" [formGroup]="form" (ngSubmit)="guardarProyecto()">
 
-            <form [formGroup]="form" (ngSubmit)="guardarProyecto()">
-
-                <div>
+                <div class="field field--full">
                     <label>Nombre del proyecto</label>
-                    <input type="text" formControlName="nombre">
+                    <input type="text" formControlName="nombre"
+                        placeholder="Ej: Sistema de reservas, App móvil, etc." />
                 </div>
 
-                <div>
+                <div class="field field--full">
                     <label>Descripción</label>
-                    <textarea rows="4" formControlName="descripcion"></textarea>
+                    <textarea rows="4" formControlName="descripcion"
+                        placeholder="Describe brevemente el objetivo y tu aporte en el proyecto..."></textarea>
                 </div>
 
-                <div>
+                <div class="field">
                     <label>Tipo de proyecto</label>
                     <select formControlName="tipoProyecto">
                         <option *ngFor="let t of tiposProyecto" [value]="t.valor">
@@ -86,7 +131,7 @@
                     </select>
                 </div>
 
-                <div>
+                <div class="field">
                     <label>Tipo de participación</label>
                     <select formControlName="tipoParticipacion">
                         <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
@@ -95,30 +140,36 @@
                     </select>
                 </div>
 
-                <div>
+                <div class="field field--full">
                     <label>Tecnologías utilizadas</label>
-                    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, MySQL...">
+                    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, MySQL..." />
                 </div>
 
-                <div>
+                <div class="field field--full">
                     <label>Repositorio</label>
-                    <input type="url" formControlName="repoUrl" placeholder="https://github.com/...">
+                    <input type="url" formControlName="repoUrl" placeholder="https://github.com/..." />
                 </div>
 
-                <div>
+                <div class="field field--full">
                     <label>Demo / despliegue</label>
-                    <input type="url" formControlName="demoUrl" placeholder="https://mi-app.web.app/...">
+                    <input type="url" formControlName="demoUrl" placeholder="https://mi-app.web.app/..." />
                 </div>
 
-                <button type="submit" [disabled]="cargando || form.invalid">
-                    {{ cargando ? 'Guardando...' : 'Guardar' }}
-                </button>
+                <div class="form-actions">
+                    <button class="btn btn--success" type="submit" [disabled]="cargando || form.invalid">
+                        <span class="btn__content">
+                            <i class="bi bi-save2" aria-hidden="true"></i>
+                            {{ cargando ? 'Guardando...' : 'Guardar' }}
+                        </span>
+                    </button>
 
-                <button type="button" (click)="cancelarEdicion()">
-                    Cancelar
-                </button>
+                    <button class="btn btn--soft" type="button" (click)="cancelarEdicion()">
+                        Cancelar
+                    </button>
+                </div>
 
             </form>
-        </div>
-    </div>
+        </section>
+
+    </section>
 </div>

@@ -1,133 +1,146 @@
 <!-- Loading State -->
-<div *ngIf="cargando" class="loading-container">
-    <div class="loading-spinner">
+<div *ngIf="cargando" class="loading">
+    <div class="loading__spinner" aria-hidden="true">
         <i class="fas fa-spinner fa-spin"></i>
     </div>
-    <p class="loading-text">Cargando portafolio...</p>
+    <p class="loading__text">Cargando portafolio...</p>
 </div>
 
 <!-- Main Content -->
-<div *ngIf="!cargando" class="portfolio-container">
+<div *ngIf="!cargando" class="portfolio">
 
-    <!-- Header del Programador -->
-    <header class="portfolio-header" *ngIf="programador">
+    <!-- Header / Hero -->
+    <header class="hero" *ngIf="programador">
 
-        <div class="portfolio-header-main">
+        <div class="hero__main">
 
             <!-- Foto -->
-            <div class="programmer-photo" *ngIf="programador.foto">
-                <img [src]="programador.foto" [alt]="'Foto de ' + programador.nombre">
-            </div>
+            <figure class="hero__photo" *ngIf="programador.foto">
+                <img [src]="programador.foto" [alt]="'Foto de ' + programador.nombre" loading="lazy" decoding="async" />
+            </figure>
 
-            <div class="programmer-info">
-                <div class="programmer-badge">
-                    <i class="fas fa-code"></i>
+            <!-- Info -->
+            <div class="hero__info">
+
+                <div class="hero__badge" aria-label="Rol">
+                    <i class="fas fa-code" aria-hidden="true"></i>
                     <span>Desarrollador</span>
                 </div>
 
-                <h1 class="programmer-name">{{ programador.nombre }}</h1>
+                <h1 class="hero__name">{{ programador.nombre }}</h1>
 
-                <p class="programmer-specialty" *ngIf="programador.especialidad">
-                    <i class="fas fa-laptop-code"></i>
-                    {{ programador.especialidad }}
+                <p class="hero__specialty" *ngIf="programador.especialidad">
+                    <i class="fas fa-laptop-code" aria-hidden="true"></i>
+                    <span>{{ programador.especialidad }}</span>
                 </p>
 
-                <p class="programmer-description">
+                <p class="hero__desc">
                     {{ programador.descripcion }}
                 </p>
 
-                <div class="availability-status" *ngIf="programador.disponibilidad">
-                    <i class="fas fa-circle"></i>
+                <div class="hero__availability" *ngIf="programador.disponibilidad">
+                    <span class="hero__dot" aria-hidden="true"></span>
                     <span><strong>Disponibilidad:</strong> {{ programador.disponibilidad }}</span>
                 </div>
 
-                <!-- Botón para agendar asesoría -->
-                <div class="actions">
-                    <a *ngIf="programador.id" [routerLink]="['/asesoria', programador.id]" class="btn-agendar">
-                        <i class="fas fa-calendar-check"></i>
+                <div class="hero__actions">
+                    <a *ngIf="programador.id" [routerLink]="['/asesoria', programador.id]" class="btn btn--primary">
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
                         Agendar asesoría
                     </a>
                 </div>
+
             </div>
         </div>
 
-        <!-- Contacto y redes -->
-        <div class="programmer-contact">
+        <!-- Contacto -->
+        <div class="hero__footer">
 
-            <div class="contact-item" *ngIf="programador.emailContacto">
-                <i class="fas fa-envelope"></i>
-                <a [href]="'mailto:' + programador.emailContacto">
-                    {{ programador.emailContacto }}
-                </a>
+            <div class="contact">
+                <div class="contact__item" *ngIf="programador.emailContacto">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <a [href]="'mailto:' + programador.emailContacto">
+                        {{ programador.emailContacto }}
+                    </a>
+                </div>
+
+                <div class="contact__item" *ngIf="programador.whatsapp">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                    <a [href]="'https://wa.me/' + programador.whatsapp" target="_blank" rel="noopener">
+                        {{ programador.whatsapp }}
+                    </a>
+                </div>
             </div>
 
-            <div class="contact-item" *ngIf="programador.whatsapp">
-                <i class="fab fa-whatsapp"></i>
-                <a [href]="'https://wa.me/' + programador.whatsapp" target="_blank">
-                    {{ programador.whatsapp }}
+            <div class="social" aria-label="Redes sociales">
+                <a *ngIf="programador.github" [href]="programador.github" target="_blank" rel="noopener">
+                    <i class="fab fa-github" aria-hidden="true"></i>
+                    <span>GitHub</span>
                 </a>
-            </div>
 
-            <div class="social-links">
-                <a *ngIf="programador.github" [href]="programador.github" target="_blank">
-                    <i class="fab fa-github"></i> GitHub
+                <a *ngIf="programador.linkedin" [href]="programador.linkedin" target="_blank" rel="noopener">
+                    <i class="fab fa-linkedin" aria-hidden="true"></i>
+                    <span>LinkedIn</span>
                 </a>
-                <a *ngIf="programador.linkedin" [href]="programador.linkedin" target="_blank">
-                    <i class="fab fa-linkedin"></i> LinkedIn
-                </a>
-                <a *ngIf="programador.portafolio" [href]="programador.portafolio" target="_blank">
-                    <i class="fas fa-globe"></i> Web
+
+                <a *ngIf="programador.portafolio" [href]="programador.portafolio" target="_blank" rel="noopener">
+                    <i class="fas fa-globe" aria-hidden="true"></i>
+                    <span>Web</span>
                 </a>
             </div>
 
         </div>
     </header>
 
-    <!-- Sección de Proyectos -->
-    <main class="projects-container">
+    <!-- Projects -->
+    <main class="projects">
 
-        <!-- Proyectos Académicos -->
-        <section class="project-section academic">
-            <div class="section-header">
-                <div class="icon-wrapper">
+        <!-- Académicos -->
+        <section class="section section--academic" aria-labelledby="academic-title">
+            <header class="section__head">
+                <div class="section__icon" aria-hidden="true">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
-                <h2>Proyectos Académicos</h2>
-                <span class="project-count">{{ proyectosAcademicos.length }} proyectos</span>
-            </div>
 
-            <div *ngIf="proyectosAcademicos.length === 0" class="empty-state">
-                <i class="fas fa-book-open"></i>
+                <h2 id="academic-title" class="section__title">Proyectos Académicos</h2>
+
+                <span class="section__count">
+                    {{ proyectosAcademicos.length }} proyectos
+                </span>
+            </header>
+
+            <div *ngIf="proyectosAcademicos.length === 0" class="empty">
+                <i class="fas fa-book-open" aria-hidden="true"></i>
                 <p>Este programador aún no tiene proyectos académicos registrados.</p>
             </div>
 
-            <div class="projects-grid">
-                <div *ngFor="let p of proyectosAcademicos; let i = index" class="project-card" [@cardAnimation]="i">
-                    <div class="project-header">
-                        <h3>
-                            <i class="fas fa-project-diagram"></i>
-                            {{ p.nombre }}
+            <div class="grid">
+                <article *ngFor="let p of proyectosAcademicos; let i = index" class="card" [@cardAnimation]="i">
+                    <header class="card__head">
+                        <h3 class="card__title">
+                            <i class="fas fa-project-diagram" aria-hidden="true"></i>
+                            <span>{{ p.nombre }}</span>
                         </h3>
-                        <span class="project-badge academic">Académico</span>
-                    </div>
+                        <span class="badge badge--academic">Académico</span>
+                    </header>
 
-                    <p class="project-description">{{ p.descripcion }}</p>
+                    <p class="card__desc">{{ p.descripcion }}</p>
 
-                    <div class="project-details">
-                        <div class="detail-item">
-                            <i class="fas fa-user-tie"></i>
+                    <div class="card__details">
+                        <div class="detail">
+                            <i class="fas fa-user-tie" aria-hidden="true"></i>
                             <div>
                                 <strong>Rol:</strong>
                                 <span>{{ p.tipoParticipacion | titlecase }}</span>
                             </div>
                         </div>
 
-                        <div class="detail-item">
-                            <i class="fas fa-code"></i>
+                        <div class="detail">
+                            <i class="fas fa-code" aria-hidden="true"></i>
                             <div>
                                 <strong>Tecnologías:</strong>
-                                <div class="tech-tags">
-                                    <span *ngFor="let tech of p.tecnologias.split(',')" class="tech-tag">
+                                <div class="tags">
+                                    <span *ngFor="let tech of p.tecnologias.split(',')" class="tag">
                                         {{ tech.trim() }}
                                     </span>
                                 </div>
@@ -135,62 +148,66 @@
                         </div>
                     </div>
 
-                    <div class="project-links" *ngIf="p.repoUrl || p.demoUrl">
-                        <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank" class="project-link repo-link">
-                            <i class="fab fa-github"></i>
+                    <footer class="card__links" *ngIf="p.repoUrl || p.demoUrl">
+                        <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank" rel="noopener" class="link link--soft">
+                            <i class="fab fa-github" aria-hidden="true"></i>
                             Ver código
                         </a>
-                        <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank" class="project-link demo-link">
-                            <i class="fas fa-external-link-alt"></i>
+                        <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank" rel="noopener" class="link link--solid">
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                             Ver demo
                         </a>
-                    </div>
-                </div>
+                    </footer>
+                </article>
             </div>
         </section>
 
-        <!-- Proyectos Laborales -->
-        <section class="project-section professional">
-            <div class="section-header">
-                <div class="icon-wrapper">
+        <!-- Laborales -->
+        <section class="section section--pro" aria-labelledby="pro-title">
+            <header class="section__head">
+                <div class="section__icon" aria-hidden="true">
                     <i class="fas fa-briefcase"></i>
                 </div>
-                <h2>Proyectos Laborales</h2>
-                <span class="project-count">{{ proyectosLaborales.length }} proyectos</span>
-            </div>
 
-            <div *ngIf="proyectosLaborales.length === 0" class="empty-state">
-                <i class="fas fa-briefcase"></i>
+                <h2 id="pro-title" class="section__title">Proyectos Laborales</h2>
+
+                <span class="section__count">
+                    {{ proyectosLaborales.length }} proyectos
+                </span>
+            </header>
+
+            <div *ngIf="proyectosLaborales.length === 0" class="empty">
+                <i class="fas fa-briefcase" aria-hidden="true"></i>
                 <p>Este programador aún no tiene proyectos laborales registrados.</p>
             </div>
 
-            <div class="projects-grid">
-                <div *ngFor="let p of proyectosLaborales; let i = index" class="project-card" [@cardAnimation]="i">
-                    <div class="project-header">
-                        <h3>
-                            <i class="fas fa-briefcase"></i>
-                            {{ p.nombre }}
+            <div class="grid">
+                <article *ngFor="let p of proyectosLaborales; let i = index" class="card" [@cardAnimation]="i">
+                    <header class="card__head">
+                        <h3 class="card__title">
+                            <i class="fas fa-briefcase" aria-hidden="true"></i>
+                            <span>{{ p.nombre }}</span>
                         </h3>
-                        <span class="project-badge professional">Profesional</span>
-                    </div>
+                        <span class="badge badge--pro">Profesional</span>
+                    </header>
 
-                    <p class="project-description">{{ p.descripcion }}</p>
+                    <p class="card__desc">{{ p.descripcion }}</p>
 
-                    <div class="project-details">
-                        <div class="detail-item">
-                            <i class="fas fa-user-tie"></i>
+                    <div class="card__details">
+                        <div class="detail">
+                            <i class="fas fa-user-tie" aria-hidden="true"></i>
                             <div>
                                 <strong>Rol:</strong>
                                 <span>{{ p.tipoParticipacion | titlecase }}</span>
                             </div>
                         </div>
 
-                        <div class="detail-item">
-                            <i class="fas fa-code"></i>
+                        <div class="detail">
+                            <i class="fas fa-code" aria-hidden="true"></i>
                             <div>
                                 <strong>Tecnologías:</strong>
-                                <div class="tech-tags">
-                                    <span *ngFor="let tech of p.tecnologias.split(',')" class="tech-tag">
+                                <div class="tags">
+                                    <span *ngFor="let tech of p.tecnologias.split(',')" class="tag">
                                         {{ tech.trim() }}
                                     </span>
                                 </div>
@@ -198,17 +215,17 @@
                         </div>
                     </div>
 
-                    <div class="project-links" *ngIf="p.repoUrl || p.demoUrl">
-                        <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank" class="project-link repo-link">
-                            <i class="fab fa-github"></i>
+                    <footer class="card__links" *ngIf="p.repoUrl || p.demoUrl">
+                        <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank" rel="noopener" class="link link--soft">
+                            <i class="fab fa-github" aria-hidden="true"></i>
                             Ver código
                         </a>
-                        <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank" class="project-link demo-link">
-                            <i class="fas fa-external-link-alt"></i>
+                        <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank" rel="noopener" class="link link--solid">
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                             Ver demo
                         </a>
-                    </div>
-                </div>
+                    </footer>
+                </article>
             </div>
         </section>
 

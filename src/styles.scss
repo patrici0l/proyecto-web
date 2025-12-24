@@ -1,19 +1,22 @@
+/* src/styles.scss */
+
 /* =========================================
-   1. DESIGN TOKENS (Variables Globales)
+   0) Base global
    ========================================= */
 
 :root {
-    /* --- Tipografía & Layout --- */
-    --font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
-    --radius-sm: 0.5rem;
-    --radius-md: 0.75rem;
-    --radius-lg: 1rem;
-    --radius-full: 9999px;
+    color-scheme: light;
+}
 
-    --transition-fast: 0.2s ease;
-    --transition-med: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+:root.theme-dark {
+    color-scheme: dark;
+}
 
-    /* --- Colores Base (Valores por defecto / Light) --- */
+/* =========================================
+   1) TOKENS - MODO CLARO (default)
+   ========================================= */
+
+:root {
     --bg-page: #f8fafc;
     --bg-card: #ffffff;
     --bg-hover: #f1f5f9;
@@ -21,287 +24,117 @@
 
     --text-main: #0f172a;
     --text-muted: #64748b;
-    --text-inverse: #ffffff;
 
-    --border-subtle: #e2e8f0;
-    --border-focus: #4f46e5;
-
-    /* --- Paleta Semántica --- */
+    --border-glass: rgba(148, 163, 184, 0.3);
     --primary: #4f46e5;
-    --primary-hover: #4338ca;
     --primary-glow: rgba(79, 70, 229, 0.3);
 
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
+    --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
 
-    --success: #22c55e;
-    --info: #0ea5e9;
-    --warning: #f59e0b;
-
-    /* --- Sombras & Efectos --- */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    /* extras útiles */
+    --radius-lg: 1rem;
+    --radius-md: 0.75rem;
+    --ring: 0 0 0 4px rgba(79, 70, 229, 0.18);
+    --transition: 0.25s ease;
 }
 
-/* --- TEMA OSCURO --- */
+/* =========================================
+   2) TOKENS - MODO OSCURO (.theme-dark)
+   ========================================= */
+
 :root.theme-dark {
-    --bg-page: #0f172a;
+    --bg-page: #020617;
     --bg-card: #1e293b;
     --bg-hover: #334155;
-    --bg-input: #020617;
+    --bg-input: #0f172a;
 
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
 
-    --border-subtle: #334155;
-    --border-focus: #818cf8;
-
+    --border-glass: rgba(255, 255, 255, 0.1);
     --primary: #6366f1;
-    --primary-hover: #818cf8;
     --primary-glow: rgba(99, 102, 241, 0.25);
 
-    /* Sombras adaptadas para fondo oscuro (más sutiles) */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.6);
+    --shadow-float: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+
+    --ring: 0 0 0 4px rgba(99, 102, 241, 0.22);
 }
 
 /* =========================================
-   2. RESET & BASE
+   3) Aplicación global
    ========================================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
 
 html,
 body {
     height: 100%;
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+    /* mejor render */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    font-family: var(--font-family-base);
     background-color: var(--bg-page);
     color: var(--text-main);
-    line-height: 1.5;
-    transition: background-color 0.3s ease, color 0.3s ease;
-
-    /* Scrollbar moderna */
-    &::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: var(--bg-page);
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: var(--text-muted);
-        border-radius: 4px;
-        border: 2px solid var(--bg-page);
-    }
+    transition: background-color var(--transition), color var(--transition);
 }
 
-/* Enlaces */
+/* Links */
 a {
-    color: var(--primary);
+    color: inherit;
     text-decoration: none;
-    transition: color var(--transition-fast);
+    transition: opacity 0.18s ease, text-decoration-color 0.18s ease;
 
     &:hover {
-        color: var(--primary-hover);
+        opacity: 0.9;
+        text-decoration: underline;
+        text-decoration-color: color-mix(in srgb, var(--primary), transparent 20%);
     }
 }
 
-/* =========================================
-   3. COMPONENTES GLOBALES (Utilidades)
-   ========================================= */
-
-/* --- BOTONES --- */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-
-    padding: 0.6rem 1.2rem;
-    border-radius: var(--radius-md);
-    border: 1px solid transparent;
-
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    line-height: 1;
-
-    transition: all var(--transition-fast);
-    user-select: none;
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        pointer-events: none;
-    }
-
-    &:active {
-        transform: translateY(1px);
-    }
-}
-
-/* Variante: Primary */
-.btn-primary {
-    background-color: var(--primary);
-    color: var(--text-inverse);
-    box-shadow: 0 2px 10px var(--primary-glow);
-
-    &:hover {
-        background-color: var(--primary-hover);
-        box-shadow: 0 4px 15px var(--primary-glow);
-        transform: translateY(-1px);
-    }
-}
-
-/* Variante: Danger */
-.btn-danger {
-    background-color: var(--danger);
-    color: var(--text-inverse);
-
-    &:hover {
-        background-color: var(--danger-hover);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-}
-
-/* Variante: Ghost (Secundario) */
-.btn-ghost {
-    background-color: transparent;
-    color: var(--text-muted);
-
-    &:hover {
-        background-color: var(--bg-hover);
-        color: var(--text-main);
-    }
-}
-
-/* --- TARJETAS (Cards) --- */
-.card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-fast);
-
-    &:hover {
-        box-shadow: var(--shadow-md);
-    }
-}
-
-/* --- INPUTS & FORMULARIOS --- */
+/* Botones y inputs base (sin romper tus estilos locales) */
+button,
 input,
-textarea,
-select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-subtle);
-    background-color: var(--bg-input);
-    color: var(--text-main);
-    font-size: 1rem;
+select,
+textarea {
+    font-family: inherit;
+}
+
+/* Focus accesible y consistente */
+:focus {
     outline: none;
-    transition: all var(--transition-fast);
-
-    &::placeholder {
-        color: var(--text-muted);
-        opacity: 0.7;
-    }
-
-    &:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px var(--primary-glow);
-    }
 }
 
-/* =========================================
-   4. MODAL DE CONFIRMACIÓN (Global)
-   ========================================= */
-
-.confirm-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.6);
-    /* Backdrop oscuro */
-    backdrop-filter: blur(4px);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-
-    &.visible {
-        opacity: 1;
-        pointer-events: auto;
-    }
+:focus-visible {
+    box-shadow: var(--ring);
+    border-radius: 0.5rem;
 }
 
-.confirm-modal {
-    background-color: var(--bg-card);
-    width: 90%;
-    max-width: 400px;
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-float);
-    border: 1px solid var(--border-subtle);
-
-    transform: scale(0.95);
-    transition: transform 0.3s var(--transition-med);
-
-    /* Borde de acento lateral (rojo para peligro) */
-    border-left: 4px solid var(--danger);
-
-    /* Animación al abrir */
-    .confirm-overlay.visible & {
-        transform: scale(1);
-    }
-
-    h3 {
-        margin-bottom: 0.5rem;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-main);
-    }
-
-    p {
-        margin-bottom: 1.5rem;
-        color: var(--text-muted);
-        font-size: 0.95rem;
-    }
-
-    .botones {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.75rem;
-    }
+/* Scrollbar (opcional, se ve bien en tu UI glass) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--text-muted), transparent 40%) transparent;
 }
 
-/* Botones específicos del modal */
-.btn-ok {
-    @extend .btn;
-    @extend .btn-danger;
-    font-size: 0.9rem;
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
 
-.btn-cancelar {
-    @extend .btn;
-    @extend .btn-ghost;
-    font-size: 0.9rem;
-    border: 1px solid var(--border-subtle);
+*::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--text-muted), transparent 55%);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--text-muted), transparent 40%);
+}
+
+/* Si usas iconos con <i>, alinea bien */
+i {
+    line-height: 1;
 }
