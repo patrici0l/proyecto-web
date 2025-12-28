@@ -1,29 +1,21 @@
 import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  query,
-  where
-} from '@angular/fire/firestore';
-import { Observable, from, map, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Asesoria {
   id?: string;
-  idProgramador: string;         // id del documento del programador
-  idSolicitante?: string;        // uid del usuario
+  idProgramador: string;
+  idSolicitante?: string;
   nombreSolicitante: string;
   emailSolicitante: string;
-  fecha: string;                 // 'YYYY-MM-DD'
-  hora: string;                  // 'HH:mm'
+  fecha: string;
+  hora: string;
   comentario?: string;
-  estado: 'pendiente' | 'aprobada' | 'rechazada';
+  estado?: 'pendiente' | 'aprobada' | 'rechazada';
+  creadoEn?: string;
+  // ✅ NUEVO: Agregado para evitar el error en el HTML
   respuestaProgramador?: string;
-  creadoEn: string;              // ISO string
 }
 
 @Injectable({
@@ -31,57 +23,42 @@ export interface Asesoria {
 })
 export class AsesoriasService {
 
-  // Únicamente inyectamos Firestore
-  constructor(private firestore: Firestore) { }
+  private apiUrl = `${environment.apiUrl}/api/asesorias`;
 
-  /** Obtiene asesorías solicitadas por un usuario */
-  getAsesoriasPorSolicitante(idSolicitante: string): Observable<Asesoria[]> {
-    const ref = collection(this.firestore, 'asesorias');
-    const q = query(ref, where('idSolicitante', '==', idSolicitante));
+  constructor(private http: HttpClient) { }
 
-    return from(getDocs(q)).pipe(
-      map(snap =>
-        snap.docs.map(d => ({ id: d.id, ...d.data() } as Asesoria))
-      )
+  // 🔹 Horas ocupadas de un programador en una fecha
+  getOcupadas(idProgramador: string, fecha: string): Observable<Asesoria[]> {
+    return this.http.get<Asesoria[]>(
+      `${this.apiUrl}/programador/${idProgramador}/ocupadas?fecha=${fecha}`
     );
   }
 
-  /** Crea una nueva asesoría limpiando valores undefined */
-  crearAsesoria(data: Asesoria) {
-    const ref = collection(this.firestore, 'asesorias');
-
-    // Limpieza de campos undefined para evitar errores en Firestore
-    const limpio = JSON.parse(JSON.stringify(data));
-
-    return addDoc(ref, limpio);
+  // 🔹 Crear asesoría pública
+  crearPublica(data: Partial<Asesoria>): Observable<any> {
+    return this.http.post(`${this.apiUrl}/publica`, data);
   }
 
-  /** Obtiene las asesorías vinculadas a un programador */
-  getAsesoriasPorProgramador(idProgramador?: string): Observable<Asesoria[]> {
-    if (!idProgramador) return of([]);
+  // -----------------------------------------------------------------------
+  // ✅ MÉTODOS AGREGADOS PARA CORREGIR LOS ERRORES DE TS
+  // (Asegúrate de que tu Backend tenga estas rutas o adáptalas)
+  // -----------------------------------------------------------------------
 
-    const ref = collection(this.firestore, 'asesorias');
-    const q = query(ref, where('idProgramador', '==', idProgramador));
-
-    return from(getDocs(q)).pipe(
-      map(snap =>
-        snap.docs.map(d => ({ id: d.id, ...d.data() } as Asesoria))
-      )
-    );
+  // 1. Obtener asesorías por EMAIL del solicitante (Usuario normal)
+  getAsesoriasPorSolicitante(email: string): Observable<Asesoria[]> {
+    // Ejemplo: GET /api/asesorias/solicitante/juan@mail.com
+    return this.http.get<Asesoria[]>(`${this.apiUrl}/solicitante/${email}`);
   }
 
-  /** Obtiene el detalle de una asesoría específica */
-  getAsesoria(id: string): Observable<Asesoria> {
-    const refDoc = doc(this.firestore, 'asesorias', id);
-
-    return from(getDoc(refDoc)).pipe(
-      map(snap => ({ id: snap.id, ...snap.data() } as Asesoria))
-    );
+  // 2. Obtener asesorías por ID del programador (Panel Programador)
+  getAsesoriasPorProgramador(idProgramador: string): Observable<Asesoria[]> {
+    // Ejemplo: GET /api/asesorias/programador/12345
+    return this.http.get<Asesoria[]>(`${this.apiUrl}/programador/${idProgramador}`);
   }
 
-  /** Actualiza el estado o respuesta de una asesoría */
-  updateAsesoria(id: string, cambios: Partial<Asesoria>) {
-    const refDoc = doc(this.firestore, 'asesorias', id);
-    return updateDoc(refDoc, cambios);
-  } 
+  // 3. Actualizar asesoría (Para responder)
+  updateAsesoria(id: string, data: Partial<Asesoria>): Observable<any> {
+    // Ejemplo: PUT /api/asesorias/ID_ASESORIA
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
 }

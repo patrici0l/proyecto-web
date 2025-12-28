@@ -44,7 +44,7 @@ export class ProgramadorAsesoriasComponent implements OnInit {
             this.asesorias = lista;
             this.cargando = false;
           },
-          error: (err) => {
+          error: (err: any) => { // ✅ Tipamos el error
             console.error(err);
             this.error = 'Ocurrió un error al cargar las asesorías.';
             this.noti.error('No se pudieron cargar las asesorías');
@@ -76,30 +76,34 @@ Motivo: (aquí el programador puede añadir una breve justificación).`;
       return;
     }
 
+    // 🔴 ANTES (Error): .then(...) 
+    // ✅ AHORA (Correcto): .subscribe(...)
     this.asesoriasService.updateAsesoria(asesoria.id, cambios)
-      .then(() => {
-        // actualizar en memoria
-        asesoria.estado = nuevoEstado;
-        asesoria.respuestaProgramador = textoBase;
+      .subscribe({
+        next: () => {
+          // actualizar en memoria
+          asesoria.estado = nuevoEstado;
+          asesoria.respuestaProgramador = textoBase;
 
-        // notificación visual al programador
-        this.noti.exito(
-          nuevoEstado === 'aprobada'
-            ? 'Asesoría aprobada correctamente'
-            : 'Asesoría rechazada correctamente'
-        );
+          // notificación visual al programador
+          this.noti.exito(
+            nuevoEstado === 'aprobada'
+              ? 'Asesoría aprobada correctamente'
+              : 'Asesoría rechazada correctamente'
+          );
 
-        // construir la “notificación simulada”
-        this.mensajeSimulado =
-          `Simulación de notificación por correo / WhatsApp
+          // construir la “notificación simulada”
+          this.mensajeSimulado =
+            `Simulación de notificación por correo / WhatsApp
 
 Para: ${asesoria.emailSolicitante}
 Mensaje:
 ${textoBase}`;
-      })
-      .catch(err => {
-        console.error(err);
-        this.noti.error('Error al actualizar el estado de la asesoría');
+        },
+        error: (err: any) => { // ✅ Tipamos el error
+          console.error(err);
+          this.noti.error('Error al actualizar el estado de la asesoría');
+        }
       });
   }
 
