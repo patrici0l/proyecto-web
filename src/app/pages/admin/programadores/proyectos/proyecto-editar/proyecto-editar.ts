@@ -78,13 +78,13 @@ export class ProyectoEditarComponent implements OnInit {
     const valores = this.form.value;
 
     const cambios: Partial<Proyecto> = {
-      nombre: valores.nombre,
+    titulo: valores.nombre,
       descripcion: valores.descripcion,
       tipoProyecto: valores.tipoProyecto,
       tipoParticipacion: valores.tipoParticipacion,
       tecnologias: valores.tecnologias,
-      repoUrl: valores.repoUrl || '',
-      demoUrl: valores.demoUrl || ''
+      urlRepo: valores.repoUrl || '',
+      urlDemo: valores.demoUrl || ''
     };
 
     try {

@@ -16,7 +16,7 @@ import { NotificacionesService } from '../../services/notificaciones';
   selector: 'app-programador',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MenuComponent],
-  templateUrl: './programador.html',
+  templateUrl: './programador.html', // Asegúrate de actualizar el HTML también
   styleUrls: ['./programador.scss'],
 })
 export class ProgramadorComponent implements OnInit {
@@ -30,6 +30,7 @@ export class ProgramadorComponent implements OnInit {
 
   form!: FormGroup;
 
+  // Listas para los selects
   tiposProyecto = [
     { valor: 'academico' as TipoProyecto, label: 'Académico' },
     { valor: 'laboral' as TipoProyecto, label: 'Laboral' }
@@ -50,33 +51,43 @@ export class ProgramadorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // 1. FORMULARIO ACTUALIZADO (Nombres de Java)
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
+      titulo: ['', Validators.required],       // Antes 'nombre'
       descripcion: ['', Validators.required],
       tipoProyecto: ['academico', Validators.required],
       tipoParticipacion: ['frontend', Validators.required],
       tecnologias: ['', Validators.required],
-      repoUrl: [''],
-      demoUrl: ['']
+      urlRepo: [''],                           // Antes 'repoUrl'
+      urlDemo: ['']                            // Antes 'demoUrl'
     });
 
+    // 2. CARGAR USUARIO Y PROYECTOS
     this.auth.usuario$.subscribe(usuario => {
       this.usuario = usuario;
-
-      if (usuario?.idProgramador) {
-        this.cargarProyectos(usuario.idProgramador);
+      // Ya no dependemos estrictamente del idProgramador para listar, 
+      // pero si el usuario existe, cargamos.
+      if (usuario) {
+        this.cargarProyectos();
       } else {
         this.cargando = false;
       }
     });
   }
 
-  private cargarProyectos(idProgramador: string) {
+  // Cargar proyectos desde Java
+  private cargarProyectos() {
     this.cargando = true;
-    this.proyectosService.getProyectosDeProgramador(idProgramador)
-      .subscribe(lista => {
-        this.proyectos = lista;
-        this.cargando = false;
+    this.proyectosService.getProyectos()
+      .subscribe({
+        next: (lista) => {
+          this.proyectos = lista;
+          this.cargando = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.cargando = false;
+        }
       });
   }
 
@@ -84,13 +95,13 @@ export class ProgramadorComponent implements OnInit {
     this.modo = 'nuevo';
     this.proyectoEditando = null;
     this.form.reset({
-      nombre: '',
+      titulo: '',
       descripcion: '',
       tipoProyecto: 'academico',
       tipoParticipacion: 'frontend',
       tecnologias: '',
-      repoUrl: '',
-      demoUrl: ''
+      urlRepo: '',
+      urlDemo: ''
     });
   }
 
@@ -98,14 +109,15 @@ export class ProgramadorComponent implements OnInit {
     this.modo = 'editar';
     this.proyectoEditando = p;
 
+    // 3. MAPEO PARA EDITAR (De objeto Java a Formulario Angular)
     this.form.patchValue({
-      nombre: p.nombre,
+      titulo: p.titulo,
       descripcion: p.descripcion,
       tipoProyecto: p.tipoProyecto,
       tipoParticipacion: p.tipoParticipacion,
       tecnologias: p.tecnologias,
-      repoUrl: p.repoUrl || '',
-      demoUrl: p.demoUrl || ''
+      urlRepo: p.urlRepo || '',
+      urlDemo: p.urlDemo || ''
     });
   }
 
@@ -115,12 +127,8 @@ export class ProgramadorComponent implements OnInit {
     this.form.reset();
   }
 
-  async guardarProyecto() {
-    if (!this.usuario?.idProgramador) {
-      this.noti.error('Error: No se encontró el ID del programador.');
-      return;
-    }
-
+  // 4. GUARDAR (Sin async/await, usando Subscribe)
+  guardarProyecto() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.noti.confirmar('Complete todos los campos requeridos.');
@@ -130,54 +138,55 @@ export class ProgramadorComponent implements OnInit {
     const valores = this.form.value;
     this.cargando = true;
 
-    try {
-      if (this.modo === 'nuevo') {
+    // Construimos el objeto con la estructura nueva
+    const proyectoData: Proyecto = {
+      titulo: valores.titulo,        // Mapeo correcto
+      descripcion: valores.descripcion,
+      tipoProyecto: valores.tipoProyecto,
+      tipoParticipacion: valores.tipoParticipacion,
+      tecnologias: valores.tecnologias,
+      urlRepo: valores.urlRepo,
+      urlDemo: valores.urlDemo,
+      // estado: 'activo' (El backend lo pone por defecto)
+    };
 
-        const proyecto: Proyecto = {
-          idProgramador: this.usuario.idProgramador,
-          nombre: valores.nombre,
-          descripcion: valores.descripcion,
-          tipoProyecto: valores.tipoProyecto,
-          tipoParticipacion: valores.tipoParticipacion,
-          tecnologias: valores.tecnologias,
-          repoUrl: valores.repoUrl || '',
-          demoUrl: valores.demoUrl || '',
-          creadoEn: new Date().toISOString()
-        };
-
-        await this.proyectosService.crearProyecto(proyecto);
-        this.noti.exito('Proyecto creado correctamente.');
-
-      } else if (this.modo === 'editar' && this.proyectoEditando?.id) {
-
-        const cambios: Partial<Proyecto> = {
-          nombre: valores.nombre,
-          descripcion: valores.descripcion,
-          tipoProyecto: valores.tipoProyecto,
-          tipoParticipacion: valores.tipoParticipacion,
-          tecnologias: valores.tecnologias,
-          repoUrl: valores.repoUrl || '',
-          demoUrl: valores.demoUrl || ''
-        };
-
-        await this.proyectosService.actualizarProyecto(this.proyectoEditando.id, cambios);
-        this.noti.exito('Proyecto actualizado correctamente.');
-      }
-
-      this.modo = 'lista';
-      this.proyectoEditando = null;
-      this.form.reset();
-
-      this.cargarProyectos(this.usuario.idProgramador);
-
-    } catch (err) {
-      console.error(err);
-      this.noti.error('Ocurrió un error al guardar el proyecto.');
-    } finally {
-      this.cargando = false;
+    if (this.modo === 'nuevo') {
+      // --- CREAR ---
+      this.proyectosService.crearProyecto(proyectoData).subscribe({
+        next: () => {
+          this.noti.exito('Proyecto creado correctamente.');
+          this.finalizarGuardado();
+        },
+        error: (err) => {
+          console.error(err);
+          this.noti.error('Error al crear proyecto.');
+          this.cargando = false;
+        }
+      });
+    } else if (this.modo === 'editar' && this.proyectoEditando?.id) {
+      // --- EDITAR ---
+      this.proyectosService.actualizarProyecto(this.proyectoEditando.id, proyectoData).subscribe({
+        next: () => {
+          this.noti.exito('Proyecto actualizado correctamente.');
+          this.finalizarGuardado();
+        },
+        error: (err) => {
+          console.error(err);
+          this.noti.error('Error al actualizar proyecto.');
+          this.cargando = false;
+        }
+      });
     }
   }
 
+  private finalizarGuardado() {
+    this.modo = 'lista';
+    this.proyectoEditando = null;
+    this.form.reset();
+    this.cargarProyectos(); // Recargar lista
+  }
+
+  // 5. ELIMINAR (Sin async/await)
   async eliminarProyecto(p: Proyecto) {
     if (!p.id) return;
 
@@ -187,18 +196,19 @@ export class ProgramadorComponent implements OnInit {
     );
 
     if (!confirmar) return;
-    if (!this.usuario?.idProgramador) return;
 
     this.cargando = true;
 
-    try {
-      await this.proyectosService.eliminarProyecto(p.id);
-      this.noti.exito('Proyecto eliminado correctamente.');
-      this.cargarProyectos(this.usuario.idProgramador);
-    } catch (err) {
-      console.error(err);
-      this.noti.error('Ocurrió un error al eliminar el proyecto.');
-      this.cargando = false;
-    }
+    this.proyectosService.eliminarProyecto(p.id).subscribe({
+      next: () => {
+        this.noti.exito('Proyecto eliminado.');
+        this.cargarProyectos();
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('Error al eliminar.');
+        this.cargando = false;
+      }
+    });
   }
 }

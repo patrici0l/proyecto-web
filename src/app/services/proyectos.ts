@@ -1,37 +1,30 @@
 import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where
-} from '@angular/fire/firestore';
-import { Observable, from, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+// Asegúrate de que la ruta a environment sea correcta según tu estructura de carpetas
+import { environment } from '../../environments/environment';
 
-// Definición de tipos específicos
+// --- 1. TIPOS Y ENUMS (Conservados del Snippet 1) ---
 export type TipoProyecto = 'academico' | 'laboral';
 export type TipoParticipacion = 'frontend' | 'backend' | 'bd' | 'fullstack';
 
+// --- 2. INTERFAZ PROYECTO (Fusionada) ---
 export interface Proyecto {
-  id?: string;
-  idProgramador: string; // ID del dueño del proyecto
-
-  nombre: string;
+  id?: string;           // Opcional al crear, obligatorio al leer
+  titulo: string;
   descripcion: string;
+  tecnologias: string;
+  urlRepo?: string;
+  urlDemo?: string;
+  estado?: 'activo' | 'inactivo' | string; // Flexible para ambos códigos
 
-  // 🔹 Campos actualizados:
-  tipoProyecto: TipoProyecto;           // 'academico' | 'laboral'
-  tipoParticipacion: TipoParticipacion; // 'frontend' | 'backend' | 'bd' | 'fullstack'
-  tecnologias: string;                  // Ej: "Angular, Firebase, Node.js" (Ahora es string, no array)
-  repoUrl?: string;                     // Enlace al repositorio
-  demoUrl?: string;                     // Enlace al demo
+  // Campos opcionales de metadatos
+  tipoProyecto?: TipoProyecto;
+  tipoParticipacion?: TipoParticipacion;
+  creadoEn?: string;
 
-  creadoEn: string;                     // Fecha en formato ISO
+  // Campo de compatibilidad (Java lo saca del token, pero lo dejamos por si acaso)
+  idProgramador?: string;
 }
 
 @Injectable({
@@ -39,80 +32,42 @@ export interface Proyecto {
 })
 export class ProyectosService {
 
-  constructor(private firestore: Firestore) { }
+  // ✅ Usamos environment para que funcione en desarrollo y producción
+  private apiUrl = `${environment.apiUrl}/api/proyectos`;
 
-  // LISTAR proyectos filtrando por ID del programador
+  constructor(private http: HttpClient) { }
+
+  // --- MÉTODOS CRUD GENERALES ---
+
+  getProyectos(): Observable<Proyecto[]> {
+    return this.http.get<Proyecto[]>(this.apiUrl);
+  }
+
+  getProyecto(id: string): Observable<Proyecto> {
+    return this.http.get<Proyecto>(`${this.apiUrl}/${id}`);
+  }
+
+  crearProyecto(data: Proyecto): Observable<Proyecto> {
+    return this.http.post<Proyecto>(this.apiUrl, data);
+  }
+
+  actualizarProyecto(id: string, cambios: Partial<Proyecto>): Observable<Proyecto> {
+    return this.http.put<Proyecto>(`${this.apiUrl}/${id}`, cambios);
+  }
+
+  eliminarProyecto(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // --- MÉTODOS ESPECÍFICOS Y COMPATIBILIDAD ---
+
+  // ✅ Método solicitado: Obtener proyectos filtrados por ID de programador
   getProyectosDeProgramador(idProgramador: string): Observable<Proyecto[]> {
-    const ref = collection(this.firestore, 'proyectos');
-    // Consulta: Dame los documentos de la colección 'proyectos' donde 'idProgramador' sea igual al ID actual
-    const q = query(ref, where('idProgramador', '==', idProgramador));
-
-    return from(getDocs(q)).pipe(
-      map(snap =>
-        snap.docs.map(d => {
-          const data = d.data() as Proyecto;
-          return { id: d.id, ...data };
-        })
-      )
-    );
+    return this.http.get<Proyecto[]>(`${this.apiUrl}/programador/${idProgramador}`);
   }
 
-  // OBTENER 1 proyecto por su ID único (ya no requiere idProgramador en la ruta)
-  getProyecto(id: string): Observable<Proyecto | null> {
-    const refDoc = doc(this.firestore, 'proyectos', id);
-    return from(getDoc(refDoc)).pipe(
-      map(snap => {
-        if (!snap.exists()) return null;
-        const data = snap.data() as Proyecto;
-        return { id: snap.id, ...data };
-      })
-    );
-  }
-
-  // CREAR proyecto
-  crearProyecto(data: Proyecto) {
-    const ref = collection(this.firestore, 'proyectos');
-
-    // Limpieza de datos: elimina propiedades undefined para evitar errores en Firestore
-    const limpio: any = { ...data };
-    Object.keys(limpio).forEach(key => {
-      if (limpio[key] === undefined) {
-        delete limpio[key];
-      }
-    });
-
-    return addDoc(ref, limpio);
-  }
-
-  // ACTUALIZAR proyecto
-  actualizarProyecto(id: string, cambios: Partial<Proyecto>) {
-    const refDoc = doc(this.firestore, 'proyectos', id);
-
-    const limpio: any = { ...cambios };
-    Object.keys(limpio).forEach(key => {
-      if (limpio[key] === undefined) {
-        delete limpio[key];
-      }
-    });
-
-    return updateDoc(refDoc, limpio);
-  }
-
-  // ELIMINAR proyecto
-  eliminarProyecto(id: string) {
-    const refDoc = doc(this.firestore, 'proyectos', id);
-    return deleteDoc(refDoc);
-  }
-
-
-  getProyectos(idProgramador: string): Observable<Proyecto[]> {
-    return this.getProyectosDeProgramador(idProgramador);
-  }
-
-  // 🔹 Alias compatible con la firma antigua (idProgramador, idProyecto)
+  // Alias para mantener compatibilidad si tu código antiguo llama a 'deleteProyecto'
   deleteProyecto(idProgramador: string, idProyecto: string) {
-    // idProgramador no lo necesitamos para borrar,
-    // pero dejamos el parámetro para no tocar el componente
     return this.eliminarProyecto(idProyecto);
   }
 }

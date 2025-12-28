@@ -14,9 +14,13 @@
     /* Slate 50 */
     --bg-card: rgba(255, 255, 255, 0.85);
     /* Glass base */
+
+    /* Inputs en modo claro */
     --bg-input: #f1f5f9;
     /* Slate 100 */
     --bg-input-focus: #ffffff;
+    --bg-input-hover: #e2e8f0;
+    /* Agregado para hover */
 
     --text-main: #0f172a;
     /* Slate 900 */
@@ -24,6 +28,8 @@
     /* Slate 700 */
     --text-placeholder: #94a3b8;
     /* Slate 400 */
+    --text-muted: #64748b;
+    /* Slate 500 */
 
     --primary: #15803d;
     /* Green 700 */
@@ -54,37 +60,41 @@
         radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.08), transparent 50%);
 }
 
-/* --- MODO OSCURO (Automático) --- */
-@media (prefers-color-scheme: dark) {
-    :host {
-        --bg-page: #0f172a;
-        /* Slate 900 */
-        --bg-card: rgba(30, 41, 59, 0.7);
-        /* Slate 800 Glass */
-        --bg-input: #020617;
-        /* Slate 950 */
-        --bg-input-focus: #0f172a;
-        /* Slate 900 */
+/* --- MODO OSCURO (Activado por clase) --- */
+/* Ahora escucha a tu botón de tema */
+html.theme-dark :host {
+    --bg-page: #0f172a;
+    /* Slate 900 */
+    --bg-card: rgba(30, 41, 59, 0.75);
+    /* Slate 800 Glass más opaco */
 
-        --text-main: #f8fafc;
-        /* Slate 50 */
-        --text-label: #cbd5e1;
-        /* Slate 300 */
-        --text-placeholder: #64748b;
-        /* Slate 500 */
+    /* Inputs en modo oscuro (Crucial para legibilidad) */
+    --bg-input: #020617;
+    /* Slate 950 (Fondo muy oscuro para inputs) */
+    --bg-input-focus: #1e293b;
+    /* Slate 800 */
+    --bg-input-hover: #0f172a;
 
-        --primary: #22c55e;
-        /* Green 500 */
-        --primary-hover: #4ade80;
-        --primary-glow: rgba(34, 197, 94, 0.2);
-        --primary-contrast: #020617;
+    --text-main: #f8fafc;
+    /* Slate 50 */
+    --text-label: #cbd5e1;
+    /* Slate 300 */
+    --text-placeholder: #64748b;
+    /* Slate 500 */
+    --text-muted: #94a3b8;
 
-        --border-subtle: #334155;
-        /* Slate 700 */
-        --border-focus: #22c55e;
+    --primary: #22c55e;
+    /* Green 500 (Más brillante) */
+    --primary-hover: #4ade80;
+    --primary-glow: rgba(34, 197, 94, 0.2);
+    --primary-contrast: #020617;
 
-        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    }
+    --border-subtle: #334155;
+    /* Slate 700 */
+    --border-focus: #22c55e;
+
+    --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+    --shadow-elevated: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
 }
 
 /* =========================================
@@ -100,7 +110,6 @@
     align-items: center;
     gap: 0.75rem;
 
-    /* Icono principal */
     i {
         color: var(--primary);
         filter: drop-shadow(0 0 8px var(--primary-glow));
@@ -139,14 +148,16 @@
     width: 100%;
     max-width: 680px;
     background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+
+    /* Efecto cristal */
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+
     padding: 2.5rem;
     border-radius: 1.5rem;
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-elevated);
 
-    /* Animación de entrada */
     animation: slideUp var(--duration-med) var(--ease-smooth);
 }
 
@@ -162,14 +173,12 @@
     }
 }
 
-/* Filas */
 .form-row {
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
 }
 
-/* Labels */
 label {
     font-size: 0.925rem;
     font-weight: 600;
@@ -211,6 +220,11 @@ textarea {
         color: var(--text-placeholder);
     }
 
+    &:hover {
+        background: var(--bg-input-hover);
+        border-color: color-mix(in srgb, var(--primary), transparent 70%);
+    }
+
     &:focus {
         background: var(--bg-input-focus);
         border-color: var(--border-focus);
@@ -222,6 +236,10 @@ textarea {
     &.ng-invalid.ng-touched {
         border-color: #ef4444;
         box-shadow: 0 0 0 1px #ef4444;
+
+        &:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+        }
     }
 }
 
@@ -247,10 +265,9 @@ input[type="file"] {
 
     &:hover {
         border-color: var(--primary);
-        background: var(--bg-input-focus);
+        background: var(--bg-input-hover);
     }
 
-    /* Estilo del botón interno del input file */
     &::file-selector-button {
         margin-right: 1rem;
         border: none;
@@ -268,7 +285,6 @@ input[type="file"] {
     }
 }
 
-/* Previsualización de imagen */
 .preview {
     margin-top: 1rem;
     text-align: center;
@@ -284,7 +300,6 @@ input[type="file"] {
         height: 120px;
         object-fit: cover;
         border-radius: 50%;
-        /* Foto de perfil redonda */
         border: 4px solid var(--bg-card);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         transition: transform var(--duration-short) var(--ease-elastic);
@@ -299,15 +314,23 @@ input[type="file"] {
    6. MENSAJES DE ESTADO
    ========================================= */
 
+/* Nota: Estilos para elementos p con styles inline */
 p[style*="color: green"] {
     background: rgba(34, 197, 94, 0.1);
     color: #166534 !important;
-    /* Force override style inline */
     padding: 0.75rem;
     border-radius: 0.5rem;
-    font-weight: 500;
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    font-weight: 600;
+    border: 1px solid rgba(34, 197, 94, 0.3);
     margin-bottom: 1rem;
+
+    /* Ajuste modo oscuro para texto hardcoded */
+    html.theme-dark & {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80 !important;
+        /* Texto claro en fondo oscuro */
+        border-color: rgba(34, 197, 94, 0.25);
+    }
 }
 
 p[style*="color: red"] {
@@ -315,9 +338,17 @@ p[style*="color: red"] {
     color: #991b1b !important;
     padding: 0.75rem;
     border-radius: 0.5rem;
-    font-weight: 500;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    font-weight: 600;
+    border: 1px solid rgba(239, 68, 68, 0.3);
     margin-bottom: 1rem;
+
+    /* Ajuste modo oscuro para texto hardcoded */
+    html.theme-dark & {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171 !important;
+        /* Texto claro en fondo oscuro */
+        border-color: rgba(239, 68, 68, 0.25);
+    }
 }
 
 /* =========================================
@@ -348,8 +379,7 @@ button[type="submit"] {
     }
 
     &:active:not(:disabled) {
-        transform: translateY(-1px);
-        transform: scale(0.98);
+        transform: translateY(-1px) scale(0.98);
     }
 
     &:disabled {
@@ -357,6 +387,8 @@ button[type="submit"] {
         cursor: not-allowed;
         box-shadow: none;
         opacity: 0.7;
+        filter: grayscale(1);
+        /* Desatura el botón deshabilitado */
     }
 }
 

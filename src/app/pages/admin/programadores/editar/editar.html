@@ -1,81 +1,83 @@
-<h2>Editar programador</h2>
+<div class="editar-container">
 
-<form [formGroup]="form" (ngSubmit)="guardarCambios()">
+    <h2>Editar programador</h2>
 
-    <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" formControlName="nombre">
-    </div>
+    <form [formGroup]="form" (ngSubmit)="guardarCambios()">
 
-    <div class="form-group">
-        <label>Especialidad</label>
-        <input type="text" formControlName="especialidad">
-    </div>
-
-    <div class="form-group">
-        <label>Descripción</label>
-        <textarea formControlName="descripcion" rows="3"></textarea>
-    </div>
-
-    <div class="foto-section">
-        <label>Foto de perfil</label>
-
-        <input type="file" (change)="onFileSelected($event)" accept="image/*">
-
-        <div *ngIf="preview" class="preview-box">
-            <img [src]="preview" alt="Previsualización" width="150">
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" formControlName="nombre">
         </div>
-    </div>
 
-    <hr>
+        <div class="form-group">
+            <label>Especialidad</label>
+            <input type="text" formControlName="especialidad">
+        </div>
 
-    <h3>Contacto</h3>
+        <div class="form-group">
+            <label>Descripción</label>
+            <textarea formControlName="descripcion" rows="3"></textarea>
+        </div>
 
-    <div class="form-group">
-        <label>Email de contacto</label>
-        <input type="email" formControlName="emailContacto">
-    </div>
+        <div class="foto-section">
+            <label>Foto de perfil</label>
 
-    <div class="form-group">
-        <label>WhatsApp</label>
-        <input type="text" formControlName="whatsapp">
-    </div>
+            <input type="file" (change)="onFileSelected($event)" accept="image/*">
 
-    <hr>
+            <div *ngIf="preview" class="preview-box">
+                <img [src]="preview" alt="Previsualización" width="150">
+            </div>
+        </div>
 
-    <h3>Redes</h3>
+        <hr>
 
-    <div class="form-group">
-        <label>GitHub</label>
-        <input type="text" formControlName="github">
-    </div>
+        <h3>Contacto</h3>
 
-    <div class="form-group">
-        <label>LinkedIn</label>
-        <input type="text" formControlName="linkedin">
-    </div>
+        <div class="form-group">
+            <label>Email de contacto</label>
+            <input type="email" formControlName="emailContacto">
+        </div>
 
-    <hr>
+        <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="text" formControlName="whatsapp">
+        </div>
 
-    <h3>Disponibilidad y Horarios</h3>
+        <hr>
 
-    <!-- DISPONIBILIDAD -->
-    <div class="form-group">
-        <label><i class="fa-solid fa-clock"></i> Disponibilidad</label>
-        <textarea formControlName="disponibilidad" rows="3"
-            placeholder="Ej: Lunes a Viernes de 14:00 a 18:00"></textarea>
-    </div>
+        <h3>Redes</h3>
 
-    <!-- HORAS EXACTAS -->
-    <div class="form-group">
-        <label><i class="fa-solid fa-hourglass-half"></i> Horas exactas (separadas por coma)</label>
-        <input type="text" formControlName="horasDisponiblesTexto" placeholder="09:00, 10:30, 16:00">
-    </div>
+        <div class="form-group">
+            <label>GitHub</label>
+            <input type="text" formControlName="github">
+        </div>
 
-    <hr>
+        <div class="form-group">
+            <label>LinkedIn</label>
+            <input type="text" formControlName="linkedin">
+        </div>
 
-    <button type="submit" [disabled]="form.invalid || cargando">
-        {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
-    </button>
+        <hr>
 
-</form>
+        <h3>Disponibilidad y Horarios</h3>
+
+        <div class="form-group">
+            <label><i class="fa-solid fa-clock"></i> Disponibilidad</label>
+            <textarea formControlName="disponibilidad" rows="3"
+                placeholder="Ej: Lunes a Viernes de 14:00 a 18:00"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa-solid fa-hourglass-half"></i> Horas exactas (separadas por coma)</label>
+            <input type="text" formControlName="horasDisponiblesTexto" placeholder="09:00, 10:30, 16:00">
+        </div>
+
+        <hr>
+
+        <button type="submit" [disabled]="form.invalid || cargando">
+            {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+
+    </form>
+
+</div>

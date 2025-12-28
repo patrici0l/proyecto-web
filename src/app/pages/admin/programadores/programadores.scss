@@ -7,7 +7,7 @@
     --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
     --ease-pop: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-    /* --- COLORES (Adaptables Light/Dark) --- */
+    /* --- MODO CLARO (Default) --- */
     --bg-page: #f8fafc;
     --bg-table: #ffffff;
     --bg-hover: #f1f5f9;
@@ -22,7 +22,7 @@
     --danger: #ef4444;
     /* Red */
     --warning: #f59e0b;
-    /* Orange (Proyectos) */
+    /* Orange */
 
     --border-subtle: #e2e8f0;
     --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -33,26 +33,38 @@
     font-family: 'Inter', system-ui, sans-serif;
     color: var(--text-main);
     background: var(--bg-page);
-    /* Fondo con degradado sutil */
+
+    /* Fondo con degradado sutil consistente con otras páginas */
     background-image:
         radial-gradient(circle at top center, rgba(21, 128, 61, 0.08), transparent 60%);
     min-height: 100vh;
 }
 
-/* --- MODO OSCURO --- */
-@media (prefers-color-scheme: dark) {
-    :host {
-        --bg-page: #0f172a;
-        --bg-table: #1e293b;
-        --bg-hover: #334155;
+/* --- MODO OSCURO (Activado por clase) --- */
+html.theme-dark :host {
+    --bg-page: #0f172a;
+    /* Slate 900 */
+    --bg-table: #1e293b;
+    /* Slate 800 */
+    --bg-hover: #334155;
+    /* Slate 700 */
 
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
+    --text-main: #f8fafc;
+    /* Blanco suave */
+    --text-muted: #94a3b8;
+    /* Gris claro */
 
-        --primary: #22c55e;
-        --border-subtle: #334155;
-        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    }
+    --primary: #22c55e;
+    /* Verde más brillante */
+    --info: #38bdf8;
+    /* Azul más brillante */
+    --danger: #f87171;
+    /* Rojo pastel */
+    --warning: #fbbf24;
+    /* Amber pastel */
+
+    --border-subtle: #334155;
+    --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
 }
 
 /* =========================================
@@ -115,6 +127,7 @@
 
     background: var(--primary);
     color: #ffffff;
+    /* Texto siempre blanco en botón sólido */
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 0.75rem;
@@ -132,8 +145,8 @@
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.35);
-        filter: brightness(1.05);
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--primary), transparent 60%);
+        filter: brightness(1.1);
     }
 
     &:active {
@@ -205,16 +218,18 @@ td {
     vertical-align: middle;
     border-bottom: 1px solid var(--border-subtle);
     font-size: 0.95rem;
+    color: var(--text-main);
 
     /* Foto del programador */
     img {
         width: 45px;
-        /* Ignoramos el width="70" del HTML para consistencia */
         height: 45px;
         border-radius: 0.75rem;
         /* Cuadrado redondeado moderno */
         object-fit: cover;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: var(--bg-hover);
+        /* Placeholder visual si no carga */
     }
 
     /* Link de Github */
@@ -235,20 +250,18 @@ td {
             /* Github Black */
             color: white;
         }
+
+        /* Ajuste para modo oscuro: Hover blanco */
+        html.theme-dark &:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
     }
 }
 
 /* =========================================
    5. BOTONES DE ACCIÓN (Clases .btn)
    ========================================= */
-
-/* Ocultamos visualmente las barras | verticales del HTML */
-td {
-    color: var(--text-main);
-    /* Restaura color normal */
-    /* El pipe | es texto directo, difícil de ocultar sin wrapper. 
-     Lo hacemos sutil con el color del texto. */
-}
 
 /* Estilo Base Botones */
 .btn {
@@ -267,47 +280,53 @@ td {
     }
 }
 
+/* NOTA: Usamos 'color-mix' para crear fondos transparentes 
+   basados en el color de la variable. Esto asegura que se vean
+   bien tanto en blanco como en negro.
+*/
+
 /* Botón Eliminar */
 .btn-danger {
     color: var(--danger);
-    background: rgba(239, 68, 68, 0.05);
-    border-color: rgba(239, 68, 68, 0.2);
+    background: color-mix(in srgb, var(--danger), transparent 90%);
+    border-color: color-mix(in srgb, var(--danger), transparent 80%);
 
     &:hover {
         background: var(--danger);
-        color: white;
-        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        color: #fff;
+        /* Texto blanco al hover */
+        box-shadow: 0 4px 10px color-mix(in srgb, var(--danger), transparent 60%);
     }
 }
 
 /* Botón Editar */
 .btn-primary {
     color: var(--info);
-    background: rgba(14, 165, 233, 0.05);
-    border-color: rgba(14, 165, 233, 0.2);
+    background: color-mix(in srgb, var(--info), transparent 90%);
+    border-color: color-mix(in srgb, var(--info), transparent 80%);
 
     &:hover {
         background: var(--info);
-        color: white;
-        box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+        color: #fff;
+        box-shadow: 0 4px 10px color-mix(in srgb, var(--info), transparent 60%);
     }
 }
 
 /* Botón Proyectos */
 .btn-info {
     color: var(--warning);
-    background: rgba(245, 158, 11, 0.05);
-    border-color: rgba(245, 158, 11, 0.2);
+    background: color-mix(in srgb, var(--warning), transparent 90%);
+    border-color: color-mix(in srgb, var(--warning), transparent 80%);
 
     &:hover {
         background: var(--warning);
-        color: white;
-        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+        color: #fff;
+        box-shadow: 0 4px 10px color-mix(in srgb, var(--warning), transparent 60%);
     }
 }
 
 /* =========================================
-   6. RESPONSIVE (Card View sin tocar HTML)
+   6. RESPONSIVE (Card View - Mobile Magic)
    ========================================= */
 
 @media (max-width: 768px) {
@@ -333,7 +352,7 @@ td {
         box-shadow: none;
     }
 
-    /* Tarjeta */
+    /* Tarjeta Individual */
     tbody tr {
         background: var(--bg-table);
         margin-bottom: 1rem;
@@ -361,14 +380,12 @@ td {
             margin-top: 0.5rem;
         }
 
-        /* Foto más grande y centrada en móvil */
         img {
             width: 60px;
             height: 60px;
         }
 
-        /* INYECCIÓN DE ETIQUETAS (CSS Magic) */
-        /* Usamos nth-of-type basado en el orden de tus columnas */
+        /* --- INYECCIÓN DE ETIQUETAS --- */
 
         /* Foto (Col 1) */
         &:nth-of-type(1) {
@@ -400,8 +417,6 @@ td {
             content: "Github";
         }
 
-        /* Acciones (Col 5) - Sin etiqueta */
-
         /* Estilo de las etiquetas generadas */
         &::before {
             color: var(--text-muted);
@@ -412,7 +427,7 @@ td {
         }
     }
 
-    /* Ajuste de botones en móvil para que sean full-width */
+    /* Ajuste de botones en móvil */
     .btn {
         width: 100%;
         justify-content: center;

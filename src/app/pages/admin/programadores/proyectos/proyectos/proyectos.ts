@@ -26,8 +26,10 @@ export class ProyectosAdminComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Obtenemos el ID del programador de la URL
     this.idProgramador = this.route.snapshot.paramMap.get('id')!;
 
+    // Usamos el método que filtra por programador (requiere el endpoint nuevo en Java)
     this.proyectosService
       .getProyectosDeProgramador(this.idProgramador)
       .subscribe({
@@ -37,6 +39,8 @@ export class ProyectosAdminComponent implements OnInit {
         },
         error: () => {
           this.cargando = false;
+          // Si falla, probablemente es porque no has creado el endpoint /programador/{id} en Java
+          // pero no romperá la app, solo mostrará error.
           this.noti.error('No se pudieron cargar los proyectos');
         }
       });
@@ -63,9 +67,11 @@ export class ProyectosAdminComponent implements OnInit {
     ]);
   }
 
+  // CORREGIDO: Eliminación compatible con HTTP (Observables)
   async eliminarProyecto(idProyecto: string) {
 
-    // 🔥 Ahora usamos la confirmación PRO del sistema, NO alert()
+    // 1. La confirmación sigue siendo una Promesa (así es tu servicio de notificaciones),
+    // así que el await aquí ESTÁ BIEN.
     const confirmado = await this.noti.confirmar(
       '¿Eliminar proyecto?',
       'Esta acción es permanente y no se puede deshacer.'
@@ -73,17 +79,18 @@ export class ProyectosAdminComponent implements OnInit {
 
     if (!confirmado) return;
 
-    try {
-      await this.proyectosService.eliminarProyecto(idProyecto);
-
-      this.noti.exito('Proyecto eliminado correctamente');
-
-      // recargar lista
-      this.proyectos = this.proyectos.filter(p => p.id !== idProyecto);
-
-    } catch (err) {
-      console.error(err);
-      this.noti.error('No se pudo eliminar el proyecto');
-    }
+    // 2. CAMBIO CLAVE: El servicio HTTP devuelve un Observable.
+    // No usamos 'await', usamos '.subscribe()'
+    this.proyectosService.eliminarProyecto(idProyecto).subscribe({
+      next: () => {
+        this.noti.exito('Proyecto eliminado correctamente');
+        // Actualizamos la lista visualmente filtrando el que borramos
+        this.proyectos = this.proyectos.filter(p => p.id !== idProyecto);
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('No se pudo eliminar el proyecto');
+      }
+    });
   }
 }

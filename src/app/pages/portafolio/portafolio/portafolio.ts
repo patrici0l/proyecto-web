@@ -15,11 +15,10 @@ import { ProyectosService, Proyecto } from '../../../services/proyectos';
 export class PortafolioComponent implements OnInit {
 
   programador: Programador | null = null;
-  proyectosAcademicos: Proyecto[] = [];
-  proyectosLaborales: Proyecto[] = [];
+  proyectos: Proyecto[] = [];
 
-  // Agregamos la variable de estado
   cargando = true;
+  error = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -28,19 +27,36 @@ export class PortafolioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const idProgramador = this.route.snapshot.paramMap.get('id')!;
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      this.error = 'ID de programador inválido.';
+      this.cargando = false;
+      return;
+    }
 
-    this.programadoresService.getProgramador(idProgramador)
-      .subscribe(p => this.programador = p);
+    // 1) Cargar programador
+    this.programadoresService.getProgramador(id).subscribe({
+      next: (p) => {
+        this.programador = p;
 
-
-    this.proyectosService.getProyectosDeProgramador(idProgramador)
-      .subscribe(lista => {
-        this.proyectosAcademicos = lista.filter(p => p.tipoProyecto === 'academico');
-        this.proyectosLaborales = lista.filter(p => p.tipoProyecto === 'laboral');
-
-        // Aquí indicamos que ya terminó de cargar
+        // 2) Cargar proyectos del programador
+        this.proyectosService.getProyectosDeProgramador(id).subscribe({
+          next: (lista) => {
+            this.proyectos = lista;
+            this.cargando = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.error = 'No se pudieron cargar los proyectos.';
+            this.cargando = false;
+          }
+        });
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'No se pudo cargar el programador.';
         this.cargando = false;
-      });
+      }
+    });
   }
 }

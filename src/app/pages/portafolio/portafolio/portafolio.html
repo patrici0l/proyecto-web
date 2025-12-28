@@ -1,4 +1,3 @@
-<!-- Loading State -->
 <div *ngIf="cargando" class="loading">
     <div class="loading__spinner" aria-hidden="true">
         <i class="fas fa-spinner fa-spin"></i>
@@ -6,22 +5,24 @@
     <p class="loading__text">Cargando portafolio...</p>
 </div>
 
-<!-- Main Content -->
-<div *ngIf="!cargando" class="portfolio">
+<div *ngIf="!cargando && error" class="loading">
+    <div class="loading__spinner" style="color: red;" aria-hidden="true">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <p class="loading__text">{{ error }}</p>
+    <a routerLink="/" class="btn btn--primary" style="margin-top: 1rem;">Volver</a>
+</div>
 
-    <!-- Header / Hero -->
-    <header class="hero" *ngIf="programador">
+<div *ngIf="!cargando && programador" class="portfolio">
 
+    <header class="hero">
         <div class="hero__main">
 
-            <!-- Foto -->
             <figure class="hero__photo" *ngIf="programador.foto">
                 <img [src]="programador.foto" [alt]="'Foto de ' + programador.nombre" loading="lazy" decoding="async" />
             </figure>
 
-            <!-- Info -->
             <div class="hero__info">
-
                 <div class="hero__badge" aria-label="Rol">
                     <i class="fas fa-code" aria-hidden="true"></i>
                     <span>Desarrollador</span>
@@ -34,7 +35,7 @@
                     <span>{{ programador.especialidad }}</span>
                 </p>
 
-                <p class="hero__desc">
+                <p class="hero__desc" *ngIf="programador.descripcion">
                     {{ programador.descripcion }}
                 </p>
 
@@ -49,13 +50,10 @@
                         Agendar asesoría
                     </a>
                 </div>
-
             </div>
         </div>
 
-        <!-- Contacto -->
         <div class="hero__footer">
-
             <div class="contact">
                 <div class="contact__item" *ngIf="programador.emailContacto">
                     <i class="fas fa-envelope" aria-hidden="true"></i>
@@ -88,113 +86,43 @@
                     <span>Web</span>
                 </a>
             </div>
-
         </div>
     </header>
 
-    <!-- Projects -->
     <main class="projects">
 
-        <!-- Académicos -->
-        <section class="section section--academic" aria-labelledby="academic-title">
-            <header class="section__head">
-                <div class="section__icon" aria-hidden="true">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-
-                <h2 id="academic-title" class="section__title">Proyectos Académicos</h2>
-
-                <span class="section__count">
-                    {{ proyectosAcademicos.length }} proyectos
-                </span>
-            </header>
-
-            <div *ngIf="proyectosAcademicos.length === 0" class="empty">
-                <i class="fas fa-book-open" aria-hidden="true"></i>
-                <p>Este programador aún no tiene proyectos académicos registrados.</p>
-            </div>
-
-            <div class="grid">
-                <article *ngFor="let p of proyectosAcademicos; let i = index" class="card" [@cardAnimation]="i">
-                    <header class="card__head">
-                        <h3 class="card__title">
-                            <i class="fas fa-project-diagram" aria-hidden="true"></i>
-                            <span>{{ p.nombre }}</span>
-                        </h3>
-                        <span class="badge badge--academic">Académico</span>
-                    </header>
-
-                    <p class="card__desc">{{ p.descripcion }}</p>
-
-                    <div class="card__details">
-                        <div class="detail">
-                            <i class="fas fa-user-tie" aria-hidden="true"></i>
-                            <div>
-                                <strong>Rol:</strong>
-                                <span>{{ p.tipoParticipacion | titlecase }}</span>
-                            </div>
-                        </div>
-
-                        <div class="detail">
-                            <i class="fas fa-code" aria-hidden="true"></i>
-                            <div>
-                                <strong>Tecnologías:</strong>
-                                <div class="tags">
-                                    <span *ngFor="let tech of p.tecnologias.split(',')" class="tag">
-                                        {{ tech.trim() }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <footer class="card__links" *ngIf="p.repoUrl || p.demoUrl">
-                        <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank" rel="noopener" class="link link--soft">
-                            <i class="fab fa-github" aria-hidden="true"></i>
-                            Ver código
-                        </a>
-                        <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank" rel="noopener" class="link link--solid">
-                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                            Ver demo
-                        </a>
-                    </footer>
-                </article>
-            </div>
-        </section>
-
-        <!-- Laborales -->
         <section class="section section--pro" aria-labelledby="pro-title">
             <header class="section__head">
                 <div class="section__icon" aria-hidden="true">
                     <i class="fas fa-briefcase"></i>
                 </div>
 
-                <h2 id="pro-title" class="section__title">Proyectos Laborales</h2>
+                <h2 id="pro-title" class="section__title">Proyectos Realizados</h2>
 
                 <span class="section__count">
-                    {{ proyectosLaborales.length }} proyectos
+                    {{ proyectos.length }} proyectos
                 </span>
             </header>
 
-            <div *ngIf="proyectosLaborales.length === 0" class="empty">
-                <i class="fas fa-briefcase" aria-hidden="true"></i>
-                <p>Este programador aún no tiene proyectos laborales registrados.</p>
+            <div *ngIf="proyectos.length === 0" class="empty">
+                <i class="fas fa-folder-open" aria-hidden="true"></i>
+                <p>Este programador aún no tiene proyectos registrados.</p>
             </div>
 
             <div class="grid">
-                <article *ngFor="let p of proyectosLaborales; let i = index" class="card" [@cardAnimation]="i">
+                <article *ngFor="let p of proyectos" class="card">
                     <header class="card__head">
                         <h3 class="card__title">
-                            <i class="fas fa-briefcase" aria-hidden="true"></i>
-                            <span>{{ p.nombre }}</span>
+                            <i class="fas fa-project-diagram" aria-hidden="true"></i>
+                            <span>{{ p.titulo }}</span>
                         </h3>
-                        <span class="badge badge--pro">Profesional</span>
+                        <span class="badge badge--pro">Proyecto</span>
                     </header>
 
-                    <p class="card__desc">{{ p.descripcion }}</p>
+                    <p class="card__desc" *ngIf="p.descripcion">{{ p.descripcion }}</p>
 
                     <div class="card__details">
-                        <div class="detail">
+                        <div class="detail" *ngIf="p.tipoParticipacion">
                             <i class="fas fa-user-tie" aria-hidden="true"></i>
                             <div>
                                 <strong>Rol:</strong>
@@ -202,12 +130,12 @@
                             </div>
                         </div>
 
-                        <div class="detail">
+                        <div class="detail" *ngIf="p.tecnologias">
                             <i class="fas fa-code" aria-hidden="true"></i>
                             <div>
                                 <strong>Tecnologías:</strong>
                                 <div class="tags">
-                                    <span *ngFor="let tech of p.tecnologias.split(',')" class="tag">
+                                    <span *ngFor="let tech of (p.tecnologias ? p.tecnologias.split(',') : [])" class="tag">
                                         {{ tech.trim() }}
                                     </span>
                                 </div>
@@ -215,12 +143,12 @@
                         </div>
                     </div>
 
-                    <footer class="card__links" *ngIf="p.repoUrl || p.demoUrl">
-                        <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank" rel="noopener" class="link link--soft">
+                    <footer class="card__links" *ngIf="p.urlRepo || p.urlDemo">
+                        <a *ngIf="p.urlRepo" [href]="p.urlRepo" target="_blank" rel="noopener" class="link link--soft">
                             <i class="fab fa-github" aria-hidden="true"></i>
                             Ver código
                         </a>
-                        <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank" rel="noopener" class="link link--solid">
+                        <a *ngIf="p.urlDemo" [href]="p.urlDemo" target="_blank" rel="noopener" class="link link--solid">
                             <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                             Ver demo
                         </a>

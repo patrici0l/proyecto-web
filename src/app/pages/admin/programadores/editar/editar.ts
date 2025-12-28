@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core'; // <--- 1. IMPORTAR ESTO
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
-
 import { ProgramadoresService, Programador } from '../../../../services/programadores';
 import { NotificacionesService } from '../../../../services/notificaciones';
 
@@ -11,17 +10,17 @@ import { NotificacionesService } from '../../../../services/notificaciones';
   standalone: true,
   templateUrl: './editar.html',
   styleUrls: ['./editar.scss'],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  encapsulation: ViewEncapsulation.None  // <--- 2. AGREGAR ESTA LÍNEA (¡IMPORTANTE!)
 })
 export class EditarComponent implements OnInit {
-
+  // ... el resto de tu código se queda IGUAL ...
+  // (No necesitas borrar ni cambiar nada de la lógica)
+  
   form!: FormGroup;
   id!: string;
-
-  // Variables para manejo de foto
   preview: string = '';
   archivoFotoNuevo: File | null = null;
-
   cargando: boolean = false;
 
   constructor(
@@ -34,7 +33,6 @@ export class EditarComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
-
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -47,7 +45,6 @@ export class EditarComponent implements OnInit {
       disponibilidad: [''],
       horasDisponiblesTexto: ['']
     });
-
     this.cargarDatos();
   }
 
@@ -55,7 +52,6 @@ export class EditarComponent implements OnInit {
     this.programadoresService.getProgramador(this.id)
       .subscribe((data: Programador | undefined) => {
         if (!data) return;
-
         this.form.patchValue({
           nombre: data.nombre,
           descripcion: data.descripcion,
@@ -68,8 +64,6 @@ export class EditarComponent implements OnInit {
           disponibilidad: data.disponibilidad || '',
           horasDisponiblesTexto: data.horasDisponibles?.join(', ') || ''
         });
-
-        // Foto actual
         if (data.foto) {
           this.preview = data.foto;
         } else if ((data as any)['fotoUrl']) {
@@ -81,9 +75,7 @@ export class EditarComponent implements OnInit {
   onFileSelected(event: any) {
     const file: File | undefined = event.target.files?.[0];
     if (!file) return;
-
     this.archivoFotoNuevo = file;
-
     const reader = new FileReader();
     reader.onload = () => {
       this.preview = reader.result as string;
@@ -97,11 +89,8 @@ export class EditarComponent implements OnInit {
       this.noti.info("Por favor completa todos los campos obligatorios.");
       return;
     }
-
     this.cargando = true;
-
     const value = this.form.value;
-
     let horasDisponibles: string[] = [];
     if (value.horasDisponiblesTexto) {
       horasDisponibles = value.horasDisponiblesTexto
@@ -109,7 +98,6 @@ export class EditarComponent implements OnInit {
         .map((h: string) => h.trim())
         .filter((h: string) => h !== '');
     }
-
     const datos: Partial<Programador> = {
       nombre: value.nombre,
       descripcion: value.descripcion,
@@ -122,22 +110,15 @@ export class EditarComponent implements OnInit {
       disponibilidad: value.disponibilidad || '',
       horasDisponibles: horasDisponibles
     };
-
     try {
-      // Enviar cambios + foto opcional
       await this.programadoresService.updateProgramador(
         this.id,
         datos,
-        this.archivoFotoNuevo
       );
-
       this.noti.exito("Programador actualizado correctamente.");
-
-      // Redirigir después de 1 segundo para UX suave
       setTimeout(() => {
         this.router.navigate(['/admin/programadores']);
       }, 800);
-
     } catch (err) {
       console.error(err);
       this.noti.error('Ocurrió un error al actualizar el programador.');

@@ -36,24 +36,26 @@
     radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.05), transparent 40%);
 }
 
-/* --- MODO OSCURO --- */
-@media (prefers-color-scheme: dark) {
-  :host {
-    --bg-page: #0f172a;
-    --bg-card: #1e293b;
-    --bg-hover: #334155;
+/* --- MODO OSCURO (Activado por clase) --- */
+html.theme-dark :host {
+  --bg-page: #0f172a;
+  /* Slate 900 */
+  --bg-card: #1e293b;
+  /* Slate 800 */
+  --bg-hover: #334155;
+  /* Slate 700 */
 
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
 
-    --primary: #22c55e;
-    --border-subtle: #334155;
+  --primary: #22c55e;
+  /* Verde brillante */
+  --border-subtle: #334155;
 
-    /* Sombras más oscuras para profundidad */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-  }
+  /* Sombras más oscuras para profundidad en dark mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 }
 
 .admin-wrapper {
@@ -89,7 +91,8 @@
     right: 0;
     width: 300px;
     height: 100%;
-    background: radial-gradient(circle at top right, rgba(21, 128, 61, 0.08), transparent 70%);
+    /* Gradiente ajustado para ser visible en ambos modos */
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--primary), transparent 92%), transparent 70%);
     pointer-events: none;
   }
 }
@@ -193,8 +196,7 @@
   &:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-hover);
-    border-color: var(--primary);
-    /* Borde sutil al hover */
+    border-color: color-mix(in srgb, var(--primary), transparent 60%);
 
     .card-link i {
       transform: translateX(4px);
@@ -213,7 +215,6 @@
     color: var(--text-muted);
     line-height: 1.5;
     margin: 0 0 1.5rem;
-    /* Espacio antes del link */
     flex-grow: 1;
     /* Empuja el link al fondo */
   }
@@ -252,13 +253,21 @@
   }
 }
 
-/* Variantes de Color (Glassy look) */
+/* Variantes de Color (Mejoradas para Dark/Light) */
 
 /* Azul (Resumen) */
 .card-icon-blue {
   background: rgba(59, 130, 246, 0.1);
   color: #3b82f6;
   border: 1px solid rgba(59, 130, 246, 0.2);
+
+  /* Ajuste brillo en modo oscuro */
+  html.theme-dark & {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+    /* Glow */
+  }
 }
 
 /* Indigo (Programadores) */
@@ -266,13 +275,25 @@
   background: rgba(99, 102, 241, 0.1);
   color: #6366f1;
   border: 1px solid rgba(99, 102, 241, 0.2);
+
+  html.theme-dark & {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+  }
 }
 
 /* Verde (Portafolios) */
 .card-icon-green {
   background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  color: #16a34a;
   border: 1px solid rgba(34, 197, 94, 0.2);
+
+  html.theme-dark & {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+  }
 }
 
 /* =========================================
@@ -287,7 +308,6 @@
   font-weight: 600;
   color: var(--primary);
   margin-top: auto;
-  /* Asegura que esté al final */
 
   i {
     transition: transform 0.2s ease;

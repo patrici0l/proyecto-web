@@ -67,13 +67,13 @@ export class ProyectoNuevoComponent implements OnInit {
 
     const proyecto: Proyecto = {
       idProgramador: this.idProgramador,
-      nombre: valores.nombre,
+      titulo: valores.nombre,
       descripcion: valores.descripcion,
       tipoProyecto: valores.tipoProyecto,
       tipoParticipacion: valores.tipoParticipacion,
       tecnologias: valores.tecnologias,
-      repoUrl: valores.repoUrl || '',
-      demoUrl: valores.demoUrl || '',
+      urlRepo: valores.repoUrl || '',
+      urlDemo: valores.demoUrl || '',
       // Se agrega la fecha de creación que estaba en el primer código
       creadoEn: new Date().toISOString()
     };

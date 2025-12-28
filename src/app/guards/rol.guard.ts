@@ -1,42 +1,35 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { map, take } from 'rxjs';
 import { AuthService } from '../services/auth';
-import { map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class rolGuard implements CanActivate {
+export const rolGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  constructor(
-    private auth: AuthService,
-    private router: Router
-  ) { }
+  const rolRequerido: string | undefined = route.data?.['rol'];
 
-  canActivate(route: any) {
-    const rolRequerido = route.data?.rol;
+  return authService.usuario$.pipe(
+    take(1),
+    map(usuario => {
+      // 1) Si no hay usuario logueado -> login
+      if (!usuario) {
+        router.navigate(['/login']);
+        return false;
+      }
 
-    return this.auth.usuario$.pipe(
-      map(usuario => {
-
-        // ❌ No hay usuario → debe iniciar sesión
-        if (!usuario) {
-          this.router.navigate(['/login']);
-          return false;
-        }
-
-        // ✔ Usuario logueado sin rol requerido → permitido
-        if (!rolRequerido) return true;
-
-        // ❌ Tiene rol incorrecto
-        if (usuario.rol !== rolRequerido) {
-          this.router.navigate(['/inicio']);
-          return false;
-        }
-
-        // ✔ Todo OK
+      // 2) Si NO se pide rol específico -> permitir (solo requiere login)
+      if (!rolRequerido) {
         return true;
-      })
-    );
-  }
-}
+      }
+
+      // 3) Si se pide rol -> validar
+      if (usuario.rol !== rolRequerido) {
+        router.navigate(['/inicio']);
+        return false;
+      }
+
+      return true;
+    })
+  );
+};

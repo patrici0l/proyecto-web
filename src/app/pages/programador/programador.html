@@ -9,7 +9,6 @@
         </p>
     </header>
 
-    <!-- Caso: no hay usuario -->
     <section *ngIf="!usuario" class="state state--warn" aria-live="polite">
         <div class="state__icon" aria-hidden="true">🔒</div>
         <div class="state__body">
@@ -18,21 +17,7 @@
         </div>
     </section>
 
-    <!-- Caso: usuario sin idProgramador -->
-    <section *ngIf="usuario && !usuario.idProgramador" class="state state--info">
-        <div class="state__icon" aria-hidden="true">⚠️</div>
-        <div class="state__body">
-            <h3 class="state__title">Falta vinculación</h3>
-            <p class="state__text">
-                Tu usuario tiene rol <strong>{{ usuario.rol }}</strong>, pero no tiene un
-                <code>idProgramador</code> asociado en la colección <strong>usuarios</strong>.
-                Pide al administrador que te vincule con tu ficha de programador.
-            </p>
-        </div>
-    </section>
-
-    <!-- Caso: usuario programador con idProgramador -->
-    <section *ngIf="usuario && usuario.idProgramador" class="content">
+    <section *ngIf="usuario" class="content">
 
         <div class="section-head">
             <div>
@@ -46,13 +31,11 @@
             </button>
         </div>
 
-        <!-- Cargando -->
         <div *ngIf="cargando" class="state state--loading" aria-live="polite">
             <span class="spinner" aria-hidden="true"></span>
             <p class="state__text">Cargando proyectos...</p>
         </div>
 
-        <!-- Tabla -->
         <div *ngIf="!cargando && proyectos.length > 0" class="table-wrap">
             <table class="table">
                 <thead>
@@ -67,7 +50,7 @@
 
                 <tbody>
                     <tr *ngFor="let p of proyectos" class="row">
-                        <td class="cell cell--name">{{ p.nombre }}</td>
+                        <td class="cell cell--name">{{ p.titulo }}</td>
                         <td class="cell">
                             <span class="pill pill--type">{{ p.tipoProyecto }}</span>
                         </td>
@@ -92,7 +75,6 @@
             </table>
         </div>
 
-        <!-- Vacío -->
         <div *ngIf="!cargando && proyectos.length === 0" class="state state--empty">
             <div class="state__icon" aria-hidden="true">📁</div>
             <div class="state__body">
@@ -101,7 +83,6 @@
             </div>
         </div>
 
-        <!-- Formulario para crear/editar proyectos -->
         <section class="proyecto-form" *ngIf="modo === 'nuevo' || modo === 'editar'">
             <header class="form-head">
                 <h3>{{ modo === 'nuevo' ? 'Nuevo proyecto' : 'Editar proyecto' }}</h3>
@@ -112,7 +93,7 @@
 
                 <div class="field field--full">
                     <label>Nombre del proyecto</label>
-                    <input type="text" formControlName="nombre"
+                    <input type="text" formControlName="titulo"
                         placeholder="Ej: Sistema de reservas, App móvil, etc." />
                 </div>
 
@@ -147,12 +128,12 @@
 
                 <div class="field field--full">
                     <label>Repositorio</label>
-                    <input type="url" formControlName="repoUrl" placeholder="https://github.com/..." />
+                    <input type="url" formControlName="urlRepo" placeholder="https://github.com/..." />
                 </div>
 
                 <div class="field field--full">
                     <label>Demo / despliegue</label>
-                    <input type="url" formControlName="demoUrl" placeholder="https://mi-app.web.app/..." />
+                    <input type="url" formControlName="urlDemo" placeholder="https://mi-app.web.app/..." />
                 </div>
 
                 <div class="form-actions">

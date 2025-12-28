@@ -7,7 +7,6 @@
         <span class="brand-icon">👨‍💻</span>
         <span class="brand-text">Gestión </span>
       </div>
-
       <app-theme-toggle></app-theme-toggle>
     </div>
 
@@ -18,36 +17,65 @@
       </div>
     </div>
 
-
     <h2 class="typing-text">
-      Plataforma de gestión de programadores
+      {{ esModoLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta' }}
     </h2>
 
     <p class="descripcion">
-      Inicia sesión de forma segura con tu cuenta de Google y gestiona
-      portafolios, asesorías y proyectos en un solo lugar.
+      {{ esModoLogin ? 'Ingresa tus credenciales para acceder.' : 'Regístrate para gestionar tus proyectos.' }}
     </p>
 
+    <form (ngSubmit)="onSubmit()" style="width: 100%; margin-top: 20px;">
+      
+      <div *ngIf="!esModoLogin" class="form-group" style="margin-bottom: 15px;">
+        <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombre" 
+          placeholder="Nombre Completo" 
+          required
+          class="custom-input"
+        >
+      </div>
 
-    <button (click)="loginGoogle()" [disabled]="cargando" class="google-btn">
-      <span class="google-icon">
-        <span class="g-segment g-blue"></span>
-        <span class="g-segment g-red"></span>
-        <span class="g-segment g-yellow"></span>
-        <span class="g-segment g-green"></span>
-      </span>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <input 
+          type="email" 
+          [(ngModel)]="email" 
+          name="email" 
+          placeholder="Correo Electrónico" 
+          required
+          class="custom-input"
+        >
+      </div>
 
-      <span class="google-text">
-        {{ cargando ? 'Conectando con Google...' : 'Continuar con Google' }}
-      </span>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          name="password" 
+          placeholder="Contraseña" 
+          required
+          class="custom-input"
+        >
+      </div>
 
-      <span class="btn-glow-pulse" aria-hidden="true"></span>
-    </button>
+      <p *ngIf="mensajeError" style="color: #ff4444; font-size: 0.9rem; text-align: center; margin-bottom: 10px;">
+        {{ mensajeError }}
+      </p>
 
+      <button type="submit" [disabled]="cargando" class="google-btn" style="justify-content: center;">
+        <span class="google-text" style="margin: 0;">
+          {{ cargando ? 'Procesando...' : (esModoLogin ? 'Iniciar Sesión' : 'Registrarse') }}
+        </span>
+        <span class="btn-glow-pulse" aria-hidden="true"></span>
+      </button>
 
-    <p class="trust-text">
-      Solo utilizamos tu correo para identificarte en el sistema.
-      No compartimos tu información con terceros.
+    </form>
+
+    <p class="trust-text" style="margin-top: 20px; cursor: pointer; text-decoration: underline;" (click)="toggleModo()">
+      {{ esModoLogin ? '¿No tienes cuenta? Regístrate aquí' : '¿Ya tienes cuenta? Inicia sesión' }}
     </p>
+
   </div>
 </div>

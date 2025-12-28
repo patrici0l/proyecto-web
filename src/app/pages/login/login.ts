@@ -1,62 +1,89 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // <--- IMPORTANTE: Agrega esto
 
-import { AuthService, UsuarioApp } from '../../services/auth';
-import { take } from 'rxjs/operators';
+// Asegúrate de que este import apunte al servicio NUEVO que hicimos en el paso anterior
+import { AuthService } from '../../services/auth';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
+
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
-  imports: [CommonModule, ThemeToggleComponent]
+  imports: [CommonModule, FormsModule, ThemeToggleComponent] // <--- Agrega FormsModule aquí
 })
 export class LoginComponent {
 
-  cargando = false;
+  // Variables para el formulario
+  email: string = '';
+  password: string = '';
+  nombre: string = ''; // Solo para registro
+
+  esModoLogin: boolean = true; // True = Login, False = Registro
+  cargando: boolean = false;
+  mensajeError: string = '';
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) { }
 
-  async loginGoogle() {
-    try {
-      this.cargando = true;
-      await this.authService.loginConGoogle();
+  async onSubmit() {
+    this.cargando = true;
+    this.mensajeError = '';
 
-      // Tomamos el usuario con su rol UNA sola vez
-      this.authService.usuario$.pipe(take(1)).subscribe((usuario: UsuarioApp | null) => {
-        if (!usuario) {
+    if (this.esModoLogin) {
+      // --- LOGIN ---
+      // Para el Login, el backend espera "password" (porque recibe un Map)
+      const datosLogin = {
+        email: this.email,
+        password: this.password
+      };
+
+      this.authService.login(datosLogin).subscribe({
+        next: (res) => {
+          console.log('Login exitoso', res);
+          this.router.navigate(['/inicio']);
           this.cargando = false;
-          return;
+        },
+        error: (err) => {
+          console.error(err);
+          this.mensajeError = 'Credenciales incorrectas o error de servidor';
+          this.cargando = false;
         }
-
-        switch (usuario.rol) {
-          case 'admin':
-            this.router.navigate(['/admin']);
-            break;
-
-          case 'programador':
-            this.router.navigate(['/programador']);
-            break;
-
-          default: // 'usuario'
-            this.router.navigate(['/inicio']);
-            break;
-        }
-
-        this.cargando = false;
       });
 
-    } catch (err) {
-      console.error(err);
-      alert('Error al iniciar sesión con Google');
-      this.cargando = false;
+    } else {
+      // --- REGISTRO ---
+      // AQUÍ ESTÁ EL TRUCO: 
+      // Para el Registro, el backend espera "passwordHash" (porque recibe la Entidad Usuario)
+      const datosRegistro = {
+        email: this.email,
+        passwordHash: this.password, // <--- ¡CAMBIO IMPORTANTE!
+        nombre: this.nombre,
+        rol: 'usuario'
+      };
+
+      this.authService.registrar(datosRegistro).subscribe({
+        next: (res) => {
+          console.log('Registro exitoso', res);
+          alert('Cuenta creada con éxito. Ahora inicia sesión.');
+          this.esModoLogin = true; // Cambiamos a login para que entres
+          this.cargando = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.mensajeError = 'Error al registrarse. Intenta con otro correo.';
+          this.cargando = false;
+        }
+      });
     }
   }
-  toggleDarkMode() {
-  document.body.classList.toggle('dark-mode');
-}
+
+  toggleModo() {
+    this.esModoLogin = !this.esModoLogin;
+    this.mensajeError = '';
+  }
 }

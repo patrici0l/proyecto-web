@@ -1,348 +1,118 @@
 /* =========================================
-   1. SISTEMA DE DISEÑO (Variables & Temas)
+   1. ESTILOS BASE (Se definen las variables)
    ========================================= */
-
-:host {
-    /* --- Dinámicas de Movimiento --- */
-    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-    --duration-short: 0.2s;
-
-    /* --- MODO CLARO (Default) --- */
+.editar-container {
+    /* --- VARIABLES MODO CLARO (Por defecto) --- */
     --bg-page: #f8fafc;
-    /* Slate 50 */
     --bg-card: #ffffff;
     --bg-input: #f1f5f9;
-    /* Slate 100 */
-    --bg-input-focus: #ffffff;
-
     --text-main: #0f172a;
-    /* Slate 900 */
-    --text-label: #334155;
-    /* Slate 700 */
-    --text-placeholder: #94a3b8;
-    /* Slate 400 */
-
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
     --primary: #4f46e5;
-    /* Indigo 600 */
-    --primary-glow: rgba(79, 70, 229, 0.25);
+    --btn-text: #ffffff;
 
-    --border-subtle: #e2e8f0;
-    /* Slate 200 */
-    --border-focus: #4f46e5;
-
-    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-
-    /* Configuración Global */
+    /* Configuración Base */
     display: block;
+    width: 100%;
     min-height: 100vh;
-    padding: 3rem 1rem;
-    font-family: 'Inter', system-ui, sans-serif;
+    padding: 2rem 1rem;
+    font-family: system-ui, sans-serif;
+    transition: all 0.3s ease;
+
+    /* APLICACIÓN DE VARIABLES AL CONTENEDOR */
+    background-color: var(--bg-page);
     color: var(--text-main);
-    background: var(--bg-page);
-    /* Degradado sutil */
-    background-image:
-        radial-gradient(circle at top right, rgba(79, 70, 229, 0.08), transparent 40%),
-        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.08), transparent 40%);
-}
-
-/* --- MODO OSCURO (Automático) --- */
-@media (prefers-color-scheme: dark) {
-    :host {
-        --bg-page: #0f172a;
-        /* Slate 900 */
-        --bg-card: #1e293b;
-        /* Slate 800 */
-        --bg-input: #0f172a;
-        /* Slate 900 (Input más oscuro que card) */
-        --bg-input-focus: #020617;
-        /* Slate 950 */
-
-        --text-main: #f8fafc;
-        /* Slate 50 */
-        --text-label: #cbd5e1;
-        /* Slate 300 */
-        --text-placeholder: #64748b;
-        /* Slate 500 */
-
-        --primary: #818cf8;
-        /* Indigo 400 */
-        --primary-glow: rgba(129, 140, 248, 0.2);
-
-        --border-subtle: #334155;
-        /* Slate 700 */
-        --border-focus: #818cf8;
-
-        --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-    }
 }
 
 /* =========================================
-   2. ESTRUCTURA (Card & Títulos)
+   2. MODO OSCURO (Solo redefinimos variables)
    ========================================= */
 
-/* Título Principal */
-h2 {
-    text-align: center;
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
-    font-weight: 800;
-    margin-bottom: 2.5rem;
-    letter-spacing: -0.02em;
-    color: var(--text-main);
+/* Seleccionamos todas las posibilidades de modo oscuro */
+body.dark .editar-container,
+body.dark-mode .editar-container,
+html.dark .editar-container,
+.dark .editar-container,
+[data-theme="dark"] .editar-container {
 
-    &::after {
-        content: "";
-        display: block;
-        width: 60px;
-        height: 4px;
-        background: var(--primary);
-        margin: 0.75rem auto 0;
-        border-radius: 2px;
-        box-shadow: 0 2px 10px var(--primary-glow);
-    }
+    /* --- VARIABLES MODO OSCURO --- */
+    /* Solo cambiamos los valores de las variables aquí. 
+       No tocamos nada más. El navegador actualiza todo automático. */
+
+    --bg-page: #0f172a;
+    /* Azul muy oscuro */
+    --bg-card: #1e293b;
+    /* Tarjeta gris azulada */
+    --bg-input: #334155;
+    /* Input más claro que el fondo */
+    --text-main: #ffffff;
+    /* Texto blanco */
+    --text-muted: #94a3b8;
+    --border-color: #334155;
 }
 
-/* Títulos de Sección (h3) */
-h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin: 2rem 0 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+/* =========================================
+   3. ESTILOS DE LOS ELEMENTOS HIJOS
+   (Usan las variables, así cambian solos)
+   ========================================= */
 
-    /* Línea decorativa al lado del título */
-    &::before {
-        content: '';
-        width: 4px;
-        height: 1.25rem;
-        background: var(--primary);
-        border-radius: 2px;
-    }
-}
-
-/* Separadores */
-hr {
-    border: none;
-    height: 1px;
-    background: var(--border-subtle);
-    margin: 2.5rem 0;
-}
-
-/* Contenedor del Formulario (Tarjeta) */
-form {
+/* Tarjeta / Formulario */
+.editar-container form {
     max-width: 700px;
     margin: 0 auto;
-    padding: 2.5rem;
-    background: var(--bg-card);
-    border-radius: 1.5rem;
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--border-subtle);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 
-    /* Animación de entrada */
-    animation: slideUpFade 0.5s var(--ease-smooth);
+    /* Aquí está la magia: usa la variable */
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
 }
 
-@keyframes slideUpFade {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Textos */
+.editar-container h2,
+.editar-container label {
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
 }
 
-/* =========================================
-   3. CAMPOS DE ENTRADA
-   ========================================= */
+.editar-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-.form-group {
+.editar-container label {
+    display: block;
+    font-weight: 600;
+}
+
+.editar-container .form-group {
     margin-bottom: 1.5rem;
 }
 
-label {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-label);
-    margin-bottom: 0.5rem;
-
-    /* Iconos dentro del label (opcional si usas fontawesome) */
-    i {
-        color: var(--primary);
-        margin-right: 0.4rem;
-    }
-}
-
-input[type="text"],
-input[type="email"],
-textarea {
+/* Inputs y Textareas */
+.editar-container input,
+.editar-container textarea {
     width: 100%;
-    padding: 0.875rem 1rem;
-    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+
+    /* Usan variables, así que reaccionan al cambio de modo */
+    background-color: var(--bg-input);
     color: var(--text-main);
-    background: var(--bg-input);
-    border: 1px solid var(--border-subtle);
-    border-radius: 0.75rem;
-    outline: none;
-    transition: all var(--duration-short) var(--ease-smooth);
-
-    /* Placeholder styling */
-    &::placeholder {
-        color: var(--text-placeholder);
-    }
-
-    /* Estados: Focus */
-    &:focus {
-        background: var(--bg-input-focus);
-        border-color: var(--border-focus);
-        box-shadow: 0 0 0 4px var(--primary-glow);
-        transform: translateY(-1px);
-    }
-
-    /* Estados: Invalid (Angular classes) */
-    &.ng-invalid.ng-touched {
-        border-color: #ef4444;
-        box-shadow: 0 0 0 1px #ef4444;
-        /* Borde rojo sutil */
-
-        &:focus {
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
-        }
-    }
+    border: 1px solid var(--border-color);
 }
 
-textarea {
-    min-height: 120px;
-    resize: vertical;
-    line-height: 1.5;
-}
-
-/* =========================================
-   4. INPUT FILE & PREVIEW
-   ========================================= */
-
-.foto-section {
-    background: var(--bg-input);
-    border: 1px dashed var(--border-subtle);
-    padding: 1.5rem;
-    border-radius: 1rem;
-    text-align: center;
-    transition: border-color var(--duration-short);
-
-    &:hover {
-        border-color: var(--primary);
-        background: var(--bg-input-focus);
-    }
-}
-
-/* Estilizando el input file nativo */
-input[type="file"] {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-
-    &::file-selector-button {
-        margin-right: 1rem;
-        padding: 0.6rem 1.2rem;
-        border-radius: 0.5rem;
-        background: var(--bg-card);
-        border: 1px solid var(--border-subtle);
-        color: var(--text-main);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all var(--duration-short);
-
-        &:hover {
-            background: var(--bg-input);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-    }
-}
-
-/* Caja de previsualización */
-.preview-box {
-    margin-top: 1.5rem;
-
-    img {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 50%;
-        /* Foto redonda para perfil */
-        border: 4px solid var(--bg-card);
-        box-shadow: var(--shadow-float);
-        transition: transform var(--duration-short) var(--ease-spring);
-
-        &:hover {
-            transform: scale(1.05);
-        }
-    }
-}
-
-/* =========================================
-   5. BOTÓN DE ACCIÓN
-   ========================================= */
-
-button[type="submit"] {
+/* Botón */
+.editar-container button[type="submit"] {
     width: 100%;
     padding: 1rem;
-    margin-top: 1rem;
-
-    background: var(--primary);
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-
+    background-color: var(--primary);
+    color: var(--btn-text);
     border: none;
     border-radius: 0.75rem;
+    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 10px var(--primary-glow);
-
-    transition: all var(--duration-short) var(--ease-spring);
-
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px var(--primary-glow);
-        filter: brightness(1.1);
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0);
-        transform: scale(0.98);
-    }
-
-    /* Estado deshabilitado */
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        background: var(--text-placeholder);
-        /* Gris */
-        box-shadow: none;
-    }
-}
-
-/* =========================================
-   6. RESPONSIVE
-   ========================================= */
-
-@media (max-width: 640px) {
-    :host {
-        padding: 1.5rem 1rem;
-    }
-
-    form {
-        padding: 1.5rem;
-        border-radius: 1rem;
-    }
-
-    h2 {
-        margin-bottom: 2rem;
-    }
+    margin-top: 1rem;
 }

@@ -1,415 +1,253 @@
-/* login.component.scss
-   - Usa tokens globales (var(--...))
-   - Dark mode ya llega por tus variables globales + html.theme-dark
-   - Animaciones discretas + reduce-motion
-*/
+/* ==============================
+   Variables base (fácil mantenimiento)
+   ============================== */
+$primary: #4285f4;
+$primary-soft: rgba(66, 133, 244, 0.2);
+$error: #ff4444;
+$radius: 8px;
+$transition: 0.25s ease;
 
-:host {
-  display: block;
-}
-
-$dur-fast: 160ms;
-$dur-med: 260ms;
-
+/* ==============================
+   Contenedor principal
+   ============================== */
 .login-page {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 2.25rem 1.25rem;
-
-  color: var(--text-main);
-
-  background:
-    radial-gradient(circle at 20% 10%, color-mix(in srgb, var(--primary-glow), transparent 35%) 0%, transparent 55%),
-    radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.10) 0%, transparent 55%),
-    var(--bg-page);
-}
-
-.login-card {
-  width: 100%;
-  max-width: 440px;
-
-  padding: 2.35rem 2.1rem 2.05rem;
-  border-radius: 1.6rem;
-
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass);
-  box-shadow: var(--shadow-float);
-
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  backdrop-filter: blur(18px) saturate(160%);
-
-  display: flex;
-  flex-direction: column;
-  gap: 1.15rem;
-
-  transform-origin: center;
-  animation: card-in 520ms cubic-bezier(0.4, 0, 0.2, 1) both;
-
-  /* brillo interior sutil */
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    background: radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--primary), transparent 75%) 0%, transparent 55%);
-    opacity: 0.22;
-    pointer-events: none;
-  }
-
-  >* {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-@keyframes card-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.login-card-header {
   display: flex;
   align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa, #e4e7eb);
+  padding: 20px;
+}
+
+/* ==============================
+   Tarjeta de login
+   ============================== */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  animation: fadeInUp 0.6s ease;
+}
+
+/* ==============================
+   Header
+   ============================== */
+.login-card-header {
+  display: flex;
   justify-content: space-between;
-  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .brand-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-
-  padding: 0.35rem 0.8rem;
+  gap: 8px;
+  padding: 6px 14px;
   border-radius: 999px;
-
-  background: var(--bg-input, var(--bg-hover));
-  border: 1px solid var(--border-glass);
-  box-shadow: var(--shadow-sm, 0 8px 18px rgba(0, 0, 0, 0.06));
-
-  color: var(--text-main);
-  font-size: 0.72rem;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: 0.10em;
-
-  .brand-icon {
-    font-size: 1.05rem;
-    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--primary-glow), transparent 35%));
-  }
-
-  .brand-text {
-    white-space: nowrap;
-  }
+  background: rgba(66, 133, 244, 0.1);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: $primary;
 }
 
-/* Orbita */
+/* ==============================
+   Logo animado
+   ============================== */
 .logo-orbit {
   position: relative;
-  width: 96px;
-  height: 96px;
-  margin: 0.15rem auto 0.25rem auto;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 20px;
 }
 
 .orbit-ring {
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  border: 2px dashed color-mix(in srgb, var(--text-muted), transparent 25%);
-  opacity: 0.55;
-  animation: spin 12s linear infinite;
+  border-radius: 50%;
+  border: 2px dashed $primary;
+  animation: spin 10s linear infinite;
 }
 
 .orbit-core {
   position: absolute;
   inset: 12px;
-  border-radius: 999px;
+  border-radius: 50%;
+  background: $primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #fff;
+}
 
-  background: radial-gradient(circle at 30% 20%,
-      color-mix(in srgb, var(--bg-card), #ffffff 15%),
-      color-mix(in srgb, var(--bg-page), transparent 0%));
+/* ==============================
+   Textos
+   ============================== */
+.typing-text {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
 
-  border: 1px solid var(--border-glass);
-  box-shadow:
-    0 16px 30px rgba(0, 0, 0, 0.10),
-    0 0 0 6px color-mix(in srgb, var(--primary-glow), transparent 65%);
+.descripcion {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 10px;
+}
 
-  display: grid;
-  place-items: center;
+.trust-text {
+  font-size: 0.9rem;
+  color: $primary;
+  transition: color $transition;
 
-  span {
-    font-size: 2rem;
-    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--primary-glow), transparent 25%));
-    animation: float 2.2s ease-in-out infinite;
+  &:hover {
+    color: darken($primary, 8%);
   }
 }
 
+/* ==============================
+   Inputs
+   ============================== */
+.custom-input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: $radius;
+  border: 1px solid #ddd;
+  background-color: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  transition: border-color $transition, box-shadow $transition;
+  outline: none;
+
+  &::placeholder {
+    color: #aaa;
+  }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px $primary-soft;
+  }
+}
+
+/* ==============================
+   Botón principal
+   ============================== */
+.google-btn {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, $primary, darken($primary, 10%));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform $transition, box-shadow $transition;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(66, 133, 244, 0.35);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.btn-glow-pulse {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35), transparent 60%);
+  opacity: 0;
+  animation: pulse 2s infinite;
+}
+
+/* ==============================
+   Error
+   ============================== */
+p[style*="color: #ff4444"] {
+  color: $error !important;
+  font-weight: 500;
+}
+
+/* ==============================
+   Modo oscuro
+   ============================== */
+:host-context(body.dark-mode) {
+  .login-page {
+    background: linear-gradient(135deg, #121212, #1e1e1e);
+  }
+
+  .login-card {
+    background: #1f1f1f;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .descripcion {
+    color: #aaa;
+  }
+
+  .custom-input {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #fff;
+
+    &::placeholder {
+      color: #777;
+    }
+
+    &:focus {
+      border-color: #8ab4f8;
+      box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.25);
+    }
+  }
+}
+
+/* ==============================
+   Animaciones
+   ============================== */
 @keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes float {
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 
-  0%,
-  100% {
+  to {
+    opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
   }
 
   50% {
-    transform: translateY(-2px);
-  }
-}
-
-/* Texto */
-.typing-text {
-  margin: 0.35rem 0 0;
-  font-size: 1.3rem;
-  font-weight: 950;
-  text-align: center;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
-  color: var(--text-main);
-
-  animation: fade-up 320ms $dur-med both;
-}
-
-.descripcion {
-  margin: 0;
-  font-size: 0.96rem;
-  text-align: center;
-  line-height: 1.55;
-  color: var(--text-muted);
-
-  animation: fade-up 380ms $dur-med both;
-  animation-delay: 40ms;
-}
-
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+    opacity: 0.4;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Botón Google */
-.google-btn {
-  margin-top: 0.45rem;
-  width: 100%;
-
-  padding: 0.92rem 1.05rem;
-  border-radius: 999px;
-
-  border: 1px solid var(--border-glass);
-  background: var(--bg-input, var(--bg-hover));
-  color: var(--text-main);
-
-  font-size: 0.98rem;
-  font-weight: 850;
-
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-
-  position: relative;
-  overflow: hidden;
-
-  box-shadow: var(--shadow-card);
-
-  transition:
-    transform $dur-fast cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow $dur-fast cubic-bezier(0.4, 0, 0.2, 1),
-    background-color $dur-fast cubic-bezier(0.4, 0, 0.2, 1),
-    border-color $dur-fast cubic-bezier(0.4, 0, 0.2, 1),
-    filter $dur-fast cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--primary), transparent 25%);
-    outline-offset: 2px;
-  }
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    border-color: color-mix(in srgb, var(--primary), transparent 40%);
-    background: var(--bg-hover);
-    box-shadow: 0 18px 34px color-mix(in srgb, var(--primary-glow), transparent 45%);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0) scale(0.99);
-  }
-
-  &:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-    filter: grayscale(0.25);
-  }
-
-  /* pulso de luz interior */
-  .btn-glow-pulse {
-    position: absolute;
-    inset: -40%;
-    background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--primary-glow), transparent 25%) 0%, transparent 60%);
-    opacity: 0;
-    transform: translateX(-20%);
-    pointer-events: none;
-  }
-
-  &:hover:not(:disabled) .btn-glow-pulse {
-    opacity: 1;
-    animation: glow-sweep 900ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)) both;
-  }
-}
-
-@keyframes glow-sweep {
-  from {
-    transform: translateX(-18%);
-    opacity: 0.0;
-  }
-
-  20% {
-    opacity: 0.9;
-  }
-
-  to {
-    transform: translateX(18%);
-    opacity: 0.0;
-  }
-}
-
-/* Icono Google (CSS) */
-.google-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  background: #fff;
-
-  display: grid;
-  place-items: center;
-
-  overflow: hidden;
-  flex-shrink: 0;
-
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.10);
-
-  position: relative;
-
-  .g-segment {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-  }
-
-  .g-blue {
-    top: 0;
-    right: 0;
-    background: #4285f4;
-  }
-
-  .g-red {
-    bottom: 0;
-    right: 0;
-    background: #ea4335;
-  }
-
-  .g-yellow {
-    bottom: 0;
-    left: 0;
-    background: #fbbc05;
-  }
-
-  .g-green {
-    top: 0;
-    left: 0;
-    background: #34a853;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 22%;
-    background: #fff;
-    border-radius: 50%;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 40%;
-    right: 0;
-    width: 45%;
-    height: 20%;
-    background: #4285f4;
-    z-index: 2;
-  }
-}
-
-.google-text {
-  white-space: nowrap;
-}
-
-.trust-text {
-  margin: 0.35rem 0 0;
-  font-size: 0.78rem;
-  text-align: center;
-  line-height: 1.5;
-  color: var(--text-muted);
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .login-card {
-    padding: 2.1rem 1.4rem 1.75rem;
-    border-radius: 1.35rem;
-  }
-
-  .typing-text {
-    font-size: 1.16rem;
-  }
-
-  .google-text {
-    white-space: normal;
-    text-align: center;
-  }
-}
-
-/* Reduce motion */
-@media (prefers-reduced-motion: reduce) {
-
-  .login-card,
-  .typing-text,
-  .descripcion {
-    animation: none;
-  }
-
-  .orbit-ring,
-  .orbit-core span {
-    animation: none;
-  }
-
-  .google-btn {
-    transition: none;
-  }
-
-  .google-btn:hover:not(:disabled) .btn-glow-pulse {
-    animation: none;
+  100% {
     opacity: 0;
   }
 }

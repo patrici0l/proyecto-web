@@ -15,7 +15,7 @@ import { Observable, from, map, of } from 'rxjs';
 export interface Asesoria {
   id?: string;
   idProgramador: string;         // id del documento del programador
-  idSolicitante?: string;        // uid del usuario (si está logueado)
+  idSolicitante?: string;        // uid del usuario
   nombreSolicitante: string;
   emailSolicitante: string;
   fecha: string;                 // 'YYYY-MM-DD'
@@ -31,68 +31,57 @@ export interface Asesoria {
 })
 export class AsesoriasService {
 
+  // Únicamente inyectamos Firestore
   constructor(private firestore: Firestore) { }
 
-  // Asesorías solicitadas por un usuario (mis-asesorias)
+  /** Obtiene asesorías solicitadas por un usuario */
   getAsesoriasPorSolicitante(idSolicitante: string): Observable<Asesoria[]> {
     const ref = collection(this.firestore, 'asesorias');
     const q = query(ref, where('idSolicitante', '==', idSolicitante));
 
     return from(getDocs(q)).pipe(
       map(snap =>
-        snap.docs.map(d => {
-          const data = d.data() as Asesoria;
-          return { id: d.id, ...data };
-        })
+        snap.docs.map(d => ({ id: d.id, ...d.data() } as Asesoria))
       )
     );
   }
 
+  /** Crea una nueva asesoría limpiando valores undefined */
   crearAsesoria(data: Asesoria) {
     const ref = collection(this.firestore, 'asesorias');
 
-    const limpio: any = { ...data };
-    Object.keys(limpio).forEach(key => {
-      if (limpio[key] === undefined) {
-        delete limpio[key];
-      }
-    });
+    // Limpieza de campos undefined para evitar errores en Firestore
+    const limpio = JSON.parse(JSON.stringify(data));
 
     return addDoc(ref, limpio);
   }
 
-  // 👉 Asesorías de un programador concreto
+  /** Obtiene las asesorías vinculadas a un programador */
   getAsesoriasPorProgramador(idProgramador?: string): Observable<Asesoria[]> {
-    if (!idProgramador) {
-      return of([]);
-    }
+    if (!idProgramador) return of([]);
 
     const ref = collection(this.firestore, 'asesorias');
     const q = query(ref, where('idProgramador', '==', idProgramador));
 
     return from(getDocs(q)).pipe(
       map(snap =>
-        snap.docs.map(d => {
-          const data = d.data() as Asesoria;
-          return { id: d.id, ...data };
-        })
+        snap.docs.map(d => ({ id: d.id, ...d.data() } as Asesoria))
       )
     );
   }
 
+  /** Obtiene el detalle de una asesoría específica */
   getAsesoria(id: string): Observable<Asesoria> {
     const refDoc = doc(this.firestore, 'asesorias', id);
 
     return from(getDoc(refDoc)).pipe(
-      map(snap => {
-        const data = snap.data() as Asesoria;
-        return { id: snap.id, ...data };
-      })
+      map(snap => ({ id: snap.id, ...snap.data() } as Asesoria))
     );
   }
 
+  /** Actualiza el estado o respuesta de una asesoría */
   updateAsesoria(id: string, cambios: Partial<Asesoria>) {
     const refDoc = doc(this.firestore, 'asesorias', id);
     return updateDoc(refDoc, cambios);
-  }
+  } 
 }
