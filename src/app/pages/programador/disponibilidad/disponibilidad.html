@@ -1,0 +1,86 @@
+<h2>Mi disponibilidad</h2>
+
+<form [formGroup]="form" class="box" (ngSubmit)="guardar()">
+    <div class="row">
+        <label>Día</label>
+        <select formControlName="diaSemana">
+            <option [value]="0">Domingo</option>
+            <option [value]="1">Lunes</option>
+            <option [value]="2">Martes</option>
+            <option [value]="3">Miércoles</option>
+            <option [value]="4">Jueves</option>
+            <option [value]="5">Viernes</option>
+            <option [value]="6">Sábado</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label>Hora inicio</label>
+        <input type="time" formControlName="horaInicio" />
+    </div>
+
+    <div class="row">
+        <label>Hora fin</label>
+        <input type="time" formControlName="horaFin" />
+    </div>
+
+    <div class="row">
+        <label>Modalidad</label>
+        <select formControlName="modalidad">
+            <option value="virtual">Virtual</option>
+            <option value="presencial">Presencial</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label>
+            <input type="checkbox" formControlName="activo" />
+            Activo
+        </label>
+    </div>
+
+    <div class="actions">
+        <button type="submit">
+            {{ editandoId ? 'Actualizar' : 'Crear' }}
+        </button>
+
+        <button type="button" *ngIf="editandoId" (click)="cancelarEdicion()">
+            Cancelar
+        </button>
+    </div>
+</form>
+
+<hr />
+
+<div *ngIf="cargando">Cargando...</div>
+
+<div *ngIf="!cargando && lista.length === 0">
+    No has registrado disponibilidad todavía.
+</div>
+
+<table *ngIf="!cargando && lista.length > 0" class="table">
+    <thead>
+        <tr>
+            <th>Día</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Modalidad</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let d of lista">
+            <td>{{ nombreDia(d.diaSemana) }}</td>
+            <td>{{ d.horaInicio | slice:0:5 }}</td>
+            <td>{{ d.horaFin | slice:0:5 }}</td>
+            <td>{{ d.modalidad }}</td>
+            <td>{{ d.activo ? 'Sí' : 'No' }}</td>
+            <td>
+                <button type="button" (click)="editar(d)">Editar</button>
+                <button type="button" (click)="eliminar(d)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
-import { AuthService, UsuarioApp } from '../../../../services/auth';
+
+import { AsesoriasProgramadorService, AsesoriaRecibida } from '../../../../services/asesorias-programador';
 import { NotificacionesService } from '../../../../services/notificaciones';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-programador-asesorias',
@@ -14,97 +13,78 @@ import { Observable } from 'rxjs';
 })
 export class ProgramadorAsesoriasComponent implements OnInit {
 
-  usuario$!: Observable<UsuarioApp | null>;
-  asesorias: Asesoria[] = [];
+  asesorias: AsesoriaRecibida[] = [];
   cargando = true;
   error: string | null = null;
 
-  // para mostrar la “notificación simulada”
+  // notificación simulada (correo / WhatsApp)
   mensajeSimulado: string | null = null;
 
   constructor(
-    private asesoriasService: AsesoriasService,
-    private auth: AuthService,
+    private asesoriasService: AsesoriasProgramadorService,
     private noti: NotificacionesService
   ) { }
 
   ngOnInit(): void {
-    this.usuario$ = this.auth.usuario$;
+    this.cargarAsesorias();
+  }
 
-    this.auth.usuario$.subscribe(usuario => {
-      if (!usuario || !usuario.idProgramador) {
+  cargarAsesorias() {
+    this.cargando = true;
+
+    this.asesoriasService.listarMias().subscribe({
+      next: (lista) => {
+        this.asesorias = lista;
         this.cargando = false;
-        this.asesorias = [];
-        return;
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('No se pudieron cargar las asesorías');
+        this.cargando = false;
       }
-
-      this.asesoriasService.getAsesoriasPorProgramador(usuario.idProgramador)
-        .subscribe({
-          next: (lista) => {
-            this.asesorias = lista;
-            this.cargando = false;
-          },
-          error: (err: any) => { // ✅ Tipamos el error
-            console.error(err);
-            this.error = 'Ocurrió un error al cargar las asesorías.';
-            this.noti.error('No se pudieron cargar las asesorías');
-            this.cargando = false;
-          }
-        });
     });
   }
 
-  cambiarEstado(asesoria: Asesoria, nuevoEstado: 'aprobada' | 'rechazada') {
+  cambiarEstado(
+    asesoria: AsesoriaRecibida,
+    nuevoEstado: 'aprobada' | 'rechazada'
+  ) {
     const nombre = asesoria.nombreSolicitante;
     const fechaHora = `${asesoria.fecha} ${asesoria.hora}`;
 
-    const textoBase =
+    const texto =
       nuevoEstado === 'aprobada'
-        ? `Hola ${nombre}, tu solicitud de asesoría para el ${fechaHora} ha sido APROBADA. 
-El programador te espera en el horario acordado.`
-        : `Hola ${nombre}, lamentablemente tu solicitud de asesoría para el ${fechaHora} ha sido RECHAZADA. 
-Motivo: (aquí el programador puede añadir una breve justificación).`;
+        ? `Hola ${nombre}, tu solicitud de asesoría para el ${fechaHora} ha sido APROBADA.`
+        : `Hola ${nombre}, tu solicitud de asesoría para el ${fechaHora} ha sido RECHAZADA.`;
 
-    const cambios: Partial<Asesoria> = {
+    this.asesoriasService.actualizar(asesoria.id, {
       estado: nuevoEstado,
-      respuestaProgramador: textoBase
-    };
+      respuestaProgramador: texto
+    }).subscribe({
+      next: () => {
+        asesoria.estado = nuevoEstado;
+        asesoria.respuestaProgramador = texto;
 
-    if (!asesoria.id) {
-      console.error('La asesoría no tiene id');
-      this.noti.error('No se pudo identificar la asesoría a actualizar');
-      return;
-    }
+        this.noti.exito(
+          nuevoEstado === 'aprobada'
+            ? 'Asesoría aprobada'
+            : 'Asesoría rechazada'
+        );
 
-    // 🔴 ANTES (Error): .then(...) 
-    // ✅ AHORA (Correcto): .subscribe(...)
-    this.asesoriasService.updateAsesoria(asesoria.id, cambios)
-      .subscribe({
-        next: () => {
-          // actualizar en memoria
-          asesoria.estado = nuevoEstado;
-          asesoria.respuestaProgramador = textoBase;
-
-          // notificación visual al programador
-          this.noti.exito(
-            nuevoEstado === 'aprobada'
-              ? 'Asesoría aprobada correctamente'
-              : 'Asesoría rechazada correctamente'
-          );
-
-          // construir la “notificación simulada”
-          this.mensajeSimulado =
-            `Simulación de notificación por correo / WhatsApp
+        // simulación de notificación
+        this.mensajeSimulado =
+          `Simulación de notificación
 
 Para: ${asesoria.emailSolicitante}
+
 Mensaje:
-${textoBase}`;
-        },
-        error: (err: any) => { // ✅ Tipamos el error
-          console.error(err);
-          this.noti.error('Error al actualizar el estado de la asesoría');
-        }
-      });
+${texto}`;
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('Error al actualizar la asesoría');
+      }
+    });
   }
 
   cerrarMensajeSimulado() {

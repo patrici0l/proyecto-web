@@ -15,6 +15,8 @@ import { MisAsesoriasComponent } from './pages/asesorias/mis-asesorias/mis-aseso
 // ===========================
 // ADMIN (guard rol=admin)
 // ===========================
+import { ProgramadorDisponibilidadComponent } from './pages/programador/disponibilidad/disponibilidad';
+
 import { AdminComponent } from './pages/admin/admin';
 import { ProgramadoresComponent } from './pages/admin/programadores/programadores';
 import { ProgramadorNuevoComponent } from './pages/admin/programadores/programador-nuevo';
@@ -106,7 +108,8 @@ export const routes: Routes = [
       // ✅ Si quieres un alias real, redirige (mejor que duplicar component)
       { path: 'proyectos', redirectTo: '', pathMatch: 'full' },
 
-      { path: 'asesorias', component: ProgramadorAsesoriasComponent }
+      { path: 'asesorias', component: ProgramadorAsesoriasComponent },
+      { path: 'disponibilidad', component: ProgramadorDisponibilidadComponent }
     ]
   },
 
