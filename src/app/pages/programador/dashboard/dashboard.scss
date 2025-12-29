@@ -1,0 +1,171 @@
+// ========================
+// VARIABLES BASE
+// ========================
+$primary: #2563eb; // azul principal
+$secondary: #64748b; // gris azulado
+$success: #16a34a;
+$warning: #f59e0b;
+$danger: #dc2626;
+
+$bg-card: #ffffff;
+$bg-page: #f8fafc;
+
+$text-main: #0f172a;
+$text-muted: #64748b;
+
+$radius: 14px;
+$shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+$transition: 0.25s ease;
+
+// ========================
+// CONTENEDOR GENERAL
+// ========================
+:host {
+    display: block;
+    padding: 2rem;
+    background-color: $bg-page;
+    color: $text-main;
+}
+
+// ========================
+// TÍTULO
+// ========================
+h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+// ========================
+// TEXTO DE CARGA
+// ========================
+div[ngif] {
+    font-size: 0.95rem;
+    color: $text-muted;
+}
+
+// ========================
+// CARDS DE RESUMEN
+// ========================
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background-color: $bg-card;
+    border-radius: $radius;
+    padding: 1.5rem;
+    box-shadow: $shadow;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform $transition, box-shadow $transition;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+    }
+}
+
+// ========================
+// SEPARADORES
+// ========================
+hr {
+    border: none;
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 2rem 0;
+}
+
+// ========================
+// CARD DEL GRÁFICO
+// ========================
+.grafico-card {
+    background-color: $bg-card;
+    border-radius: $radius;
+    padding: 1.5rem;
+    box-shadow: $shadow;
+    min-height: 320px;
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+
+// ========================
+// ACCIONES / REPORTES
+// ========================
+.acciones-reportes {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+// ========================
+// BOTONES
+// ========================
+.btn {
+    padding: 0.6rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color $transition, transform $transition, box-shadow $transition;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+}
+
+.btn--primary {
+    background-color: $primary;
+    color: #ffffff;
+
+    &:hover {
+        background-color: darken($primary, 6%);
+    }
+}
+
+.btn--secondary {
+    background-color: $secondary;
+    color: #ffffff;
+
+    &:hover {
+        background-color: darken($secondary, 6%);
+    }
+}
+
+// ========================
+// RESPONSIVE
+// ========================
+@media (max-width: 640px) {
+    :host {
+        padding: 1.25rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    .acciones-reportes {
+        flex-direction: column;
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}

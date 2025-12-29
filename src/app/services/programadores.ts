@@ -10,13 +10,12 @@ export interface Programador {
   especialidad?: string;
   descripcion?: string;
   telefono?: string;
-
   emailContacto?: string;
   whatsapp?: string;
   github?: string;
   linkedin?: string;
   portafolio?: string;
-
+  // Estos campos son opcionales, pero útiles si el backend los manda
   disponibilidad?: string;
   horasDisponibles?: string[];
   creadoEn?: string;
@@ -29,7 +28,7 @@ export class ProgramadoresService {
 
   private apiUrl = `${environment.apiUrl}/api/programadores`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ===============================
   // PÚBLICO
@@ -42,11 +41,16 @@ export class ProgramadoresService {
     return this.http.get<Programador>(`${this.apiUrl}/${id}`);
   }
 
+  // ✅✅✅ NUEVO MÉTODO IMPORTANTE ✅✅✅
+  // Llama al backend: /api/programadores/{id}/slots?fecha=2025-12-29
+  obtenerSlots(id: string, fecha: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/${id}/slots?fecha=${fecha}`);
+  }
+
   // ===============================
-  // ADMIN (por ahora stubs funcionales)
+  // ADMIN (Stubs)
   // ===============================
   crearProgramador(data: Partial<Programador>, archivoFoto?: File): Observable<any> {
-    // más adelante conectamos con endpoint admin real
     return this.http.post(this.apiUrl, data);
   }
 

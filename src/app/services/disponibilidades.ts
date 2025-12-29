@@ -3,46 +3,61 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+
 export interface Disponibilidad {
-  id?: string;
-  diaSemana: number;     // 0..6
-  horaInicio: string;    // "09:00" o "09:00:00"
-  horaFin: string;       // "12:00" o "12:00:00"
-  modalidad: 'virtual' | 'presencial';
-  activo: boolean;
+  id: string;
+  diaSemana: number;      // 0-6
+  horaInicio: string;     // HH:mm
+  horaFin: string;
+  modalidad: string;      // 'virtual' | 'presencial'
+  activo: boolean;        // 🔴 ESTO FALTABA
+
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class DisponibilidadesService {
 
-  private apiPublica = `${environment.apiUrl}/api/disponibilidades`;
-  private apiPrivada = `${environment.apiUrl}/api/programador/disponibilidades`;
+  // Usamos la misma base que definimos en el Controller de Java
+  private apiUrl = `${environment.apiUrl}/api/disponibilidades`;
 
   constructor(private http: HttpClient) { }
 
-  // ======================
-  // PÚBLICO (para agendar)
-  // ======================
-  getDeProgramador(idProgramador: string): Observable<Disponibilidad[]> {
-    return this.http.get<Disponibilidad[]>(`${this.apiPublica}/programador/${idProgramador}`);
+  /**
+   * ==========================================
+   * MÉTODOS PÚBLICOS (Para Clientes)
+   * ==========================================
+   */
+
+  // Obtiene las disponibilidades activas de un programador específico
+  getPorProgramador(idProgramador: string): Observable<Disponibilidad[]> {
+    return this.http.get<Disponibilidad[]>(`${this.apiUrl}/programador/${idProgramador}`);
   }
 
-  // ======================
-  // PRIVADO (programador)
-  // ======================
+  /**
+   * ==========================================
+   * MÉTODOS PRIVADOS (Para el Programador logueado)
+   * ==========================================
+   */
+
+  // Lista todas las disponibilidades del perfil logueado (activas e inactivas)
   listarMias(): Observable<Disponibilidad[]> {
-    return this.http.get<Disponibilidad[]>(this.apiPrivada);
+    return this.http.get<Disponibilidad[]>(`${this.apiUrl}/mis-disponibilidades`);
   }
 
-  crear(data: Omit<Disponibilidad, 'id'>): Observable<any> {
-    return this.http.post(this.apiPrivada, data);
+  // Crea una nueva franja horaria
+  crear(data: Omit<Disponibilidad, 'id'>): Observable<Disponibilidad> {
+    return this.http.post<Disponibilidad>(this.apiUrl, data);
   }
 
-  actualizar(id: string, data: Partial<Disponibilidad>): Observable<any> {
-    return this.http.put(`${this.apiPrivada}/${id}`, data);
+  // Actualiza una disponibilidad existente
+  actualizar(id: string, data: Partial<Disponibilidad>): Observable<Disponibilidad> {
+    return this.http.put<Disponibilidad>(`${this.apiUrl}/${id}`, data);
   }
 
+  // Elimina una disponibilidad
   eliminar(id: string): Observable<any> {
-    return this.http.delete(`${this.apiPrivada}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

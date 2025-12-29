@@ -30,6 +30,7 @@ import { ProyectoEditarComponent } from './pages/admin/programadores/proyectos/p
 // ===========================
 import { ProgramadorComponent } from './pages/programador/programador';
 import { ProgramadorAsesoriasComponent } from './pages/programador/asesorias/asesorias/asesorias';
+import { ProgramadorDashboardComponent } from './pages/programador/dashboard/dashboard';
 
 // ===========================
 // LAYOUTS + GUARD
@@ -91,6 +92,7 @@ export const routes: Routes = [
       { path: 'programadores/:id/proyectos', component: ProyectosAdminComponent },
       { path: 'programadores/:id/proyectos/nuevo', component: ProyectoNuevoComponent },
       { path: 'programadores/:id/proyectos/editar/:idProyecto', component: ProyectoEditarComponent },
+
     ]
   },
 
@@ -106,6 +108,8 @@ export const routes: Routes = [
       { path: '', component: ProgramadorComponent },
 
       // ✅ Si quieres un alias real, redirige (mejor que duplicar component)
+      { path: 'dashboard', component: ProgramadorDashboardComponent },
+
       { path: 'proyectos', redirectTo: '', pathMatch: 'full' },
 
       { path: 'asesorias', component: ProgramadorAsesoriasComponent },

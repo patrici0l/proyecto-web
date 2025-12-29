@@ -1,0 +1,34 @@
+<h2>Dashboard</h2>
+
+<div *ngIf="!resumen">
+    Cargando resumen...
+</div>
+
+<div *ngIf="resumen" class="cards">
+    <div class="card">Total: {{ resumen.total }}</div>
+    <div class="card">Pendientes: {{ resumen.pendientes }}</div>
+    <div class="card">Aprobadas: {{ resumen.aprobadas }}</div>
+    <div class="card">Rechazadas: {{ resumen.rechazadas }}</div>
+</div>
+
+<hr />
+
+<div *ngIf="cargando">
+    Cargando gráfico...
+</div>
+
+<div class="grafico-card">
+    <canvas id="graficoAsesorias"></canvas>
+</div>
+
+<hr />
+
+<div class="acciones-reportes">
+    <button class="btn btn--primary" (click)="descargarPdf()">
+        Descargar PDF
+    </button>
+
+    <button class="btn btn--secondary" (click)="descargarExcel()">
+        Descargar Excel
+    </button>
+</div>

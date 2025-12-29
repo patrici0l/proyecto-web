@@ -1,87 +1,91 @@
-<h2>Asesorías recibidas</h2>
-
-<!-- Estado: cargando -->
-<div *ngIf="cargando" class="state state--loading">
-    <div class="state__icon" aria-hidden="true">
-        <span class="spinner"></span>
+<div class="header-section">
+    <div class="header-content">
+        <h2>Gestión de Asesorías</h2>
+        <p class="subtitle">Administra las solicitudes y notificaciones por correo.</p>
     </div>
-    <p class="state__text">Cargando solicitudes...</p>
 </div>
 
-<!-- Estado: vacío -->
+<div *ngIf="cargando" class="state state--loading">
+    <div class="spinner"></div>
+    <p>Sincronizando solicitudes...</p>
+</div>
+
 <div *ngIf="!cargando && asesorias.length === 0" class="state state--empty">
-    <div class="state__icon" aria-hidden="true">📭</div>
-    <p class="state__text">No tienes solicitudes de asesoría por el momento.</p>
+    <div class="state__icon">📭</div>
+    <h3>Todo al día</h3>
+    <p>No tienes nuevas solicitudes pendientes.</p>
 </div>
 
-<!-- Tabla -->
-<div *ngIf="!cargando && asesorias.length > 0" class="table-wrap">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Solicitante</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Comentario</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+<div *ngIf="!cargando && asesorias.length > 0" class="table-card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Solicitante</th>
+                    <th style="width: 15%;">Fecha</th>
+                    <th style="width: 10%;">Hora</th>
+                    <th style="width: 25%;">Comentario</th>
+                    <th style="width: 10%;">Estado</th>
+                    <th style="width: 15%;" class="text-right">Acciones</th>
+                </tr>
+            </thead>
 
-        <tbody>
-            <tr *ngFor="let a of asesorias" class="row">
-                <td class="cell cell--name">{{ a.nombreSolicitante }}</td>
-                <td class="cell">{{ a.fecha }}</td>
-                <td class="cell">{{ a.hora }}</td>
+            <tbody>
+                <tr *ngFor="let a of asesorias" class="row">
+                    <td class="cell">
+                        <div class="user-profile">
+                            <div class="avatar">
+                                {{ a.nombreSolicitante.charAt(0).toUpperCase() }}
+                            </div>
+                            <div class="user-info">
+                                <span class="name">{{ a.nombreSolicitante }}</span>
+                                <span class="email" [title]="a.emailSolicitante">
+                                    {{ a.emailSolicitante }}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
 
-                <td class="cell cell--comment" [title]="a.comentario || '-'">
-                    {{ a.comentario || '-' }}
-                </td>
+                    <td class="cell font-medium">
+                        {{ a.fecha | slice:0:10 }}
+                    </td>
 
-                <td class="cell">
-                    <span class="status" [ngClass]="{
-              'status--pending': a.estado === 'pendiente',
-              'status--ok': a.estado === 'aprobada',
-              'status--bad': a.estado === 'rechazada'
-            }">
-                        {{ a.estado | titlecase }}
-                    </span>
-                </td>
+                    <td class="cell">
+                        <span class="time-badge">{{ a.hora | slice:0:5 }}</span>
+                    </td>
 
-                <td class="cell cell--actions">
-                    <button type="button" class="btn btn--ok" (click)="cambiarEstado(a, 'aprobada')"
-                        [disabled]="a.estado !== 'pendiente'">
-                        <i class="bi bi-check2-circle" aria-hidden="true"></i>
-                        Aprobar
-                    </button>
+                    <td class="cell">
+                        <p class="comment-text" [title]="a.comentario || ''">
+                            {{ a.comentario || 'Sin comentarios adicionales' }}
+                        </p>
+                    </td>
 
-                    <button type="button" class="btn btn--bad" (click)="cambiarEstado(a, 'rechazada')"
-                        [disabled]="a.estado !== 'pendiente'">
-                        <i class="bi bi-x-circle" aria-hidden="true"></i>
-                        Rechazar
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                    <td class="cell">
+                        <span class="badge" [ngClass]="{
+                            'badge--pending': a.estado === 'pendiente',
+                            'badge--approved': a.estado === 'aprobada',
+                            'badge--rejected': a.estado === 'rechazada'
+                        }">
+                            <span class="dot"></span>
+                            {{ a.estado | titlecase }}
+                        </span>
+                    </td>
 
-<!-- Panel de notificación simulada -->
-<div *ngIf="mensajeSimulado" class="toast" role="dialog" aria-live="polite">
-    <header class="toast__head">
-        <h3 class="toast__title">
-            <span class="toast__bell" aria-hidden="true">🔔</span>
-            Notificación simulada
-        </h3>
+                    <td class="cell text-right">
+                        <div class="actions-group">
+                            <button type="button" class="btn-icon btn-approve" (click)="cambiarEstado(a, 'aprobada')"
+                                [disabled]="a.estado !== 'pendiente'" title="Aprobar y enviar correo">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
 
-        <button type="button" class="toast__close" (click)="cerrarMensajeSimulado()" aria-label="Cerrar">
-            ✕
-        </button>
-    </header>
-
-    <pre class="toast__body">{{ mensajeSimulado }}</pre>
-
-    <button type="button" class="toast__btn" (click)="cerrarMensajeSimulado()">
-        Cerrar
-    </button>
+                            <button type="button" class="btn-icon btn-reject" (click)="cambiarEstado(a, 'rechazada')"
+                                [disabled]="a.estado !== 'pendiente'" title="Rechazar y notificar">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
