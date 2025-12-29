@@ -1,31 +1,39 @@
+<div class="header-section">
+    <h2>Lista de Programadores</h2>
+    <button routerLink="/admin/programadores/nuevo" class="btn-nuevo">
+        + Nuevo Programador
+    </button>
+</div>
 
-<h2 class="typing-title">Lista de programadores</h2>
-<button class="btn-nuevo" [routerLink]="['/admin/programadores/nuevo']">
-    <i class="icon">➕</i> Nuevo programador
-</button>
+<div class="table-container">
+    <table *ngIf="lista.length > 0">
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of lista">
+                <td>
+                    <img [src]="p.foto || 'assets/no-user.png'" alt="foto" width="50" style="border-radius: 50%;">
+                </td>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.especialidad }}</td>
+                <td>
+                    <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn-editar">
+                        Editar
+                    </button>
 
-<table>
-    <thead>
-        <tr>
-            <th>Foto</th>
-            <th>Nombre</th>
-            <th>Especialidad</th>
-            <th>Github</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let p of lista">
-            <td><img *ngIf="p.foto" [src]="p.foto" width="70"></td>
-            <td>{{ p.nombre }}</td>
-            <td>{{ p.especialidad }}</td>
-            <td><a *ngIf="p.github" [href]="p.github" target="_blank">Github</a></td>
-            <td>
-                <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button> |
-                <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button> |
-                <button [routerLink]="['/admin/programadores', p.id, 'proyectos']" class="btn btn-info">
-                    Proyectos</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                    <button (click)="eliminar(p)" class="btn-eliminar">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p *ngIf="lista.length === 0 && !cargando">No hay programadores registrados.</p>
+</div>

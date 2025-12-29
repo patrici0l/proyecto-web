@@ -1,8 +1,8 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ProgramadoresService, Programador } from '../../../services/programadores';
-import { NotificacionesService } from '../../../services/notificaciones';
+import { ProgramadoresService, Programador } from '../../../services/programadores'; // Ajusta la ruta
+import { NotificacionesService } from '../../../services/notificaciones'; // Ajusta la ruta
 
 @Component({
   selector: 'app-programadores',
@@ -14,10 +14,10 @@ import { NotificacionesService } from '../../../services/notificaciones';
 export class ProgramadoresComponent implements OnInit {
 
   lista: Programador[] = [];
+  cargando = false;
 
   constructor(
     private programadoresService: ProgramadoresService,
-    private ngZone: NgZone,
     private noti: NotificacionesService
   ) { }
 
@@ -26,39 +26,42 @@ export class ProgramadoresComponent implements OnInit {
   }
 
   cargarProgramadores() {
-    this.programadoresService.getProgramadores()
-      .subscribe({
-        next: (programadores) => {
-          this.ngZone.run(() => {
-            this.lista = programadores;
-          });
-        },
-        error: (err) => {
-          console.error('Error Firestore:', err);
-          this.noti.error('No se pudieron cargar los programadores');
-        }
-      });
+    this.cargando = true;
+    this.programadoresService.getProgramadores().subscribe({
+      next: (data) => {
+        this.lista = data;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.cargando = false;
+      }
+    });
   }
 
-  async eliminar(id: string | undefined) {
-    if (!id) return;
+  // ✅ AQUÍ ESTABA EL PROBLEMA
+  // Usamos subscribe para forzar la ejecución
+  async eliminar(p: Programador) {
+    if (!p.id) return;
 
     const confirmado = await this.noti.confirmar(
-      '¿Eliminar este programador?',
-      'Se eliminará toda la información asociada a este programador.\nEsta acción no se puede deshacer.'
+      '¿Eliminar programador?',
+      `Se borrará a ${p.nombre} y todos sus datos.`
     );
 
     if (!confirmado) return;
 
-    try {
-      await this.programadoresService.deleteProgramador(id);
-
-      this.noti.exito('Programador eliminado correctamente.');
-      this.cargarProgramadores();
-
-    } catch (e) {
-      console.error(e);
-      this.noti.error('No se pudo eliminar el programador. Intenta nuevamente.');
-    }
+    // Llamada al servicio
+    this.programadoresService.deleteProgramador(p.id).subscribe({
+      next: () => {
+        this.noti.exito('Eliminado correctamente');
+        // Recargamos la lista para ver que desapareció
+        this.cargarProgramadores();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        this.noti.error('No se pudo eliminar. Revisa si tiene proyectos activos.');
+      }
+    });
   }
 }
