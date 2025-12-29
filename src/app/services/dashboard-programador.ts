@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -22,11 +22,26 @@ export class DashboardProgramadorService {
 
     constructor(private http: HttpClient) { }
 
-    getResumen(): Observable<ResumenDashboard> {
-        return this.http.get<ResumenDashboard>(`${this.api}/resumen`);
+    // Aceptamos filtros opcionales
+    getResumen(filtros?: { estado?: string; desde?: string; hasta?: string }): Observable<ResumenDashboard> {
+        let params = new HttpParams();
+        if (filtros) {
+            if (filtros.estado) params = params.set('estado', filtros.estado);
+            if (filtros.desde) params = params.set('fechaDesde', filtros.desde);
+            if (filtros.hasta) params = params.set('fechaHasta', filtros.hasta);
+        }
+
+        return this.http.get<ResumenDashboard>(`${this.api}/resumen`, { params });
     }
 
-    getSerie(): Observable<PuntoSerie[]> {
-        return this.http.get<PuntoSerie[]>(`${this.api}/serie`);
+    getSerie(filtros?: { estado?: string; desde?: string; hasta?: string }): Observable<PuntoSerie[]> {
+        let params = new HttpParams();
+        if (filtros) {
+            if (filtros.estado) params = params.set('estado', filtros.estado);
+            if (filtros.desde) params = params.set('fechaDesde', filtros.desde);
+            if (filtros.hasta) params = params.set('fechaHasta', filtros.hasta);
+        }
+
+        return this.http.get<PuntoSerie[]>(`${this.api}/serie`, { params });
     }
 }

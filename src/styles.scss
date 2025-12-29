@@ -29,6 +29,10 @@
     --primary: #4f46e5;
     --primary-glow: rgba(79, 70, 229, 0.3);
 
+    /* Agregamos un color de error para el botón de borrar */
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+
     --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
 
     /* extras útiles */
@@ -54,6 +58,9 @@
     --border-glass: rgba(255, 255, 255, 0.1);
     --primary: #6366f1;
     --primary-glow: rgba(99, 102, 241, 0.25);
+
+    --danger: #f87171;
+    --danger-hover: #ef4444;
 
     --shadow-float: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
 
@@ -94,7 +101,7 @@ a {
     }
 }
 
-/* Botones y inputs base (sin romper tus estilos locales) */
+/* Botones y inputs base */
 button,
 input,
 select,
@@ -112,7 +119,7 @@ textarea {
     border-radius: 0.5rem;
 }
 
-/* Scrollbar (opcional, se ve bien en tu UI glass) */
+/* Scrollbar */
 * {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, var(--text-muted), transparent 40%) transparent;
@@ -134,7 +141,121 @@ textarea {
     background: color-mix(in srgb, var(--text-muted), transparent 40%);
 }
 
-/* Si usas iconos con <i>, alinea bien */
 i {
     line-height: 1;
+}
+
+/* =========================================
+   4) COMPONENTES INYECTADOS (MODAL CONFIRMACIÓN)
+   Estos estilos son usados por NotificacionesService
+   ========================================= */
+
+/* Fondo oscuro que cubre toda la pantalla */
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Un poco más oscuro para mejor contraste */
+    backdrop-filter: blur(4px);
+    /* Efecto cristal opcional, muy moderno */
+    z-index: 9999;
+
+    /* ESTO CENTRA LA VENTANA */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Animación de entrada */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+
+    &.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* La ventana del mensaje */
+.confirm-modal {
+    background-color: var(--bg-card);
+    /* Usa tu variable de tema */
+    color: var(--text-main);
+    /* Usa tu variable de tema */
+    border: 1px solid var(--border-glass);
+
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-float);
+
+    min-width: 300px;
+    max-width: 90%;
+    text-align: center;
+
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Animación cuando se hace visible */
+    .confirm-overlay.visible & {
+        transform: scale(1) translateY(0);
+    }
+
+    h3 {
+        margin-top: 0;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    p {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+}
+
+/* Contenedor de botones del modal */
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Estilos específicos para los botones creados dinámicamente */
+.confirm-modal button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, transform 0.1s;
+
+    &:active {
+        transform: scale(0.96);
+    }
+}
+
+/* Botón Aceptar (Eliminar) */
+.btn-ok {
+    background-color: var(--danger);
+    color: white;
+
+    &:hover {
+        background-color: var(--danger-hover);
+    }
+}
+
+/* Botón Cancelar */
+.btn-cancelar {
+    background-color: var(--bg-hover);
+    color: var(--text-main);
+    border: 1px solid var(--border-glass);
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--bg-hover), var(--text-muted) 10%);
+    }
 }

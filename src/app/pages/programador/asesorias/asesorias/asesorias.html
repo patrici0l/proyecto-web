@@ -1,19 +1,25 @@
 <div class="header-section">
     <div class="header-content">
         <h2>Gestión de Asesorías</h2>
-        <p class="subtitle">Administra las solicitudes y notificaciones por correo.</p>
+        <p class="subtitle">Administra las solicitudes. El sistema notificará automáticamente por correo a los usuarios.
+        </p>
+    </div>
+
+    <div class="counter-chip" *ngIf="asesorias.length > 0">
+        <span class="count">{{ asesorias.length }}</span>
+        <span class="label">Solicitudes</span>
     </div>
 </div>
 
 <div *ngIf="cargando" class="state state--loading">
     <div class="spinner"></div>
-    <p>Sincronizando solicitudes...</p>
+    <p>Sincronizando agenda...</p>
 </div>
 
 <div *ngIf="!cargando && asesorias.length === 0" class="state state--empty">
-    <div class="state__icon">📭</div>
-    <h3>Todo al día</h3>
-    <p>No tienes nuevas solicitudes pendientes.</p>
+    <div class="icon-empty">📭</div>
+    <h3>Bandeja al día</h3>
+    <p>No tienes solicitudes pendientes de gestionar.</p>
 </div>
 
 <div *ngIf="!cargando && asesorias.length > 0" class="table-card">
@@ -22,9 +28,9 @@
             <thead>
                 <tr>
                     <th style="width: 25%;">Solicitante</th>
-                    <th style="width: 15%;">Fecha</th>
+                    <th style="width: 12%;">Fecha</th>
                     <th style="width: 10%;">Hora</th>
-                    <th style="width: 25%;">Comentario</th>
+                    <th style="width: 28%;">Comentario</th>
                     <th style="width: 10%;">Estado</th>
                     <th style="width: 15%;" class="text-right">Acciones</th>
                 </tr>
@@ -39,15 +45,13 @@
                             </div>
                             <div class="user-info">
                                 <span class="name">{{ a.nombreSolicitante }}</span>
-                                <span class="email" [title]="a.emailSolicitante">
-                                    {{ a.emailSolicitante }}
-                                </span>
+                                <span class="email" [title]="a.emailSolicitante">{{ a.emailSolicitante }}</span>
                             </div>
                         </div>
                     </td>
 
-                    <td class="cell font-medium">
-                        {{ a.fecha | slice:0:10 }}
+                    <td class="cell">
+                        <span class="date-text">{{ a.fecha | slice:0:10 }}</span>
                     </td>
 
                     <td class="cell">
@@ -56,15 +60,15 @@
 
                     <td class="cell">
                         <p class="comment-text" [title]="a.comentario || ''">
-                            {{ a.comentario || 'Sin comentarios adicionales' }}
+                            {{ a.comentario || 'Sin comentarios adicionales.' }}
                         </p>
                     </td>
 
                     <td class="cell">
-                        <span class="badge" [ngClass]="{
-                            'badge--pending': a.estado === 'pendiente',
-                            'badge--approved': a.estado === 'aprobada',
-                            'badge--rejected': a.estado === 'rechazada'
+                        <span class="status-badge" [ngClass]="{
+                            'status-badge--pending': a.estado === 'pendiente',
+                            'status-badge--approved': a.estado === 'aprobada',
+                            'status-badge--rejected': a.estado === 'rechazada'
                         }">
                             <span class="dot"></span>
                             {{ a.estado | titlecase }}
@@ -72,14 +76,14 @@
                     </td>
 
                     <td class="cell text-right">
-                        <div class="actions-group">
-                            <button type="button" class="btn-icon btn-approve" (click)="cambiarEstado(a, 'aprobada')"
-                                [disabled]="a.estado !== 'pendiente'" title="Aprobar y enviar correo">
+                        <div class="actions">
+                            <button type="button" class="action-btn btn-approve" (click)="cambiarEstado(a, 'aprobada')"
+                                [disabled]="a.estado !== 'pendiente'" title="Aprobar y enviar correo de confirmación">
                                 <i class="bi bi-check-lg"></i>
                             </button>
 
-                            <button type="button" class="btn-icon btn-reject" (click)="cambiarEstado(a, 'rechazada')"
-                                [disabled]="a.estado !== 'pendiente'" title="Rechazar y notificar">
+                            <button type="button" class="action-btn btn-reject" (click)="cambiarEstado(a, 'rechazada')"
+                                [disabled]="a.estado !== 'pendiente'" title="Rechazar y notificar al usuario">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </div>

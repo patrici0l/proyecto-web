@@ -9,15 +9,15 @@ export interface Programador {
   foto?: string;
   especialidad?: string;
   descripcion?: string;
-  telefono?: string;
+  // Nuevos campos
   emailContacto?: string;
   whatsapp?: string;
   github?: string;
   linkedin?: string;
   portafolio?: string;
-  // Estos campos son opcionales, pero útiles si el backend los manda
-  disponibilidad?: string;
-  horasDisponibles?: string[];
+  disponibilidad?: string;      // Texto libre
+  horasDisponibles?: string[];  // Array de horas
+  usuarioId?: string;
   creadoEn?: string;
 }
 
@@ -26,13 +26,15 @@ export interface Programador {
 })
 export class ProgramadoresService {
 
+  // Asegúrate de que environment.apiUrl apunte a tu backend (ej: http://localhost:9090)
   private apiUrl = `${environment.apiUrl}/api/programadores`;
 
   constructor(private http: HttpClient) { }
 
   // ===============================
-  // PÚBLICO
+  // 🟢 MÉTODOS PÚBLICOS (Lectura)
   // ===============================
+
   getProgramadores(): Observable<Programador[]> {
     return this.http.get<Programador[]>(this.apiUrl);
   }
@@ -41,24 +43,77 @@ export class ProgramadoresService {
     return this.http.get<Programador>(`${this.apiUrl}/${id}`);
   }
 
-  // ✅✅✅ NUEVO MÉTODO IMPORTANTE ✅✅✅
-  // Llama al backend: /api/programadores/{id}/slots?fecha=2025-12-29
+  // Obtener horarios disponibles
   obtenerSlots(id: string, fecha: string): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/${id}/slots?fecha=${fecha}`);
   }
 
   // ===============================
-  // ADMIN (Stubs)
+  // 🟠 MÉTODOS ADMIN (Escritura)
   // ===============================
-  crearProgramador(data: Partial<Programador>, archivoFoto?: File): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+
+  crearProgramador(data: any, archivo: File | null): Observable<any> {
+    const formData = this.construirFormData(data, archivo);
+    return this.http.post(this.apiUrl, formData);
   }
 
-  updateProgramador(id: string, data: Partial<Programador>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  updateProgramador(id: string, data: any, archivo: File | null): Observable<any> {
+    const formData = this.construirFormData(data, archivo);
+    return this.http.put(`${this.apiUrl}/${id}`, formData);
   }
 
   deleteProgramador(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  // ===============================
+  // 🔧 UTILERÍA PRIVADA
+  // ===============================
+
+  /**
+   * Construye el FormData asegurando que los nombres de los campos
+   * coincidan EXACTAMENTE con los @RequestParam del Backend.
+   */
+  private construirFormData(data: any, archivo: File | null): FormData {
+    const formData = new FormData();
+
+    // 1. Adjuntar Archivo (si existe)
+    if (archivo) {
+      formData.append('file', archivo);
+    }
+
+    // 2. Definir los campos de texto permitidos (para evitar enviar basura)
+    // Estos nombres deben ser IGUALES a los de tu Controller Java
+    const camposTexto = [
+      'nombre',
+      'descripcion',
+      'especialidad',
+      'emailContacto',
+      'whatsapp',
+      'github',
+      'linkedin',
+      'portafolio',
+      'disponibilidad' // disponibilidadTexto en backend, pero el @RequestParam lo llamamos 'disponibilidad'
+    ];
+
+    // 3. Recorrer y agregar campos de texto
+    camposTexto.forEach(campo => {
+      if (data[campo] !== null && data[campo] !== undefined) {
+        formData.append(campo, data[campo].toString());
+      }
+    });
+
+    // 4. Manejo especial para Arrays (Horas)
+    if (data.horasDisponibles && Array.isArray(data.horasDisponibles)) {
+      // Spring Boot espera un String JSON para convertirlo a List
+      formData.append('horasDisponibles', JSON.stringify(data.horasDisponibles));
+    }
+
+    // DEBUG: Ver qué se está enviando (solo visible en consola del navegador)
+    // formData.forEach((value, key) => {
+    //    console.log(`FormData: ${key} = ${value}`);
+    // });
+
+    return formData;
   }
 }

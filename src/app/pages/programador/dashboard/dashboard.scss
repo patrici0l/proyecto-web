@@ -1,171 +1,242 @@
-// ========================
-// VARIABLES BASE
-// ========================
-$primary: #2563eb; // azul principal
-$secondary: #64748b; // gris azulado
-$success: #16a34a;
-$warning: #f59e0b;
-$danger: #dc2626;
-
-$bg-card: #ffffff;
+// VARIABLES
+$primary: #4f46e5;
 $bg-page: #f8fafc;
-
+$bg-card: #ffffff;
+$border-color: #e2e8f0;
 $text-main: #0f172a;
 $text-muted: #64748b;
+$radius: 12px;
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 
-$radius: 14px;
-$shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-$transition: 0.25s ease;
+// COLORES KPI
+$c-pend: #f59e0b;
+$c-aprob: #10b981;
+$c-rech: #ef4444;
 
-// ========================
-// CONTENEDOR GENERAL
-// ========================
 :host {
     display: block;
     padding: 2rem;
     background-color: $bg-page;
+    font-family: 'Segoe UI', sans-serif;
     color: $text-main;
 }
 
-// ========================
-// TÍTULO
-// ========================
 h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 800;
 }
 
-// ========================
-// TEXTO DE CARGA
-// ========================
-div[ngif] {
-    font-size: 0.95rem;
-    color: $text-muted;
+// --- FILTROS ---
+.filtros-container {
+    display: flex;
+    gap: 1rem;
+    background: $bg-card;
+    padding: 1.5rem;
+    border-radius: $radius;
+    border: 1px solid $border-color;
+    align-items: flex-end;
+    flex-wrap: wrap;
+
+    .filtro-group {
+        flex: 1;
+        min-width: 140px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: $text-muted;
+            text-transform: uppercase;
+        }
+    }
 }
 
-// ========================
-// CARDS DE RESUMEN
-// ========================
+.form-control {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.2s;
+
+    &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+}
+
+// --- KPI CARDS ---
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2rem;
-}
-
-.card {
-    background-color: $bg-card;
-    border-radius: $radius;
-    padding: 1.5rem;
-    box-shadow: $shadow;
-    font-size: 1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: transform $transition, box-shadow $transition;
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
-    }
-}
-
-// ========================
-// SEPARADORES
-// ========================
-hr {
-    border: none;
-    height: 1px;
-    background-color: #e2e8f0;
+    gap: 1.5rem;
     margin: 2rem 0;
 }
 
-// ========================
-// CARD DEL GRÁFICO
-// ========================
-.grafico-card {
-    background-color: $bg-card;
-    border-radius: $radius;
+.card {
+    background: $bg-card;
     padding: 1.5rem;
+    border-radius: $radius;
+    border: 1px solid $border-color;
     box-shadow: $shadow;
-    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
 
-    canvas {
-        width: 100% !important;
-        height: auto !important;
+    &:hover {
+        transform: translateY(-3px);
+    }
+
+    // Borde lateral de color
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+    }
+
+    &--total {
+        &::before {
+            background: $primary;
+        }
+
+        .card-value {
+            color: $primary;
+        }
+    }
+
+    &--warning {
+        &::before {
+            background: $c-pend;
+        }
+
+        .card-value {
+            color: $c-pend;
+        }
+    }
+
+    &--success {
+        &::before {
+            background: $c-aprob;
+        }
+
+        .card-value {
+            color: $c-aprob;
+        }
+    }
+
+    &--danger {
+        &::before {
+            background: $c-rech;
+        }
+
+        .card-value {
+            color: $c-rech;
+        }
+    }
+
+    .card-label {
+        font-size: 0.85rem;
+        color: $text-muted;
+        font-weight: 600;
+    }
+
+    .card-value {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-top: 0.5rem;
     }
 }
 
-// ========================
-// ACCIONES / REPORTES
-// ========================
+// --- GRID DE GRÁFICOS ---
+.charts-grid {
+    display: grid;
+    // Por defecto 2 columnas iguales
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .grafico-card {
+        background: $bg-card;
+        padding: 1.5rem;
+        border-radius: $radius;
+        border: 1px solid $border-color;
+        box-shadow: $shadow;
+
+        // Clase especial para que ocupe todo el ancho (línea temporal)
+        &.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .grafico-header {
+            margin-bottom: 1rem;
+
+            h3 {
+                font-size: 1.1rem;
+                margin: 0;
+                font-weight: 700;
+            }
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+
+            // Ajuste específico para el Donut para que no sea gigante
+            &.donut-container {
+                max-width: 350px;
+                margin: 0 auto; // Centrarlo
+            }
+        }
+    }
+}
+
+// --- BOTONES ---
 .acciones-reportes {
     display: flex;
     gap: 1rem;
-    flex-wrap: wrap;
 }
 
-// ========================
-// BOTONES
-// ========================
 .btn {
-    padding: 0.6rem 1.4rem;
-    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
     border: none;
-    transition: background-color $transition, transform $transition, box-shadow $transition;
+    cursor: pointer;
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    &--primary {
+        background: $primary;
+        color: #fff;
     }
 
-    &:active {
-        transform: translateY(0);
-        box-shadow: none;
+    &--secondary {
+        background: #fff;
+        border: 1px solid $border-color;
     }
-}
 
-.btn--primary {
-    background-color: $primary;
-    color: #ffffff;
-
-    &:hover {
-        background-color: darken($primary, 6%);
+    &--dark {
+        background: $text-main;
+        color: #fff;
     }
-}
 
-.btn--secondary {
-    background-color: $secondary;
-    color: #ffffff;
-
-    &:hover {
-        background-color: darken($secondary, 6%);
+    &:disabled {
+        opacity: 0.6;
+        cursor: wait;
     }
 }
 
-// ========================
 // RESPONSIVE
-// ========================
-@media (max-width: 640px) {
-    :host {
-        padding: 1.25rem;
+@media (max-width: 900px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
     }
 
-    h2 {
-        font-size: 1.4rem;
-    }
-
-    .acciones-reportes {
-        flex-direction: column;
-
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
-    }
+    // Todo a 1 columna en tablet/móvil
 }

@@ -1,0 +1,62 @@
+<div class="programador-container">
+
+    <header class="page-head">
+        <h1>Nuevo Proyecto</h1>
+        <p class="muted">Agrega un nuevo trabajo a tu portafolio.</p>
+    </header>
+
+    <section class="proyecto-form">
+        <form class="form-grid" [formGroup]="form" (ngSubmit)="crear()">
+
+            <div class="field field--full">
+                <label>Nombre del proyecto *</label>
+                <input type="text" formControlName="titulo" placeholder="Ej: E-commerce Angular" />
+            </div>
+
+            <div class="field field--full">
+                <label>Descripción *</label>
+                <textarea rows="4" formControlName="descripcion" placeholder="¿De qué trata el proyecto?"></textarea>
+            </div>
+
+            <div class="field">
+                <label>Tipo *</label>
+                <select formControlName="tipoProyecto">
+                    <option *ngFor="let t of tiposProyecto" [value]="t.valor">{{ t.label }}</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Rol *</label>
+                <select formControlName="tipoParticipacion">
+                    <option *ngFor="let t of tiposParticipacion" [value]="t.valor">{{ t.label }}</option>
+                </select>
+            </div>
+
+            <div class="field field--full">
+                <label>Tecnologías *</label>
+                <input type="text" formControlName="tecnologias" placeholder="Ej: Java, Spring Boot, MySQL" />
+            </div>
+
+            <div class="field field--full">
+                <label>URL Repositorio</label>
+                <input type="url" formControlName="urlRepo" placeholder="https://github.com/..." />
+            </div>
+
+            <div class="field field--full">
+                <label>URL Demo</label>
+                <input type="url" formControlName="urlDemo" placeholder="https://mi-proyecto.com" />
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn--success" type="submit" [disabled]="form.invalid || cargando">
+                    <span *ngIf="cargando">Guardando...</span>
+                    <span *ngIf="!cargando"><i class="bi bi-plus-lg"></i> Crear Proyecto</span>
+                </button>
+
+                <a routerLink="/programador" class="btn btn--soft">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </section>
+</div>

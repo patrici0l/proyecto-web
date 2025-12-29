@@ -87,6 +87,23 @@ export class AsesoriasService {
     return this.http.get<Asesoria[]>(`${this.api}/mis`);
   }
 
+  getFiltradasProgramador(filtros: {
+    estado?: string;
+    desde?: string;
+    hasta?: string;
+  }) {
+    const params = new URLSearchParams();
+
+    if (filtros.estado) params.append('estado', filtros.estado);
+    if (filtros.desde) params.append('desde', filtros.desde);
+    if (filtros.hasta) params.append('hasta', filtros.hasta);
+
+    return this.http.get<Asesoria[]>(
+      `${this.api}/programador/filtradas?${params.toString()}`
+    );
+  }
+
+
   /* =========================
      ACTUALIZAR ASESORÍA
      ========================= */

@@ -17,10 +17,15 @@ export class NotificacionesService {
     readonly notificacion$: Observable<NotificacionConfig | null> = this._notificacion.asObservable();
 
     // -----------------------------
-    //  NOTIFICACIONES (para el componente)
+    //  MÉTODOS PRINCIPALES
     // -----------------------------
     exito(mensaje: string, duracion: number = 3500): void {
         this.mostrar({ mensaje, tipo: 'exito', duracion });
+    }
+
+    // *** SOLUCIÓN AL ERROR: Alias para 'success' ***
+    success(mensaje: string, duracion: number = 3500): void {
+        this.exito(mensaje, duracion);
     }
 
     error(mensaje: string, duracion: number = 3500): void {
@@ -40,19 +45,17 @@ export class NotificacionesService {
     }
 
     // -----------------------------
-    //  CONFIRMACIÓN ELEGANTE (igual que la tuya)
+    //  CONFIRMACIÓN (Tu código original)
     // -----------------------------
     confirmar(titulo: string, mensaje: string = ''): Promise<boolean> {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.classList.add('confirm-overlay');
-
             const modal = document.createElement('div');
             modal.classList.add('confirm-modal');
 
             const h3 = document.createElement('h3');
             h3.innerText = titulo;
-
             const p = document.createElement('p');
             p.innerText = mensaje;
 
@@ -61,7 +64,7 @@ export class NotificacionesService {
 
             const btnOk = document.createElement('button');
             btnOk.innerText = 'Aceptar';
-            btnOk.classList.add('btn-ok');
+            btnOk.classList.add('btn-ok'); // Asegúrate de tener estilos para esto
 
             const btnCancel = document.createElement('button');
             btnCancel.innerText = 'Cancelar';
@@ -69,12 +72,10 @@ export class NotificacionesService {
 
             botones.appendChild(btnOk);
             botones.appendChild(btnCancel);
-
             modal.appendChild(h3);
             modal.appendChild(p);
             modal.appendChild(botones);
             overlay.appendChild(modal);
-
             document.body.appendChild(overlay);
 
             setTimeout(() => overlay.classList.add('visible'), 10);
@@ -87,8 +88,6 @@ export class NotificacionesService {
 
             btnOk.onclick = () => cerrar(true);
             btnCancel.onclick = () => cerrar(false);
-
-            // opcional: cerrar al hacer click fuera
             overlay.onclick = (e) => {
                 if (e.target === overlay) cerrar(false);
             };

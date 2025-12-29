@@ -104,8 +104,7 @@ export class ProgramadorNuevoComponent {
 
         try {
             // Llamar al servicio para crear el programador
-            await this.programadoresService.crearProgramador(data);
-
+            await this.programadoresService.crearProgramador(data, this.archivoFoto).toPromise();
             // Notificación bonita 
             this.noti.exito('Programador agregado correctamente');
 

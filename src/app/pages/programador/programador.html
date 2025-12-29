@@ -4,17 +4,11 @@
 
     <header class="page-head">
         <h1>Panel de Programador</h1>
-        <p class="page-sub">
-            Gestiona tus proyectos académicos y laborales desde un solo lugar.
-        </p>
+        <p class="page-sub">Gestiona tus proyectos.</p>
     </header>
 
-    <section *ngIf="!usuario" class="state state--warn" aria-live="polite">
-        <div class="state__icon" aria-hidden="true">🔒</div>
-        <div class="state__body">
-            <h3 class="state__title">Acceso requerido</h3>
-            <p class="state__text">Debes iniciar sesión como programador para gestionar tus proyectos.</p>
-        </div>
+    <section *ngIf="!usuario" class="state state--warn">
+        <h3>Acceso requerido</h3>
     </section>
 
     <section *ngIf="usuario" class="content">
@@ -22,18 +16,13 @@
         <div class="section-head">
             <div>
                 <h2>Mis proyectos</h2>
-                <p class="muted">Crea, edita y organiza tus proyectos para tu portafolio.</p>
+                <p class="muted">Crea, edita y organiza tus proyectos.</p>
             </div>
 
-            <button type="button" class="btn btn--primary" (click)="nuevoProyecto()">
+            <a routerLink="/programador/nuevo-proyecto" class="btn btn--primary">
                 <i class="bi bi-plus-lg" aria-hidden="true"></i>
                 Nuevo proyecto
-            </button>
-        </div>
-
-        <div *ngIf="cargando" class="state state--loading" aria-live="polite">
-            <span class="spinner" aria-hidden="true"></span>
-            <p class="state__text">Cargando proyectos...</p>
+            </a>
         </div>
 
         <div *ngIf="!cargando && proyectos.length > 0" class="table-wrap">
@@ -47,26 +36,22 @@
                         <th class="th-actions">Acciones</th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    <tr *ngFor="let p of proyectos" class="row">
-                        <td class="cell cell--name">{{ p.titulo }}</td>
-                        <td class="cell">
-                            <span class="pill pill--type">{{ p.tipoProyecto }}</span>
+                    <tr *ngFor="let p of proyectos">
+                        <td>{{ p.titulo }}</td>
+                        <td>
+                            <span class="pill">{{ p.tipoProyecto }}</span>
                         </td>
-                        <td class="cell">
-                            <span class="pill">{{ p.tipoParticipacion }}</span>
-                        </td>
-                        <td class="cell cell--tech" [title]="p.tecnologias">{{ p.tecnologias }}</td>
-
+                        <td>{{ p.tipoParticipacion }}</td>
+                        <td>{{ p.tecnologias }}</td>
                         <td class="cell cell--actions">
-                            <button type="button" class="btn btn--ghost" (click)="editarProyecto(p)">
-                                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                            <a [routerLink]="['/programador/editar-proyecto', p.id]" class="btn btn--ghost">
+                                <i class="bi bi-pencil-square"></i>
                                 Editar
-                            </button>
+                            </a>
 
                             <button type="button" class="btn btn--danger" (click)="eliminarProyecto(p)">
-                                <i class="bi bi-trash3" aria-hidden="true"></i>
+                                <i class="bi bi-trash3"></i>
                                 Eliminar
                             </button>
                         </td>
@@ -76,81 +61,8 @@
         </div>
 
         <div *ngIf="!cargando && proyectos.length === 0" class="state state--empty">
-            <div class="state__icon" aria-hidden="true">📁</div>
-            <div class="state__body">
-                <h3 class="state__title">Sin proyectos</h3>
-                <p class="state__text">Aún no tienes proyectos registrados.</p>
-            </div>
+            <p>No tienes proyectos aún.</p>
         </div>
-
-        <section class="proyecto-form" *ngIf="modo === 'nuevo' || modo === 'editar'">
-            <header class="form-head">
-                <h3>{{ modo === 'nuevo' ? 'Nuevo proyecto' : 'Editar proyecto' }}</h3>
-                <p class="muted">Completa los campos. Tecnologías separadas por comas.</p>
-            </header>
-
-            <form class="form-grid" [formGroup]="form" (ngSubmit)="guardarProyecto()">
-
-                <div class="field field--full">
-                    <label>Nombre del proyecto</label>
-                    <input type="text" formControlName="titulo"
-                        placeholder="Ej: Sistema de reservas, App móvil, etc." />
-                </div>
-
-                <div class="field field--full">
-                    <label>Descripción</label>
-                    <textarea rows="4" formControlName="descripcion"
-                        placeholder="Describe brevemente el objetivo y tu aporte en el proyecto..."></textarea>
-                </div>
-
-                <div class="field">
-                    <label>Tipo de proyecto</label>
-                    <select formControlName="tipoProyecto">
-                        <option *ngFor="let t of tiposProyecto" [value]="t.valor">
-                            {{ t.label }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label>Tipo de participación</label>
-                    <select formControlName="tipoParticipacion">
-                        <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
-                            {{ t.label }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="field field--full">
-                    <label>Tecnologías utilizadas</label>
-                    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, MySQL..." />
-                </div>
-
-                <div class="field field--full">
-                    <label>Repositorio</label>
-                    <input type="url" formControlName="urlRepo" placeholder="https://github.com/..." />
-                </div>
-
-                <div class="field field--full">
-                    <label>Demo / despliegue</label>
-                    <input type="url" formControlName="urlDemo" placeholder="https://mi-app.web.app/..." />
-                </div>
-
-                <div class="form-actions">
-                    <button class="btn btn--success" type="submit" [disabled]="cargando || form.invalid">
-                        <span class="btn__content">
-                            <i class="bi bi-save2" aria-hidden="true"></i>
-                            {{ cargando ? 'Guardando...' : 'Guardar' }}
-                        </span>
-                    </button>
-
-                    <button class="btn btn--soft" type="button" (click)="cancelarEdicion()">
-                        Cancelar
-                    </button>
-                </div>
-
-            </form>
-        </section>
 
     </section>
 </div>

@@ -1,0 +1,65 @@
+<div class="programador-container">
+    <header class="page-head">
+        <h1>Editar Proyecto</h1>
+        <p class="muted">Actualiza la información de tu portafolio.</p>
+    </header>
+
+    <div *ngIf="cargando" class="state state--loading">
+        <span class="spinner"></span>
+        <p>Cargando datos del proyecto...</p>
+    </div>
+
+    <section class="proyecto-form" *ngIf="!cargando">
+        <form class="form-grid" [formGroup]="form" (ngSubmit)="guardar()">
+
+            <div class="field field--full">
+                <label>Nombre del proyecto</label>
+                <input type="text" formControlName="titulo" />
+            </div>
+
+            <div class="field field--full">
+                <label>Descripción</label>
+                <textarea rows="4" formControlName="descripcion"></textarea>
+            </div>
+
+            <div class="field">
+                <label>Tipo</label>
+                <select formControlName="tipoProyecto">
+                    <option *ngFor="let t of tiposProyecto" [value]="t.valor">{{ t.label }}</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Rol</label>
+                <select formControlName="tipoParticipacion">
+                    <option *ngFor="let t of tiposParticipacion" [value]="t.valor">{{ t.label }}</option>
+                </select>
+            </div>
+
+            <div class="field field--full">
+                <label>Tecnologías</label>
+                <input type="text" formControlName="tecnologias" placeholder="Ej: Angular, Java..." />
+            </div>
+
+            <div class="field field--full">
+                <label>URL Repositorio</label>
+                <input type="url" formControlName="urlRepo" />
+            </div>
+
+            <div class="field field--full">
+                <label>URL Demo</label>
+                <input type="url" formControlName="urlDemo" />
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn--success" type="submit" [disabled]="form.invalid || cargando">
+                    <i class="bi bi-save2"></i> Guardar Cambios
+                </button>
+
+                <a routerLink="/programador" class="btn btn--soft">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </section>
+</div>

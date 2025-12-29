@@ -1,34 +1,100 @@
-<h2>Dashboard</h2>
+<h2>Dashboard de Programador</h2>
 
-<div *ngIf="!resumen">
-    Cargando resumen...
-</div>
+<section class="filtros-container">
+    <div class="filtro-group">
+        <label>Estado</label>
+        <select [(ngModel)]="estado" class="form-control">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="aprobada">Aprobada</option>
+            <option value="rechazada">Rechazada</option>
+        </select>
+    </div>
 
-<div *ngIf="resumen" class="cards">
-    <div class="card">Total: {{ resumen.total }}</div>
-    <div class="card">Pendientes: {{ resumen.pendientes }}</div>
-    <div class="card">Aprobadas: {{ resumen.aprobadas }}</div>
-    <div class="card">Rechazadas: {{ resumen.rechazadas }}</div>
-</div>
+    <div class="filtro-group">
+        <label>Desde</label>
+        <input type="date" [(ngModel)]="desde" class="form-control">
+    </div>
+
+    <div class="filtro-group">
+        <label>Hasta</label>
+        <input type="date" [(ngModel)]="hasta" class="form-control">
+    </div>
+
+    <div class="filtro-actions">
+        <button class="btn btn--dark" (click)="aplicarFiltros()">
+            Filtrar
+        </button>
+    </div>
+</section>
 
 <hr />
 
-<div *ngIf="cargando">
-    Cargando gráfico...
+<div *ngIf="cargandoResumen" class="loading-state">
+    Cargando datos...
 </div>
 
-<div class="grafico-card">
-    <canvas id="graficoAsesorias"></canvas>
+<div *ngIf="resumen" class="cards">
+    <div class="card card--total">
+        <span class="card-label">Total</span>
+        <span class="card-value">{{ resumen.total }}</span>
+    </div>
+    <div class="card card--warning">
+        <span class="card-label">Pendientes</span>
+        <span class="card-value">{{ resumen.pendientes }}</span>
+    </div>
+    <div class="card card--success">
+        <span class="card-label">Aprobadas</span>
+        <span class="card-value">{{ resumen.aprobadas }}</span>
+    </div>
+    <div class="card card--danger">
+        <span class="card-label">Rechazadas</span>
+        <span class="card-value">{{ resumen.rechazadas }}</span>
+    </div>
+</div>
+
+<div class="charts-grid">
+
+    <div class="grafico-card full-width">
+        <div class="grafico-header">
+            <h3>Evolución Temporal</h3>
+            <span *ngIf="cargandoGrafico" class="loading-badge">Cargando...</span>
+        </div>
+        <div class="canvas-container">
+            <canvas id="graficoAsesorias"></canvas>
+        </div>
+    </div>
+
+    <div class="grafico-card">
+        <div class="grafico-header">
+            <h3>Distribución %</h3>
+        </div>
+        <div class="canvas-container donut-container">
+            <canvas id="graficoPastel"></canvas>
+        </div>
+        <div *ngIf="!resumen" class="no-data">Sin datos</div>
+    </div>
+
+    <div class="grafico-card">
+        <div class="grafico-header">
+            <h3>Comparativa por Estado</h3>
+        </div>
+        <div class="canvas-container">
+            <canvas id="graficoBarras"></canvas>
+        </div>
+        <div *ngIf="!resumen" class="no-data">Sin datos</div>
+    </div>
+
 </div>
 
 <hr />
 
 <div class="acciones-reportes">
-    <button class="btn btn--primary" (click)="descargarPdf()">
-        Descargar PDF
+    <button class="btn btn--primary" (click)="descargarPdf()" [disabled]="descargando">
+        {{ descargando ? 'Procesando...' : 'Descargar PDF' }}
     </button>
 
-    <button class="btn btn--secondary" (click)="descargarExcel()">
+    <button class="btn btn--secondary" (click)="descargarExcel()" [disabled]="descargando">
         Descargar Excel
     </button>
 </div>

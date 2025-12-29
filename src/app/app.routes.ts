@@ -8,15 +8,13 @@ import { InicioComponent } from './pages/inicio/inicio';
 import { UsuariosComponent } from './pages/usuarios/usuarios';
 import { PortafolioComponent } from './pages/portafolio/portafolio/portafolio';
 
-// Asesorías (público + “mis asesorías” con guard)
+// Asesorías
 import { AgendarAsesoriaComponent } from './pages/asesorias/agendar/agendar/agendar';
 import { MisAsesoriasComponent } from './pages/asesorias/mis-asesorias/mis-asesorias/mis-asesorias';
 
 // ===========================
 // ADMIN (guard rol=admin)
 // ===========================
-import { ProgramadorDisponibilidadComponent } from './pages/programador/disponibilidad/disponibilidad';
-
 import { AdminComponent } from './pages/admin/admin';
 import { ProgramadoresComponent } from './pages/admin/programadores/programadores';
 import { ProgramadorNuevoComponent } from './pages/admin/programadores/programador-nuevo';
@@ -29,9 +27,12 @@ import { ProyectoEditarComponent } from './pages/admin/programadores/proyectos/p
 // PROGRAMADOR (guard rol=programador)
 // ===========================
 import { ProgramadorComponent } from './pages/programador/programador';
+import { ProgramadorDisponibilidadComponent } from './pages/programador/disponibilidad/disponibilidad';
 import { ProgramadorAsesoriasComponent } from './pages/programador/asesorias/asesorias/asesorias';
 import { ProgramadorDashboardComponent } from './pages/programador/dashboard/dashboard';
 
+import { EditarProyectoComponent } from './pages/programador/editar-proyecto/editar-proyecto'; 
+import { NuevoProyectoComponent } from './pages/programador/nuevo-proyecto/nuevo-proyecto';
 // ===========================
 // LAYOUTS + GUARD
 // ===========================
@@ -57,13 +58,13 @@ export const routes: Routes = [
       { path: 'inicio', component: InicioComponent },
       { path: 'usuarios', component: UsuariosComponent },
 
-      // ✅ Portafolio público (coincide con usuarios.html)
+      // Portafolio público
       { path: 'portafolio/:id', component: PortafolioComponent },
 
-      // ✅ Agendar asesoría (coincide con usuarios.html)
+      // Agendar asesoría
       { path: 'asesoria/:idProgramador', component: AgendarAsesoriaComponent },
 
-      // ✅ Requiere login (cualquier rol)
+      // Requiere login (cualquier rol)
       {
         path: 'mis-asesorias',
         component: MisAsesoriasComponent,
@@ -83,16 +84,15 @@ export const routes: Routes = [
     children: [
       { path: '', component: AdminComponent },
 
-      // Programadores
+      // Gestión de Programadores
       { path: 'programadores', component: ProgramadoresComponent },
       { path: 'programadores/nuevo', component: ProgramadorNuevoComponent },
       { path: 'programadores/editar/:id', component: EditarComponent },
 
-      // Proyectos del programador
+      // Gestión de Proyectos (Visto por Admin)
       { path: 'programadores/:id/proyectos', component: ProyectosAdminComponent },
       { path: 'programadores/:id/proyectos/nuevo', component: ProyectoNuevoComponent },
-      { path: 'programadores/:id/proyectos/editar/:idProyecto', component: ProyectoEditarComponent },
-
+      { path: 'programadores/:id/proyectos/editarProyecto/:idProyecto', component: ProyectoEditarComponent },
     ]
   },
 
@@ -105,15 +105,20 @@ export const routes: Routes = [
     canActivate: [rolGuard],
     data: { rol: 'programador' },
     children: [
+      // Lista de proyectos (Home del programador)
       { path: '', component: ProgramadorComponent },
 
-      // ✅ Si quieres un alias real, redirige (mejor que duplicar component)
+      // ✅ RUTA NUEVA: Editar Proyecto
+      { path: 'nuevo-proyecto', component: NuevoProyectoComponent },
+      { path: 'editar-proyecto/:id', component: EditarProyectoComponent },
+
+      // Otras secciones
       { path: 'dashboard', component: ProgramadorDashboardComponent },
-
-      { path: 'proyectos', redirectTo: '', pathMatch: 'full' },
-
       { path: 'asesorias', component: ProgramadorAsesoriasComponent },
-      { path: 'disponibilidad', component: ProgramadorDisponibilidadComponent }
+      { path: 'disponibilidad', component: ProgramadorDisponibilidadComponent },
+
+      // Redirección de seguridad
+      { path: 'proyectos', redirectTo: '', pathMatch: 'full' },
     ]
   },
 

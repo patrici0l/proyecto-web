@@ -1,71 +1,81 @@
-<h2>Mis asesorías</h2>
-
-<div *ngIf="cargando">
-    Cargando tus solicitudes...
+<div class="header-section">
+    <div class="header-content">
+        <h2>Mis Asesorías</h2>
+        <p class="subtitle">Historial de tus solicitudes y respuestas de los programadores.</p>
+    </div>
 </div>
 
-<div *ngIf="!cargando && asesorias.length === 0">
-    <p>No has solicitado ninguna asesoría todavía.</p>
+<div *ngIf="cargando" class="state state--loading">
+    <div class="spinner"></div>
+    <p>Cargando tu historial...</p>
 </div>
 
-<table *ngIf="!cargando && asesorias.length > 0">
-    <thead>
-        <tr>
-            <th>Programador</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Comentario</th>
-            <th>Estado</th>
-            <th>Mensaje del programador</th>
-            <th>Notificación simulada</th>
-        </tr>
-    </thead>
+<div *ngIf="!cargando && asesorias.length === 0" class="state state--empty">
+    <div class="icon-empty">📅</div>
+    <h3>Sin historial</h3>
+    <p>Aún no has solicitado ninguna asesoría.</p>
+    <a routerLink="/" class="btn-link">Buscar Programador</a>
+</div>
 
-    <tbody>
-        <tr *ngFor="let a of asesorias">
-            <td>{{ nombreProgramador(a.idProgramador) }}</td>
-            <td>{{ a.fecha }}</td>
-            <td>{{ a.hora }}</td>
-            <td>{{ a.comentario || '-' }}</td>
+<div *ngIf="!cargando && asesorias.length > 0" class="table-card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Programador</th>
+                    <th style="width: 15%;">Fecha</th>
+                    <th style="width: 10%;">Hora</th>
+                    <th style="width: 35%;">Respuesta / Estado</th>
+                    <th style="width: 15%;">Estado</th>
+                </tr>
+            </thead>
 
-            <td>
-                <span [ngClass]="{
-            'estado-pendiente': a.estado === 'pendiente',
-            'estado-aprobada': a.estado === 'aprobada',
-            'estado-rechazada': a.estado === 'rechazada'
-          }">
-                    {{ a.estado | titlecase }}
-                </span>
-            </td>
+            <tbody>
+                <tr *ngFor="let a of asesorias" class="row">
+                    <td class="cell">
+                        <div class="prog-profile">
+                            <div class="avatar-letter">
+                                {{ nombreProgramador(a.idProgramador).charAt(0).toUpperCase() }}
+                            </div>
+                            <span class="prog-name">{{ nombreProgramador(a.idProgramador) }}</span>
+                        </div>
+                    </td>
 
-            <td>
-                <ng-container *ngIf="a.respuestaProgramador; else sinRespuesta">
-                    {{ a.respuestaProgramador }}
-                </ng-container>
-                <ng-template #sinRespuesta>
-                    <span *ngIf="a.estado === 'pendiente'">
-                        El programador aún no responde.
-                    </span>
-                    <span *ngIf="a.estado !== 'pendiente'">
-                        (Sin mensaje)
-                    </span>
-                </ng-template>
-            </td>
+                    <td class="cell">
+                        <span class="date-text">{{ a.fecha | slice:0:10 }}</span>
+                    </td>
 
-            <td>
-                <ng-container *ngIf="a.estado !== 'pendiente'; else pendienteNotif">
-                    <p class="nota-notificacion">
-                        Esta es la información que habrías recibido por correo o WhatsApp:
-                    </p>
-                    <small>
-                        Estado: {{ a.estado | titlecase }}<br>
-                        Mensaje: {{ a.respuestaProgramador || '(Sin mensaje adicional)' }}
-                    </small>
-                </ng-container>
-                <ng-template #pendienteNotif>
-                    <small>Aún no hay notificación: tu solicitud sigue pendiente.</small>
-                </ng-template>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                    <td class="cell">
+                        <span class="time-badge">{{ a.hora | slice:0:5 }}</span>
+                    </td>
+
+                    <td class="cell">
+                        <div *ngIf="a.respuestaProgramador; else sinRespuesta">
+                            <p class="response-text">
+                                <i class="bi bi-chat-quote-fill"></i>
+                                {{ a.respuestaProgramador }}
+                            </p>
+                        </div>
+                        <ng-template #sinRespuesta>
+                            <span class="waiting-text" *ngIf="a.estado === 'pendiente'">
+                                Esperando respuesta...
+                            </span>
+                            <span class="text-muted" *ngIf="a.estado !== 'pendiente'">-</span>
+                        </ng-template>
+                    </td>
+
+                    <td class="cell">
+                        <span class="status-badge" [ngClass]="{
+                            'status-badge--pending': a.estado === 'pendiente',
+                            'status-badge--approved': a.estado === 'aprobada',
+                            'status-badge--rejected': a.estado === 'rechazada'
+                        }">
+                            <span class="dot"></span>
+                            {{ a.estado | titlecase }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
