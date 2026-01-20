@@ -18,7 +18,7 @@ export const rolGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: Ro
         return false;
       }
 
-      // 2) Si NO se pide rol específico -> permitir (solo requiere login)
+  
       if (!rolRequerido) {
         return true;
       }
