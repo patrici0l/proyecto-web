@@ -73,7 +73,7 @@ export class AsesoriasService {
      PROGRAMADOR (JWT)
      ========================= */
 
-  // 🔐 Asesorías del programador autenticado
+
   getAsesoriasDelProgramador(): Observable<Asesoria[]> {
     return this.http.get<Asesoria[]>(`${this.api}/programador`);
   }
