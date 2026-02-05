@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { NotificacionesService } from '../../../../services/notificaciones';
+import { WhatsappService } from '../../../../services/whatsapp.service';
 
 @Component({
   selector: 'app-programador-asesorias',
@@ -19,7 +20,8 @@ export class ProgramadorAsesoriasComponent implements OnInit {
 
   constructor(
     private asesoriasService: AsesoriasService,
-    private noti: NotificacionesService
+    private noti: NotificacionesService,
+    private whatsapp: WhatsappService
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +46,7 @@ export class ProgramadorAsesoriasComponent implements OnInit {
 
   cambiarEstado(asesoria: Asesoria, nuevoEstado: 'aprobada' | 'rechazada'): void {
     const nombre = asesoria.nombreSolicitante;
-    // Texto simple para el correo
+
     const texto = nuevoEstado === 'aprobada'
       ? `Hola ${nombre}, tu solicitud ha sido APROBADA. Nos vemos en la fecha acordada.`
       : `Hola ${nombre}, lamentablemente tu solicitud ha sido RECHAZADA en esta ocasión.`;
@@ -57,7 +59,6 @@ export class ProgramadorAsesoriasComponent implements OnInit {
         asesoria.estado = nuevoEstado;
         asesoria.respuestaProgramador = texto;
 
-        // ✅ Notificación REAL al usuario del sistema (Tú)
         if (nuevoEstado === 'aprobada') {
           this.noti.exito('Solicitud Aprobada. Correo de confirmación enviado.');
         } else {
@@ -67,6 +68,34 @@ export class ProgramadorAsesoriasComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.noti.error('Error al procesar la solicitud.');
+      }
+    });
+  }
+
+  /**
+   * Genera y abre un link de WhatsApp utilizando el teléfono registrado en la asesoría.
+   */
+  enviarWhatsapp(asesoria: Asesoria) {
+    const telefono = ((asesoria as any).telefonoSolicitante || '').trim();
+
+    if (!telefono) {
+      this.noti.error('Esta asesoría no tiene teléfono de WhatsApp registrado.');
+      return;
+    }
+
+    const mensaje = asesoria.respuestaProgramador
+      ? asesoria.respuestaProgramador
+      : `Hola ${asesoria.nombreSolicitante}, tu asesoría está en estado: ${asesoria.estado}.
+Fecha: ${asesoria.fecha} Hora: ${asesoria.hora}`;
+
+    this.whatsapp.generarLink(telefono, mensaje).subscribe({
+      next: (res) => {
+        window.open(res.link, '_blank');
+        this.noti.exito('Abriendo WhatsApp…');
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('No se pudo generar link de WhatsApp');
       }
     });
   }

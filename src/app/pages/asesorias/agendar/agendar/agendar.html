@@ -1,13 +1,17 @@
-<h2>Agendar Asesoria</h2>
+<h2>Agendar Asesoría</h2>
 
 <div class="main-container" *ngIf="programador">
 
     <div class="glass-card">
         <header class="header-section">
-            <h2>Agendar con <span class="highlight">{{ programador.nombre }}</span></h2>
+            <h2>
+                Agendar con
+                <span class="highlight">{{ programador.nombre }}</span>
+            </h2>
             <p class="sub">Sincronización de agenda</p>
         </header>
 
+        <!-- CONTROL DE FECHA -->
         <div class="hud-control">
             <button class="nav-btn left" (click)="diaAnterior()">
                 <span class="icon">❮</span>
@@ -15,8 +19,12 @@
 
             <div class="hud-display">
                 <span class="label">FECHA SELECCIONADA</span>
-                <strong class="date-text">{{ fechaSeleccionada | date:'EEEE d MMMM':'':'es' }}</strong>
-                <span class="year">{{ fechaSeleccionada | date:'yyyy' }}</span>
+                <strong class="date-text">
+                    {{ fechaSeleccionada | date:'EEEE d MMMM':'':'es' }}
+                </strong>
+                <span class="year">
+                    {{ fechaSeleccionada | date:'yyyy' }}
+                </span>
             </div>
 
             <button class="nav-btn right" (click)="diaSiguiente()">
@@ -26,35 +34,66 @@
 
         <hr class="divider-glow">
 
+        <!-- BLOQUES HORARIOS -->
         <div class="slots-section" *ngIf="disponibilidadDiaSeleccionado.length > 0">
             <h3>Bloques Temporales Disponibles</h3>
 
             <div class="slots-grid">
-                <button class="slot-btn" *ngFor="let slot of disponibilidadDiaSeleccionado"
+                <button
+                    class="slot-btn"
+                    *ngFor="let slot of disponibilidadDiaSeleccionado"
                     [class.ocupado]="slot.ocupado"
-                    [class.seleccionado]="form.value.hora === slot.hora && form.value.fecha === fechaSeleccionadaStr"
-                    [disabled]="slot.ocupado" (click)="seleccionarHora(slot)">
-
+                    [class.seleccionado]="
+                        form.value.hora === slot.hora &&
+                        form.value.fecha === fechaSeleccionadaStr
+                    "
+                    [disabled]="slot.ocupado"
+                    (click)="seleccionarHora(slot)"
+                >
                     <span class="time">{{ slot.hora }}</span>
                     <div class="status-dot"></div>
                 </button>
             </div>
         </div>
 
+        <!-- SIN DISPONIBILIDAD -->
         <div class="empty-state" *ngIf="disponibilidadDiaSeleccionado.length === 0">
             <p>⚠️ No hay bloques de tiempo configurados.</p>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="enviarSolicitud()" class="future-form">
+        <!-- FORMULARIO -->
+        <form
+            [formGroup]="form"
+            (ngSubmit)="enviarSolicitud()"
+            class="future-form"
+        >
 
             <div class="input-group">
                 <label>Identidad (Nombre)</label>
-                <input type="text" formControlName="nombreSolicitante" placeholder="Ingresa tu nombre">
+                <input
+                    type="text"
+                    formControlName="nombreSolicitante"
+                    placeholder="Ingresa tu nombre"
+                >
             </div>
 
             <div class="input-group">
                 <label>Enlace de contacto (Email)</label>
-                <input type="email" formControlName="emailSolicitante" placeholder="correo@ejemplo.com">
+                <input
+                    type="email"
+                    formControlName="emailSolicitante"
+                    placeholder="correo@ejemplo.com"
+                >
+            </div>
+
+            <!-- 🔹 CAMPO WHATSAPP AGREGADO -->
+            <div class="input-group">
+                <label>WhatsApp (Teléfono)</label>
+                <input
+                    type="text"
+                    formControlName="telefonoSolicitante"
+                    placeholder="Ej: 593999999999"
+                >
             </div>
 
             <div class="data-readout">
@@ -68,10 +107,18 @@
 
             <div class="input-group">
                 <label>Datos adicionales</label>
-                <textarea formControlName="comentario" rows="2" placeholder="Comentarios opcionales..."></textarea>
+                <textarea
+                    formControlName="comentario"
+                    rows="2"
+                    placeholder="Comentarios opcionales..."
+                ></textarea>
             </div>
 
-            <button class="btn-action" type="submit" [disabled]="cargando || form.invalid">
+            <button
+                class="btn-action"
+                type="submit"
+                [disabled]="cargando || form.invalid"
+            >
                 <span class="btn-content">
                     {{ cargando ? 'PROCESANDO...' : 'CONFIRMAR ENLACE' }}
                 </span>
@@ -81,6 +128,7 @@
     </div>
 </div>
 
+<!-- LOADING -->
 <div *ngIf="!programador" class="loading-screen">
     <div class="spinner"></div>
     <p>Cargando sistema...</p>

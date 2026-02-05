@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -35,7 +35,7 @@ export class AgendarAsesoriaComponent implements OnInit {
   hoyStr!: string;
 
   cargando = false;
-  cargandoHoras = false; // Nuevo flag para feedback visual al cambiar fecha
+  cargandoHoras = false; // Flag para feedback visual al cambiar fecha
 
   constructor(
     private fb: FormBuilder,
@@ -43,7 +43,6 @@ export class AgendarAsesoriaComponent implements OnInit {
     private router: Router,
     private asesoriasService: AsesoriasService,
     private programadoresService: ProgramadoresService,
-    // private disponibilidadesService: DisponibilidadesService, // ❌ YA NO SE NECESITA
     private authService: AuthService,
     private noti: NotificacionesService
   ) { }
@@ -58,7 +57,7 @@ export class AgendarAsesoriaComponent implements OnInit {
 
     this.initForm();
 
-    // 1. Cargar Usuario (Autrelleno del formulario)
+    // 1. Cargar Usuario (Autorelleno del formulario)
     this.authService.usuario$.subscribe(u => {
       this.usuarioActual = u;
       if (u) {
@@ -73,7 +72,7 @@ export class AgendarAsesoriaComponent implements OnInit {
     this.programadoresService.getProgramador(this.idProgramador)
       .subscribe(p => this.programador = p);
 
-    // 3. Cargar Horas Iniciales (Directamente)
+    // 3. Cargar Horas Iniciales
     this.cargarHorasDia();
   }
 
@@ -81,6 +80,7 @@ export class AgendarAsesoriaComponent implements OnInit {
     this.form = this.fb.group({
       nombreSolicitante: ['', Validators.required],
       emailSolicitante: ['', [Validators.required, Validators.email]],
+      telefonoSolicitante: [''], // ✅ Agregado: Campo opcional de teléfono
       fecha: [this.fechaSeleccionadaStr, Validators.required],
       hora: ['', Validators.required],
       comentario: ['']
@@ -112,26 +112,24 @@ export class AgendarAsesoriaComponent implements OnInit {
   }
 
   /**
-   * ✅ NUEVA LÓGICA: Pide los slots ya calculados al Backend
+   * Obtiene los slots de tiempo disponibles para la fecha seleccionada
    */
   cargarHorasDia() {
     this.cargandoHoras = true;
     const fechaStr = this.formatearFecha(this.fechaSeleccionada);
     this.fechaSeleccionadaStr = fechaStr;
 
-    // Resetear formulario y lista
+    // Resetear selección de hora y lista previa
     this.form.patchValue({ fecha: fechaStr, hora: '' });
     this.disponibilidadDiaSeleccionado = [];
 
-    // Llamada al nuevo endpoint
     this.programadoresService.obtenerSlots(this.idProgramador, fechaStr)
       .subscribe({
         next: (slots: string[]) => {
-          // El backend devuelve solo las horas libres (ej: ["18:00", "19:00"])
-          // Las mapeamos para que tu HTML no se rompa
+          // El backend devuelve solo las horas libres
           this.disponibilidadDiaSeleccionado = slots.map(hora => ({
             hora: hora,
-            ocupado: false // Si el backend la manda, es porque está libre
+            ocupado: false
           }));
           this.cargandoHoras = false;
         },
@@ -150,7 +148,8 @@ export class AgendarAsesoriaComponent implements OnInit {
 
   // ============================
   // ENVÍO DE ASESORÍA
-  // === 
+  // ============================
+  
   async enviarSolicitud() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -161,20 +160,20 @@ export class AgendarAsesoriaComponent implements OnInit {
     this.cargando = true;
     const v = this.form.value;
 
-    // ✅ CORRECCIÓN: Usamos 'any' para que TypeScript no exija 'creadoEn' ni 'estado'
-    // ya que esos campos los pone el Backend automáticamente.
+    // Se usa Partial<Asesoria> o 'any' para manejar campos automáticos del Backend
     const data: any = {
       idProgramador: this.idProgramador,
       nombreSolicitante: v.nombreSolicitante,
       emailSolicitante: v.emailSolicitante,
+      telefonoSolicitante: v.telefonoSolicitante, // ✅ Agregado al payload
       fecha: v.fecha,
       hora: v.hora,
       comentario: v.comentario,
-      estado: 'pendiente' // Opcional: lo mandamos explícito para que no se queje
+      estado: 'pendiente'
     };
 
     try {
-      // Casteamos a Asesoria solo en la llamada para engañar al servicio si es estricto
+      // Envío al servicio
       await this.asesoriasService.crearPublica(data).toPromise();
 
       this.noti.exito('Tu solicitud fue enviada correctamente');
@@ -182,6 +181,7 @@ export class AgendarAsesoriaComponent implements OnInit {
     } catch (e) {
       console.error(e);
       this.noti.error('Error al agendar. Verifica si la hora sigue disponible.');
+      // Recargamos horas por si el error fue por un slot tomado recientemente
       this.cargarHorasDia();
     } finally {
       this.cargando = false;

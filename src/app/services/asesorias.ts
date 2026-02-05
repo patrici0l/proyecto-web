@@ -15,7 +15,7 @@ export interface Asesoria {
 
   nombreSolicitante: string;
   emailSolicitante: string;
-
+ telefonoSolicitante?: string;
   fecha: string; // YYYY-MM-DD
   hora: string;  // HH:mm
 
@@ -34,6 +34,8 @@ export interface AsesoriaPublica {
   fecha: string;
   hora: string;
   comentario?: string;
+  telefonoSolicitante?: string;
+
 }
 
 @Injectable({ providedIn: 'root' })
@@ -53,6 +55,7 @@ export class AsesoriasService {
       idProgramador: data.idProgramador,
       nombreSolicitante: data.nombreSolicitante,
       emailSolicitante: data.emailSolicitante,
+      telefonoSolicitante: data.telefonoSolicitante || '',
       fecha: data.fecha,
       hora: data.hora,
       comentario: data.comentario || ''

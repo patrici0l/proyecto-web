@@ -27,12 +27,13 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th style="width: 25%;">Solicitante</th>
-                    <th style="width: 12%;">Fecha</th>
-                    <th style="width: 10%;">Hora</th>
-                    <th style="width: 28%;">Comentario</th>
+                    <th style="width: 18%;">Solicitante</th>
+                    <th style="width: 12%;">WhatsApp</th>
+                    <th style="width: 10%;">Fecha</th>
+                    <th style="width: 8%;">Hora</th>
+                    <th style="width: 20%;">Comentario</th>
                     <th style="width: 10%;">Estado</th>
-                    <th style="width: 15%;" class="text-right">Acciones</th>
+                    <th style="width: 22%;" class="text-right">Acciones</th>
                 </tr>
             </thead>
 
@@ -48,6 +49,10 @@
                                 <span class="email" [title]="a.emailSolicitante">{{ a.emailSolicitante }}</span>
                             </div>
                         </div>
+                    </td>
+
+                    <td class="cell">
+                        <span class="wa-text">{{ a.telefonoSolicitante || '-' }}</span>
                     </td>
 
                     <td class="cell">
@@ -78,13 +83,18 @@
                     <td class="cell text-right">
                         <div class="actions">
                             <button type="button" class="action-btn btn-approve" (click)="cambiarEstado(a, 'aprobada')"
-                                [disabled]="a.estado !== 'pendiente'" title="Aprobar y enviar correo de confirmación">
+                                [disabled]="a.estado !== 'pendiente'" title="Aprobar y enviar correo">
                                 <i class="bi bi-check-lg"></i>
                             </button>
 
                             <button type="button" class="action-btn btn-reject" (click)="cambiarEstado(a, 'rechazada')"
-                                [disabled]="a.estado !== 'pendiente'" title="Rechazar y notificar al usuario">
+                                [disabled]="a.estado !== 'pendiente'" title="Rechazar y notificar">
                                 <i class="bi bi-x-lg"></i>
+                            </button>
+
+                            <button type="button" class="action-btn btn-wa" (click)="enviarWhatsapp(a)"
+                                [disabled]="a.estado === 'pendiente'" title="Contactar por WhatsApp">
+                                <i class="bi bi-whatsapp"></i>
                             </button>
                         </div>
                     </td>

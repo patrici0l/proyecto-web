@@ -13,15 +13,15 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
 
-    // ✅ Rutas REALES (aquí estaba el error)
+ 
     provideRouter(routes),
 
-    // ✅ HTTP con Interceptor JWT
+ 
     provideHttpClient(
       withInterceptors([authInterceptor])
     ),
 
-    // ✅ Firebase (lo dejas como está)
+ 
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage())

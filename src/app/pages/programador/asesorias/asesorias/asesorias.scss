@@ -337,4 +337,18 @@ th {
     align-items: flex-start;
     gap: 1rem;
   }
+
+  .btn--wa {
+    border: 1px solid #25d366;
+    background: transparent;
+    padding: .4rem .7rem;
+    border-radius: .6rem;
+    cursor: pointer;
+  }
+
+  .btn--wa:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
 }
