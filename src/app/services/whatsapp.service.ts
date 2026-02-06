@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface WhatsappLinkResponse {
   link: string;
@@ -12,19 +12,19 @@ export interface WhatsappLinkResponse {
 })
 export class WhatsappService {
 
-  // Base: http://localhost:8080/whatsapp-api-1.0/api/whatsapp
-  private baseUrl = `${environment.apiJakarta}/api/whatsapp`;
+  // URL temporal para desarrollo local
+  private baseUrl = `${environment.apiJakartaWhatsApp}`.replace(/\/+$/, '');
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    
+  }
 
-  generarLink(telefono: string, mensaje: string): Observable<WhatsappLinkResponse> {
+  generarLink(telefono: string, mensaje: string): Observable<{ link: string }> {
     const params = new HttpParams()
       .set('telefono', telefono)
       .set('mensaje', mensaje);
 
-    return this.http.get<WhatsappLinkResponse>(
-      `${this.baseUrl}/link`,
-      { params }
-    );
+ return this.http.get<{ link: string }>(`${this.baseUrl}/link`, { params });
+
   }
 }

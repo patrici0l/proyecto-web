@@ -54,7 +54,6 @@
 </div>
 
 <div class="charts-grid">
-
     <div class="grafico-card full-width">
         <div class="grafico-header">
             <h3>Evolución Temporal</h3>
@@ -84,7 +83,61 @@
         </div>
         <div *ngIf="!resumen" class="no-data">Sin datos</div>
     </div>
+</div>
 
+<div class="card" style="margin-top: 1rem;">
+    <h3>Estado del Notificador (Python)</h3>
+
+    <div *ngIf="pythonHealth; else pyOff">
+        <p><b>Servicio:</b> OK</p>
+        <p><b>Hora servidor:</b> {{ pythonHealth.time }}</p>
+
+        <div *ngIf="pythonStatus">
+            <p><b>Última ejecución:</b> {{ pythonStatus.last_run || '-' }}</p>
+            <p><b>OK:</b> {{ pythonStatus.jobs_ok }} | <b>Fallas:</b> {{ pythonStatus.jobs_fail }}</p>
+            <p *ngIf="pythonStatus.last_error" style="color:#b00020;">
+                <b>Último error:</b> {{ pythonStatus.last_error }}
+            </p>
+        </div>
+    </div>
+
+    <ng-template #pyOff>
+        <p style="color:#b00020;"><b>Python:</b> No disponible</p>
+    </ng-template>
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+    <h3>Últimas Notificaciones (Correo / WhatsApp)</h3>
+  
+    <p><b>Estado:</b> cargando={{ cargandoNotifs }} | items={{ notifs?.length || 0 }}</p>
+  
+    <div *ngIf="cargandoNotifs">Cargando...</div>
+  
+    <table class="table" *ngIf="!cargandoNotifs">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Destinatario</th>
+          <th>Estado</th>
+          <th>Programada</th>
+          <th>Enviada</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr *ngFor="let n of notifs">
+          <td>{{ n.tipo || n.canal || '-' }}</td>
+          <td>{{ n.destinatario || n.email || n.telefono || '-' }}</td>
+          <td>{{ n.estadoEnvio || n.estado || '-' }}</td>
+          <td>{{ n.programadaPara || n.fechaProgramada || '-' }}</td>
+          <td>{{ n.enviadoEn || n.fechaEnvio || '-' }}</td>
+        </tr>
+  
+        <tr *ngIf="!notifs || notifs.length === 0">
+          <td colspan="5" style="text-align: center;">No hay notificaciones registradas.</td>
+        </tr>
+      </tbody>
+    </table>
 </div>
 
 <hr />

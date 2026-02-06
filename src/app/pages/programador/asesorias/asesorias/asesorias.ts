@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { NotificacionesService } from '../../../../services/notificaciones';
-import { WhatsappService } from '../../../../services/whatsapp.service';
+import { WhatsappService, WhatsappLinkResponse } from '../../../../services/whatsapp.service';
 
 @Component({
   selector: 'app-programador-asesorias',
@@ -36,9 +36,9 @@ export class ProgramadorAsesoriasComponent implements OnInit {
           this.asesorias = lista;
           this.cargando = false;
         },
-        error: (err) => {
-          console.error(err);
-          this.noti.error('No se pudieron cargar las asesorías');
+        error: (err: any) => {
+          console.error('Error cargando asesorías:', err);
+          this.noti.error(`No se pudieron cargar las asesorías: ${err?.status ?? ''} ${err?.url ?? ''}`);
           this.cargando = false;
         }
       });
@@ -46,7 +46,6 @@ export class ProgramadorAsesoriasComponent implements OnInit {
 
   cambiarEstado(asesoria: Asesoria, nuevoEstado: 'aprobada' | 'rechazada'): void {
     const nombre = asesoria.nombreSolicitante;
-
     const texto = nuevoEstado === 'aprobada'
       ? `Hola ${nombre}, tu solicitud ha sido APROBADA. Nos vemos en la fecha acordada.`
       : `Hola ${nombre}, lamentablemente tu solicitud ha sido RECHAZADA en esta ocasión.`;
@@ -65,15 +64,16 @@ export class ProgramadorAsesoriasComponent implements OnInit {
           this.noti.info('Solicitud Rechazada. El usuario ha sido notificado.');
         }
       },
-      error: (err) => {
-        console.error(err);
-        this.noti.error('Error al procesar la solicitud.');
+      error: (err: any) => {
+        console.error('Error al actualizar estado:', err);
+        this.noti.error(`Error al procesar la solicitud: ${err?.status ?? ''} ${err?.statusText ?? ''}`);
       }
     });
   }
 
   /**
-   * Genera y abre un link de WhatsApp utilizando el teléfono registrado en la asesoría.
+   * Genera y abre un link de WhatsApp utilizando el teléfono registrado.
+   * Maneja el bloqueo de popups abriendo la pestaña ANTES de la llamada asíncrona.
    */
   enviarWhatsapp(asesoria: Asesoria) {
     const telefono = ((asesoria as any).telefonoSolicitante || '').trim();
@@ -85,17 +85,28 @@ export class ProgramadorAsesoriasComponent implements OnInit {
 
     const mensaje = asesoria.respuestaProgramador
       ? asesoria.respuestaProgramador
-      : `Hola ${asesoria.nombreSolicitante}, tu asesoría está en estado: ${asesoria.estado}.
-Fecha: ${asesoria.fecha} Hora: ${asesoria.hora}`;
+      : `Hola ${asesoria.nombreSolicitante}, tu asesoría está en estado: ${asesoria.estado}. Fecha: ${asesoria.fecha} Hora: ${asesoria.hora}`;
+
+    // 1. Abrimos la ventana inmediatamente para que el navegador no la bloquee
+    const nuevaVentana = window.open('', '_blank');
 
     this.whatsapp.generarLink(telefono, mensaje).subscribe({
-      next: (res) => {
-        window.open(res.link, '_blank');
-        this.noti.exito('Abriendo WhatsApp…');
+      next: (res: WhatsappLinkResponse) => {
+        if (nuevaVentana) {
+          // 2. Si la ventana se abrió con éxito, redirigimos a la URL del API
+          nuevaVentana.location.href = res.link;
+          this.noti.exito('Abriendo WhatsApp...');
+        } else {
+          // Fallback en caso de que window.open haya devuelto null
+          window.location.href = res.link;
+        }
       },
-      error: (err) => {
-        console.error(err);
-        this.noti.error('No se pudo generar link de WhatsApp');
+      error: (err: any) => {
+        // 3. Si el API falla, cerramos la pestaña en blanco para no ensuciar el navegador
+        if (nuevaVentana) nuevaVentana.close();
+        
+        console.error('WhatsApp error:', err);
+        this.noti.error(`WhatsApp falló: ${err?.status} - ${err?.message}`);
       }
     });
   }

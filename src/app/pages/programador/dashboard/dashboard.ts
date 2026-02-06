@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PythonStatusService, PythonHealth, SchedulerStatus } from '../../../services/python-status.service';
+import { NotificacionesService } from '../../../services/notificaciones';
+
 import Chart from 'chart.js/auto';
 
 import {
@@ -9,7 +12,6 @@ import {
   PuntoSerie
 } from '../../../services/dashboard-programador';
 import { ReportesProgramadorService } from '../../../services/reportes-programador';
-import { NotificacionesService } from '../../../services/notificaciones';
 
 @Component({
   selector: 'app-programador-dashboard',
@@ -30,20 +32,30 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
   cargandoResumen = false;
   cargandoGrafico = false;
   descargando = false;
+  cargandoNotifs = false;
+
+  // NUEVAS PROPIEDADES (PYTHON Y NOTIFICACIONES)
+  pythonHealth: PythonHealth | null = null;
+  pythonStatus: SchedulerStatus | null = null;
+  notifs: any[] = [];
 
   // CHARTS
   private chartLine: Chart | null = null;
   private chartPie: Chart | null = null;
-  private chartBar: Chart | null = null; // <--- NUEVO
+  private chartBar: Chart | null = null;
 
   constructor(
     private dashboardService: DashboardProgramadorService,
     private reportesService: ReportesProgramadorService,
-    private notificaciones: NotificacionesService
+    private notificaciones: NotificacionesService, // Usado para alertas UI
+    private py: PythonStatusService,               // Servicio Python
+    private notiService: NotificacionesService     // Usado para listar
   ) { }
 
   ngOnInit(): void {
     this.cargarDatos();
+    this.cargarPython();
+    this.cargarNotificacionesRecientes();
   }
 
   ngAfterViewInit(): void { }
@@ -65,13 +77,13 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
       next: (res) => {
         this.resumen = res;
         this.cargandoResumen = false;
-        // Creamos ambos gráficos
         setTimeout(() => {
           this.crearGraficoPastel();
-          this.crearGraficoBarras(); // <--- LLAMADA NUEVA
+          this.crearGraficoBarras();
         }, 50);
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error al cargar resumen:', err);
         this.notificaciones.error('Error al cargar resumen');
         this.cargandoResumen = false;
       }
@@ -86,14 +98,15 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
         this.crearGraficoLinea(serie);
         this.cargandoGrafico = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error gráfico evolución:', err);
         this.notificaciones.error('Error gráfico evolución');
         this.cargandoGrafico = false;
       }
     });
   }
 
-  // --- GRÁFICO 1: LÍNEA ---
+  // --- GRÁFICOS ---
   private crearGraficoLinea(serie: PuntoSerie[]): void {
     const canvas = document.getElementById('graficoAsesorias') as HTMLCanvasElement;
     if (!canvas) return;
@@ -121,7 +134,6 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // --- GRÁFICO 2: PASTEL (Doughnut) ---
   private crearGraficoPastel(): void {
     if (!this.resumen) return;
     const canvas = document.getElementById('graficoPastel') as HTMLCanvasElement;
@@ -149,7 +161,6 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // --- GRÁFICO 3: BARRAS (NUEVO) ---
   private crearGraficoBarras(): void {
     if (!this.resumen) return;
     const canvas = document.getElementById('graficoBarras') as HTMLCanvasElement;
@@ -164,9 +175,9 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
           label: 'Cantidad',
           data: [this.resumen.pendientes, this.resumen.aprobadas, this.resumen.rechazadas],
           backgroundColor: [
-            'rgba(245, 158, 11, 0.7)', // Naranja traslúcido
-            'rgba(16, 185, 129, 0.7)', // Verde traslúcido
-            'rgba(239, 68, 68, 0.7)'   // Rojo traslúcido
+            'rgba(245, 158, 11, 0.7)',
+            'rgba(16, 185, 129, 0.7)',
+            'rgba(239, 68, 68, 0.7)'
           ],
           borderColor: ['#f59e0b', '#10b981', '#ef4444'],
           borderWidth: 1,
@@ -185,7 +196,7 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // DESCARGAS
+  // --- DESCARGAS ---
   descargarPdf(): void {
     this.descargando = true;
     this.reportesService.descargarPdf().subscribe({
@@ -219,5 +230,49 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+  }
+
+  // --- MÉTODOS PYTHON ---
+
+  private cargarPython(): void {
+    this.py.health().subscribe({
+      next: (h) => (this.pythonHealth = h),
+      error: () => (this.pythonHealth = null)
+    });
+
+    this.py.schedulerStatus().subscribe({
+      next: (s) => (this.pythonStatus = s),
+      error: () => (this.pythonStatus = null)
+    });
+  }
+
+  // --- NOTIFICACIONES CON DEBUG ---
+
+  private cargarNotificacionesRecientes(): void {
+    this.cargandoNotifs = true;
+
+    this.notiService.listarNotificaciones().subscribe({
+      next: (lista: any[]) => {
+        console.log('NOTIFS raw:', lista);
+
+        this.notifs = (lista || [])
+          .slice()
+          .sort((a, b) => {
+            const da = new Date(b.enviadoEn || b.programadaPara || b.fecha || b.createdAt || 0).getTime();
+            const db = new Date(a.enviadoEn || a.programadaPara || a.fecha || a.createdAt || 0).getTime();
+            return da - db;
+          })
+          .slice(0, 20);
+
+        console.log('NOTIFS mapped & sorted:', this.notifs);
+        this.cargandoNotifs = false;
+      },
+      error: (err: any) => {
+        console.error('NOTIFS error:', err);
+        this.notifs = [];
+        this.cargandoNotifs = false;
+        this.notificaciones.error('Error al conectar con el servicio de notificaciones');
+      }
+    });
   }
 }

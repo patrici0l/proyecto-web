@@ -1,242 +1,243 @@
-// VARIABLES
-$primary: #4f46e5;
-$bg-page: #f8fafc;
+// --- VARIABLES REFINADAS ---
+$primary: #6366f1; // Un Indigo más moderno
+$primary-light: rgba(99, 102, 241, 0.1);
+$bg-page: #f1f5f9;
 $bg-card: #ffffff;
 $border-color: #e2e8f0;
-$text-main: #0f172a;
+$text-main: #1e293b;
 $text-muted: #64748b;
-$radius: 12px;
-$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+$radius-lg: 16px;
+$radius-md: 10px;
+$shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+$shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
 
-// COLORES KPI
+// COLORES DE ESTADO
 $c-pend: #f59e0b;
 $c-aprob: #10b981;
 $c-rech: #ef4444;
+$c-python: #3776ab;
 
 :host {
     display: block;
-    padding: 2rem;
+    padding: 2.5rem;
     background-color: $bg-page;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif; // Tipografía más limpia
     color: $text-main;
+    min-height: 100vh;
 }
 
 h2 {
+    font-size: 1.875rem;
     margin-bottom: 2rem;
     font-weight: 800;
+    letter-spacing: -0.025em;
+    color: $text-main;
 }
 
-// --- FILTROS ---
+h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: $text-main;
+}
+
+// --- FILTROS (Modernizados) ---
 .filtros-container {
     display: flex;
-    gap: 1rem;
+    gap: 1.25rem;
     background: $bg-card;
     padding: 1.5rem;
-    border-radius: $radius;
+    border-radius: $radius-lg;
     border: 1px solid $border-color;
+    box-shadow: $shadow-sm;
     align-items: flex-end;
-    flex-wrap: wrap;
+    margin-bottom: 2rem;
 
     .filtro-group {
         flex: 1;
-        min-width: 140px;
+        min-width: 160px;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
 
         label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: $text-muted;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
     }
 }
 
 .form-control {
     width: 100%;
-    padding: 0.6rem;
+    padding: 0.75rem;
+    background-color: #f8fafc;
     border: 1px solid $border-color;
-    border-radius: 8px;
-    outline: none;
-    transition: 0.2s;
+    border-radius: $radius-md;
+    color: $text-main;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
 
     &:focus {
+        background-color: #fff;
         border-color: $primary;
-        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+        box-shadow: 0 0 0 4px $primary-light;
+        outline: none;
     }
 }
 
-// --- KPI CARDS ---
+// --- KPI CARDS (Efecto Glass & Depth) ---
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2.5rem;
 }
 
 .card {
     background: $bg-card;
-    padding: 1.5rem;
-    border-radius: $radius;
+    padding: 1.75rem;
+    border-radius: $radius-lg;
     border: 1px solid $border-color;
-    box-shadow: $shadow;
-    display: flex;
-    flex-direction: column;
+    box-shadow: $shadow-sm;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
-    transition: transform 0.2s;
 
     &:hover {
-        transform: translateY(-3px);
-    }
-
-    // Borde lateral de color
-    &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-    }
-
-    &--total {
-        &::before {
-            background: $primary;
-        }
-
-        .card-value {
-            color: $primary;
-        }
-    }
-
-    &--warning {
-        &::before {
-            background: $c-pend;
-        }
-
-        .card-value {
-            color: $c-pend;
-        }
-    }
-
-    &--success {
-        &::before {
-            background: $c-aprob;
-        }
-
-        .card-value {
-            color: $c-aprob;
-        }
-    }
-
-    &--danger {
-        &::before {
-            background: $c-rech;
-        }
-
-        .card-value {
-            color: $c-rech;
-        }
+        transform: translateY(-5px);
+        box-shadow: $shadow-md;
     }
 
     .card-label {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: $text-muted;
         font-weight: 600;
+        text-transform: uppercase;
     }
 
     .card-value {
-        font-size: 2rem;
+        font-size: 2.25rem;
         font-weight: 800;
         margin-top: 0.5rem;
+        display: block;
     }
+
+    // Colores temáticos dinámicos
+    &--total { border-top: 4px solid $primary; .card-value { color: $primary; }}
+    &--warning { border-top: 4px solid $c-pend; .card-value { color: $c-pend; }}
+    &--success { border-top: 4px solid $c-aprob; .card-value { color: $c-aprob; }}
+    &--danger { border-top: 4px solid $c-rech; .card-value { color: $c-rech; }}
 }
 
-// --- GRID DE GRÁFICOS ---
+// --- TABLAS (Estilo Dashboard moderno) ---
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+
+    th {
+        background: #f8fafc;
+        padding: 1rem;
+        text-align: left;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: $text-muted;
+        border-bottom: 2px solid $border-color;
+    }
+
+    td {
+        padding: 1rem;
+        font-size: 0.9rem;
+        border-bottom: 1px solid $border-color;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: #f8fafc; }
+}
+
+// --- GRÁFICOS GRID ---
 .charts-grid {
     display: grid;
-    // Por defecto 2 columnas iguales
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 
     .grafico-card {
         background: $bg-card;
         padding: 1.5rem;
-        border-radius: $radius;
+        border-radius: $radius-lg;
         border: 1px solid $border-color;
-        box-shadow: $shadow;
+        box-shadow: $shadow-sm;
 
-        // Clase especial para que ocupe todo el ancho (línea temporal)
-        &.full-width {
-            grid-column: 1 / -1;
-        }
+        &.full-width { grid-column: 1 / -1; }
 
         .grafico-header {
-            margin-bottom: 1rem;
-
-            h3 {
-                font-size: 1.1rem;
-                margin: 0;
-                font-weight: 700;
-            }
-        }
-
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 300px;
-
-            // Ajuste específico para el Donut para que no sea gigante
-            &.donut-container {
-                max-width: 350px;
-                margin: 0 auto; // Centrarlo
-            }
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
     }
 }
 
 // --- BOTONES ---
-.acciones-reportes {
-    display: flex;
-    gap: 1rem;
-}
-
 .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    border-radius: $radius-md;
     font-weight: 600;
-    border: none;
+    font-size: 0.9rem;
     cursor: pointer;
+    transition: all 0.2s;
+    gap: 0.5rem;
+    border: 1px solid transparent;
 
     &--primary {
         background: $primary;
         color: #fff;
+        &:hover { background: darken($primary, 8%); }
     }
 
     &--secondary {
         background: #fff;
-        border: 1px solid $border-color;
+        border-color: $border-color;
+        color: $text-main;
+        &:hover { background: #f8fafc; border-color: darken($border-color, 10%); }
     }
 
     &--dark {
         background: $text-main;
         color: #fff;
+        &:hover { background: #000; }
     }
 
     &:disabled {
-        opacity: 0.6;
-        cursor: wait;
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 }
 
-// RESPONSIVE
-@media (max-width: 900px) {
-    .charts-grid {
-        grid-template-columns: 1fr;
-    }
+// --- ESTADOS ESPECIALES ---
+.loading-state {
+    padding: 2rem;
+    text-align: center;
+    color: $primary;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+}
 
-    // Todo a 1 columna en tablet/móvil
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+// RESPONSIVE REFINADO
+@media (max-width: 1024px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    .filtros-container { flex-direction: column; align-items: stretch; }
 }

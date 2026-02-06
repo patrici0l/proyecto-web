@@ -1,96 +1,116 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
+/** Definición de tipos para mayor seguridad de tipado */
 export type NotificacionTipo = 'exito' | 'error' | 'info';
 
 export interface NotificacionConfig {
-    mensaje: string;
-    tipo: NotificacionTipo;
-    duracion: number; // ms
+  mensaje: string;
+  tipo: NotificacionTipo;
+  duracion: number; // en milisegundos
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class NotificacionesService {
-    private readonly _notificacion = new BehaviorSubject<NotificacionConfig | null>(null);
+  // Estado privado de la notificación actual
+  private readonly _notificacion = new BehaviorSubject<NotificacionConfig | null>(null);
 
-    /** Observable que consume NotificacionComponent */
-    readonly notificacion$: Observable<NotificacionConfig | null> = this._notificacion.asObservable();
+  /** * Observable que el NotificacionComponent debe consumir con el pipe | async 
+   */
+  readonly notificacion$: Observable<NotificacionConfig | null> = this._notificacion.asObservable();
 
-    // -----------------------------
-    //  MÉTODOS PRINCIPALES
-    // -----------------------------
-    exito(mensaje: string, duracion: number = 3500): void {
-        this.mostrar({ mensaje, tipo: 'exito', duracion });
-    }
+  constructor(private http: HttpClient) {}
 
-    // *** SOLUCIÓN AL ERROR: Alias para 'success' ***
-    success(mensaje: string, duracion: number = 3500): void {
-        this.exito(mensaje, duracion);
-    }
+  // -------------------------------------------------------------------------
+  // MÉTODOS DE UI (Toasts / Alertas)
+  // -------------------------------------------------------------------------
 
-    error(mensaje: string, duracion: number = 3500): void {
-        this.mostrar({ mensaje, tipo: 'error', duracion });
-    }
+  exito(mensaje: string, duracion: number = 3500): void {
+    this.mostrar({ mensaje, tipo: 'exito', duracion });
+  }
 
-    info(mensaje: string, duracion: number = 3500): void {
-        this.mostrar({ mensaje, tipo: 'info', duracion });
-    }
+  success(mensaje: string, duracion: number = 3500): void {
+    this.exito(mensaje, duracion);
+  }
 
-    mostrar(cfg: NotificacionConfig): void {
-        this._notificacion.next(cfg);
-    }
+  error(mensaje: string, duracion: number = 3500): void {
+    this.mostrar({ mensaje, tipo: 'error', duracion });
+  }
 
-    limpiar(): void {
-        this._notificacion.next(null);
-    }
+  info(mensaje: string, duracion: number = 3500): void {
+    this.mostrar({ mensaje, tipo: 'info', duracion });
+  }
 
-    // -----------------------------
-    //  CONFIRMACIÓN (Tu código original)
-    // -----------------------------
-    confirmar(titulo: string, mensaje: string = ''): Promise<boolean> {
-        return new Promise((resolve) => {
-            const overlay = document.createElement('div');
-            overlay.classList.add('confirm-overlay');
-            const modal = document.createElement('div');
-            modal.classList.add('confirm-modal');
+  mostrar(cfg: NotificacionConfig): void {
+    this._notificacion.next(cfg);
+  }
 
-            const h3 = document.createElement('h3');
-            h3.innerText = titulo;
-            const p = document.createElement('p');
-            p.innerText = mensaje;
+  limpiar(): void {
+    this._notificacion.next(null);
+  }
 
-            const botones = document.createElement('div');
-            botones.classList.add('botones');
+  listarNotificaciones(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/api/notificaciones`);
+  }
 
-            const btnOk = document.createElement('button');
-            btnOk.innerText = 'Aceptar';
-            btnOk.classList.add('btn-ok'); // Asegúrate de tener estilos para esto
+  // -------------------------------------------------------------------------
+  // CONFIRMACIÓN (Modal dinámico por DOM)
+  // -------------------------------------------------------------------------
 
-            const btnCancel = document.createElement('button');
-            btnCancel.innerText = 'Cancelar';
-            btnCancel.classList.add('btn-cancelar');
+  confirmar(titulo: string, mensaje: string = ''): Promise<boolean> {
+    return new Promise((resolve) => {
+      // Crear elementos
+      const overlay = document.createElement('div');
+      overlay.classList.add('confirm-overlay');
 
-            botones.appendChild(btnOk);
-            botones.appendChild(btnCancel);
-            modal.appendChild(h3);
-            modal.appendChild(p);
-            modal.appendChild(botones);
-            overlay.appendChild(modal);
-            document.body.appendChild(overlay);
+      const modal = document.createElement('div');
+      modal.classList.add('confirm-modal');
 
-            setTimeout(() => overlay.classList.add('visible'), 10);
+      const h3 = document.createElement('h3');
+      h3.innerText = titulo;
 
-            const cerrar = (valor: boolean) => {
-                overlay.classList.remove('visible');
-                setTimeout(() => overlay.remove(), 200);
-                resolve(valor);
-            };
+      const p = document.createElement('p');
+      p.innerText = mensaje;
 
-            btnOk.onclick = () => cerrar(true);
-            btnCancel.onclick = () => cerrar(false);
-            overlay.onclick = (e) => {
-                if (e.target === overlay) cerrar(false);
-            };
-        });
-    }
+      const botones = document.createElement('div');
+      botones.classList.add('botones');
+
+      const btnOk = document.createElement('button');
+      btnOk.innerText = 'Aceptar';
+      btnOk.classList.add('btn-ok');
+
+      const btnCancel = document.createElement('button');
+      btnCancel.innerText = 'Cancelar';
+      btnCancel.classList.add('btn-cancelar');
+
+      // Ensamblar
+      botones.appendChild(btnOk);
+      botones.appendChild(btnCancel);
+      modal.appendChild(h3);
+      modal.appendChild(p);
+      modal.appendChild(botones);
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      // Pequeño delay para disparar la animación CSS
+      setTimeout(() => overlay.classList.add('visible'), 10);
+
+      const cerrar = (valor: boolean) => {
+        overlay.classList.remove('visible');
+        setTimeout(() => overlay.remove(), 200);
+        resolve(valor);
+      };
+
+      // Eventos
+      btnOk.onclick = () => cerrar(true);
+      btnCancel.onclick = () => cerrar(false);
+      overlay.onclick = (e) => {
+        if (e.target === overlay) cerrar(false);
+      };
+    });
+  }
 }
