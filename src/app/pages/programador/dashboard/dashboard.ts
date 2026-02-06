@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PythonStatusService, PythonHealth, SchedulerStatus } from '../../../services/python-status.service';
@@ -47,9 +47,8 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private dashboardService: DashboardProgramadorService,
     private reportesService: ReportesProgramadorService,
-    private notificaciones: NotificacionesService, // Usado para alertas UI
-    private py: PythonStatusService,               // Servicio Python
-    private notiService: NotificacionesService     // Usado para listar
+    private notificaciones: NotificacionesService, // Centralizado para alertas y listado
+    private py: PythonStatusService
   ) { }
 
   ngOnInit(): void {
@@ -205,7 +204,10 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
         this.descargando = false;
         this.notificaciones.success('PDF descargado');
       },
-      error: () => { this.descargando = false; this.notificaciones.error('Error descarga PDF'); }
+      error: () => { 
+        this.descargando = false; 
+        this.notificaciones.error('Error descarga PDF'); 
+      }
     });
   }
 
@@ -217,7 +219,10 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
         this.descargando = false;
         this.notificaciones.success('Excel descargado');
       },
-      error: () => { this.descargando = false; this.notificaciones.error('Error descarga Excel'); }
+      error: () => { 
+        this.descargando = false; 
+        this.notificaciones.error('Error descarga Excel'); 
+      }
     });
   }
 
@@ -246,12 +251,12 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // --- NOTIFICACIONES CON DEBUG ---
+  // --- NOTIFICACIONES ---
 
   private cargarNotificacionesRecientes(): void {
     this.cargandoNotifs = true;
 
-    this.notiService.listarNotificaciones().subscribe({
+    this.notificaciones.listarNotificaciones().subscribe({
       next: (lista: any[]) => {
         console.log('NOTIFS raw:', lista);
 
@@ -268,10 +273,10 @@ export class ProgramadorDashboardComponent implements OnInit, AfterViewInit {
         this.cargandoNotifs = false;
       },
       error: (err: any) => {
-        console.error('NOTIFS error:', err);
+        // Se mantiene el log para debug, pero se elimina el Toast de error UI
+        console.error('NOTIFS error (silenciado en UI):', err);
         this.notifs = [];
         this.cargandoNotifs = false;
-        this.notificaciones.error('Error al conectar con el servicio de notificaciones');
       }
     });
   }
